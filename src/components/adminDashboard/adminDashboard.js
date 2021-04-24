@@ -55,18 +55,16 @@ export default function AdminDashboard({role, setErr}) {
                         approved: (data.data.approved!==undefined?data.data.approved:0),
                         denied:(data.data.declined!==undefined?data.data.declined:0),
                         pending: (data.data.pending!==undefined?data.data.pending:0),
-                        total: (data.data.pending!==undefined&&
-                            data.data.declined!==undefined&&
-                            data.data.approved!==undefined
-                            ?
-                            data.data.approved + data.data.pending + data.data.pending:0)
+                        total: (data.data.approved!==undefined?data.data.approved:0
+                            +data.data.declined!==undefined?data.data.declined:0
+                            +data.data.pending!==undefined?data.data.pending:0)
                     });
                 })
                 .catch(err =>{
                     console.error(err);
                     setErr(err.response.data.err);
                 });
-        // eslint-disable-next-line
+
         }, [role]);
 
     return (
