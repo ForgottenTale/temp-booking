@@ -1,0 +1,29 @@
+.request {
+    width: 100%;
+   
+    &_header {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        align-items: center;
+        height: 60px;
+
+        &_title {
+            margin-left: 30px;
+            font-size: 18px;
+            color: rgb(163, 163, 163);
+            font-weight: 600;
+        }
+    }
+    &_sub{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 30px;
+        &_title{
+            color: rgb(48, 48, 48);
+            font-size: 18px;
+            font-weight: 500;
+        }
+    }
+}

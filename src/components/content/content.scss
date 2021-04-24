@@ -1,0 +1,50 @@
+.content{
+    height: 100%;
+    display: flex;
+    width: 100%;
+    
+
+    &_container{
+        width: 100%;
+        margin-left: 60px;
+        transition: margin-left 150ms ease;
+
+        &.open{
+            margin-left: 220px;
+        }
+
+        &_user{
+            margin-left: 30px;
+            padding: 20px 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+    }
+   
+   
+}
+
+@media only screen and (max-width: 786px) {
+    .content{
+    
+    
+        &_container{
+            width: 100%;
+            margin-left: 0px;
+            transition: margin-left 150ms ease;
+    
+            &.open{
+                margin-left: 0px;
+            }
+            &_user{
+                margin-top: 90px;
+            
+            }
+    
+         
+        }
+       
+       
+    }
+
+}

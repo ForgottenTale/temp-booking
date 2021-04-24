@@ -1,0 +1,31 @@
+.dayNameBody {
+    color: grey;
+    height: 30px;
+    justify-content: center;
+    display: flex;
+    width: 99%;
+    &_name {
+        margin-left: auto;
+        margin-right: auto;
+        display: inline-block;
+        border: none;
+        text-transform: uppercase;
+        margin-top: 10px;
+        opacity: .5;
+        font-weight: 700;
+        font-size: 14px;
+       
+        &_active{
+            margin-left: auto;
+            margin-right: auto;
+            display: inline-block;
+            border: none;
+            text-transform: uppercase;
+            margin-top: 10px;
+            opacity: .8;
+            font-weight: 700;
+            font-size: 14px;
+            color: #0676FF;
+        }
+    }
+}

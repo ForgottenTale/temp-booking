@@ -1,0 +1,11 @@
+.weekView {
+    &_container {
+        display: flex;
+        width: 100%;
+
+        &_events {
+            display: flex;
+            width: 100%;
+        }
+    }
+}

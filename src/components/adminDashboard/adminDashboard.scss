@@ -1,0 +1,23 @@
+.adminDashboard {
+    padding: 30px;
+
+    &_con {
+        display: flex; 
+        justify-content: space-between;       
+        &_box {
+            width: 200px;
+            background-color: rgb(248, 250, 248);
+            border-radius: 10px;
+
+            &:nth-child(2){
+                margin-left: 20px;
+            }
+            & h5{
+                padding: 20px 20px 10px 20px;
+            }
+            & p{
+                padding: 10px 20px 20px 20px;
+            }
+        }
+    }
+}

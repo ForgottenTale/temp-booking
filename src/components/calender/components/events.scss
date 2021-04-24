@@ -1,0 +1,70 @@
+.events {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
+    &_date {
+        position: absolute;
+        margin-top: 10px;
+        font-weight: 700;
+        font-size: 30px;
+        opacity: 0.6;
+
+        &_active {
+            position: absolute;
+            margin-top: 10px;
+            font-weight: 700;
+            font-size: 30px;
+            opacity: 0.8;
+            color: #0676FF;
+        }
+    }
+    & .svg {
+        width: 100%;
+        height: 1500px;
+
+        &_gridlines {
+            opacity: 0.4;
+        }
+
+        &_barGroup {
+            &_rect {
+                width: 100%;
+
+                &:nth-of-type(1) {
+                    fill: #f2faf5;
+                }
+                &:nth-of-type(2n) {
+                    fill: #fff3f6;
+                }
+                &:nth-of-type(3n) {
+                    fill: #fff8ee;
+                }
+            }
+            &_text {
+                fill: #444444;
+                text-anchor: start;
+                font-size: 12px;
+                font-weight: 600;
+            }
+            &_agent {
+                fill: #444444;
+                text-anchor: start;
+                font-size: 12px;
+                font-weight: 400;
+            }
+            &_rectDes {
+                width: 4px;
+                fill: #87d4a4;
+            }
+        }
+    }
+}
+
+.rect {
+    fill: #f2faf5;
+}
+.prevDay{
+    opacity: .4;
+    fill: #F7F8F9;
+}

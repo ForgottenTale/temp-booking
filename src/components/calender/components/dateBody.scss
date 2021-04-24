@@ -1,0 +1,27 @@
+.daytime {
+    width: 99%;
+    height: 90px;
+    background-color: rgb(245, 245, 245);
+    margin: 1px;
+    transition: background-color 0.08s ease-in-out;
+    &:hover {
+        background-color: #00ffb3;
+    }
+
+    .active {
+        background-color: #eed600;
+        color: black;
+    }
+
+    &_day {
+        background-color: rgb(245, 245, 245);
+        width: 20px;
+        height: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 10px;
+        color: grey;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
+    }
+}
