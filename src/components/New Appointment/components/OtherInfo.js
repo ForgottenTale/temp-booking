@@ -30,7 +30,7 @@ function CohostData(props) {
 function OtherInfo({ path, type, data, setData }) {
   const history = useHistory();
   let [count, setCount] = useState(1);
-  const [cohost, setCohost] = useState(data.coHosts);
+  const [cohost, setCohost] = useState(JSON.parse(data.coHosts));
   const [content,setContent] = useState({
     schedule:data.schedule,
     comments:data.comments,
