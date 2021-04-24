@@ -213,13 +213,13 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                     <button onClick={() => setMessage(true)}>Reject</button>
                 </div> : null}
 
-                {message ? <Message setMessage={setMessage} setRefresh={setRefresh} setSpinner={setSpinner} refresh={refresh} data={data} /> : null}
+                {message ? <Message setMessage={setMessage} setRefresh={setRefresh} setSpinner={setSpinner} refresh={refresh} data={data} setErr={setErr} /> : null}
             </div >
             : null
     );
 }
 
-function Message({ setMessage, setRefresh, data, setSpinner, refresh }) {
+function Message({ setMessage, setRefresh, data, setSpinner, refresh,setErr }) {
 
     const [msg, setMsg] = useState("");
     const history = useHistory();
