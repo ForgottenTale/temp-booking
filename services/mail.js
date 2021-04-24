@@ -2,7 +2,7 @@ const nodemailer = require("nodemailer");
 
 let transporterData;
 console.log(process.env.NODE_ENV);
-if(process.env.NODE_ENV=="production" || process.env.NODE_ENV=="testing"){
+if(process.env.NODE_ENV=="testing"){
     transporterData = {
         host: "smtp.ethereal.email",
         port: 587,
@@ -15,7 +15,7 @@ if(process.env.NODE_ENV=="production" || process.env.NODE_ENV=="testing"){
             rejectUnauthorized:false
         }
     };    
-}else if(process.env.NODE_ENV == "development"){
+}else if(process.env.NODE_ENV=="production" || process.env.NODE_ENV == "development"){
     transporterData = {
         host: process.env.MAIL_HOST,
         port: process.env.MAIL_PORT,
