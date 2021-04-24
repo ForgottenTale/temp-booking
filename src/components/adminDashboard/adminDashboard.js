@@ -7,7 +7,7 @@ import RequestView from '../requestView/requestView';
 import axios from 'axios';
 import ServiceSelection from '../New Appointment/App';
 
-export default function AdminDashboard({role}) {
+export default function AdminDashboard({role, setErr}) {
     const [data, setData] = useState(null);
     const header = ['Id', "Name", "Service", "Type", "Time", "Status", "Action"];
     const { path } = useRouteMatch();
@@ -30,7 +30,10 @@ export default function AdminDashboard({role}) {
                     if(data.status===200)
                         setData(data.data);
                 })
-                .catch(err => console.error(err));
+                .catch(err => {
+                    console.error(err);
+                    setErr(err.response.data.error);
+                });
            
             }else if(role==="REGULAR"){
                 url = "http://localhost:5000/api/my-appointments";
@@ -39,7 +42,10 @@ export default function AdminDashboard({role}) {
                         if(data.status===200)
                             setData(data.data);
                     })
-                    .catch(err => console.error(err));
+                    .catch(err =>{ 
+                        console.error(err)
+                        setErr(err.response.data.error);
+                    });
             }
             url = "http://localhost:5000/api/activity";
             axios.get(url, { withCredentials: true })
@@ -52,14 +58,18 @@ export default function AdminDashboard({role}) {
                         total: data.data.approved + data.data.pending + data.data.pending
                     });
                 })
-                .catch(err => console.error(err));
+                .catch(err =>{
+                    console.error(err);
+                    setErr(err.response.data.err);
+                });
+        // eslint-disable-next-line
         }, [role]);
 
     return (
         <Switch>
             
             <Route exact path={path}>
-            {pop?<ServiceSelection setPop={setPop} pop={pop}/>:null}
+            {pop?<ServiceSelection setErr={setErr} setPop={setPop} pop={pop}/>:null}
                 <div className="request">
                     <div className="adminDashboard">
                         <div className="adminDashboard_con">

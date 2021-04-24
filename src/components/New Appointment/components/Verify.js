@@ -1,10 +1,16 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import confirmIcon from "../../../images/info.png";
 
-function Verify({ path, type, data, setId }) {
+function Verify({ path, type, data, setId, setErr}) {
   const history = useHistory();
+  const [proceed, setProceed] = useState(false);
+
+  useEffect(()=>{
+    if(proceed)
+      history.push(path + "/confirmation");
+  });
 
   const handleSubmit = () => {
     const keys = Object.keys(data);
@@ -19,7 +25,6 @@ function Verify({ path, type, data, setId }) {
     handleUpload(formData);
 
     console.log(Array.from(formData));
-    history.push(path + "/confirmation");
   };
 
   const handleUpload = async (data) => {
@@ -33,8 +38,10 @@ function Verify({ path, type, data, setId }) {
 
       });
       setId(res.data.id);
+      setProceed(true);
     } catch (err) {
-      console.log(err);
+        console.error(err);
+        setErr(err.response.data.error);
     }
   };
 

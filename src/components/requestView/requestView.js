@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Spinner from '../spinner/spinner';
 import { useHistory } from "react-router-dom";
 
-export default function RequestView({ req, setRefresh, refresh, showButton }) {
+export default function RequestView({ req, setRefresh, refresh, showButton, setErr}) {
 
     const [spinner, setSpinner] = useState(false);
     const [data, setData] = useState({})
@@ -22,9 +22,12 @@ export default function RequestView({ req, setRefresh, refresh, showButton }) {
                 .then((d) => {
                     setData(d.data[0]);
                 })
-                .catch(err => console.error(err));
+                .catch(err =>{
+                    console.error(err);
+                    setErr(err.response.data.error);
+                });
         }
-
+    // eslint-disable-next-line
     }, [req])
 
 
@@ -227,7 +230,7 @@ function Message({ setMessage, setRefresh, data, setSpinner, refresh }) {
         const formData = new URLSearchParams();
         formData.append('id', data.id);
         formData.append('action', action);
-        formData.append('response', msg);
+        formData.append('response', "This is just a test dffhasdifhpadohfpoasjdfoiasdhfio");
         try {
             const headers = {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -241,7 +244,8 @@ function Message({ setMessage, setRefresh, data, setSpinner, refresh }) {
 
 
         } catch (err) {
-            console.log(err);
+            console.error(err);
+            setErr(err.response.data.error);
             setSpinner(false);
         }
     }

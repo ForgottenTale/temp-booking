@@ -7,9 +7,9 @@ import {useState} from 'react';
 import Error from './components/error/error';
 
 
-
 function App() {
   const [user, setUser] = useState({id: null, name: null, role: null, email: null});
+  const [err, setErr] = useState(null);
   useEffect(() => {
     const headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -36,8 +36,8 @@ function App() {
 
   return (
     <div className="App">
-      <Error msg="dfsdfsdfsdfsdf"/>
-        <Content {...user}/>
+      {err && <Error msg={err} setErr={setErr}/>}
+        <Content setErr={setErr} {...user}/>
     </div>
   );
 }

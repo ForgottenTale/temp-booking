@@ -9,7 +9,7 @@ import { pushEvents } from '../utils/date';
 import axios from 'axios';
 
 
-function Calender() {
+function Calender({setErr}) {
 
     const [monthView, setMonthView] = useState(true);
     const [weekView, setWeekView] = useState(false);
@@ -28,8 +28,12 @@ function Calender() {
                 console.log(d)
                 setData(d.data);
             })
-            .catch(err => console.error(err));
-
+            .catch(err =>{
+                console.error(err);
+                
+                setErr(err.response.data.error);
+            });
+    // eslint-disable-next-line
     }, [value])
 
     useEffect(() => {

@@ -1,9 +1,16 @@
 
+import { useEffect } from 'react';
 import './error.scss';
 
 
 
-export default function Error({ msg }) {
+export default function Error({ msg , setErr}) {
+    
+    useEffect(()=>{
+        setTimeout(()=>{
+            setErr(null);
+        }, 5000);
+    })
 
     return (
         <div className="error">
@@ -12,7 +19,7 @@ export default function Error({ msg }) {
                     xmlns="http://www.w3.org/2000/svg"
                     width="14"
                     height="14"
-                    fill="none"
+                    fill="white"
                     stroke="currentColor"
                     strokeLinecap="round"
                     strokeLinejoin="round"
