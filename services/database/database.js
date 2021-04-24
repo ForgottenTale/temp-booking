@@ -338,7 +338,7 @@ module.exports = {
 							AppointmentClass = getClass(constraint.type);
 							AppointmentClass.convertSqlTimesToDate(distinctDateEvents);
 							distinctDateEvents = transmuteSnakeToCamel(distinctDateEvents);
-							dataArray.push({date: distinctDate, events: distinctDateEvents})
+							dataArray.push({date: distinctDate, events: [distinctDateEvents]})
 						})
 					return done(null, dataArray);
 				})
