@@ -56,8 +56,8 @@ module.exports = function(app){
     })
 
     app.route('/api/logout')
-    .post((req, res)=>{
+    .get((req, res)=>{
         req.logout();
-        res.redirect('/login');
+        res.sendStatus(200);
     })
 }

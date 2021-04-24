@@ -12,7 +12,7 @@ export default function Admin({ setUser }) {
 
     useEffect(() => {
         const source = axios.CancelToken.source();
-        const url = "http://localhost:5000/api/users?role=regular";
+        const url = "/api/users?role=regular";
 
         const loadData = async () => {
             try {

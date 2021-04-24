@@ -21,7 +21,7 @@ export default function Request({ role, setErr}) {
 
     useEffect(() => {
 
-        const url = "http://localhost:5000/api/my-approvals";
+        const url = "/api/my-approvals";
         axios.get(url, { withCredentials: true })
             .then((data) => {
                 setData(data.data);
