@@ -52,6 +52,20 @@ function DateTime({ path, type, setData, data }) {
     // }
   };
 
+  const setdate = ()=>{
+    var d = new Date(data.startTime),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+  }
+
   return (
     <div className="service-container row">
       <div className="select-service col-5">
@@ -69,6 +83,7 @@ function DateTime({ path, type, setData, data }) {
             <div className="col-5">
               <label className="form-label">Date</label>
               <input
+                defaultValue={setdate()}
                 type="date"
                 className="form-control"
                 min={minDate}

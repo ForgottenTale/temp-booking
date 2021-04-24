@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, Switch, Route, useRouteMatch } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, useRouteMatch, useHistory } from "react-router-dom";
 import ServiceList from "./components/ServiceList";
 import Services from "./components/Services";
 import DateTime from "./components/DateTime";
@@ -18,9 +18,9 @@ function App(props) {
     title: "",
     speakerName: "Elon Musk",
     speakerEmail: "",
-    coHosts:"",
-    type:"",
-    serviceName:"",
+    coHosts: [["", ""]],
+    type: "",
+    serviceName: "",
     description: "",
     deliveryType: "",
     remainder: "",
@@ -29,16 +29,21 @@ function App(props) {
     dimensions: "",
     wordsCount: "",
     url: "",
+    schedule:"",
     img: "",
   });
   const [type, setType] = useState(null);
   const [id, setId] = useState("Loading...");
   const { path } = useRouteMatch();
+  const history = useHistory();
   // const [poster, setPoster] = useState("{}");
 
   return (
     <div className="ub">
-      <div className="overlay" onClick={() => { props.setPop(!props.pop) }}></div>
+      <div className="overlay" onClick={() => {
+        history.push("/dashboard")
+        props.setPop(!props.pop)
+      }}></div>
       <Router>
         <Switch>
           <Route path={path} exact>

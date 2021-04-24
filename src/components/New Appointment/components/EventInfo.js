@@ -6,11 +6,11 @@ function EventInfo({ path, type, data, setData }) {
   const history = useHistory();
 
   const [content, setContent] = useState({
-    description: "",
-    speakerName: "",
-    speakerEmail: "",
-    img: "",
-    title:""
+    description: data.description,
+    speakerName: data.speakerName,
+    speakerEmail: data.speakerEmail,
+    img: data.img,
+    title:data.title
   });
 
   function next(event) {
@@ -47,6 +47,7 @@ function EventInfo({ path, type, data, setData }) {
               <textarea
                 rows="3"
                 className="form-control"
+                defaultValue={data.description}
                 name="eventDesc"
                 onChange={(e) =>
                   setContent({ ...content, description: e.target.value })
@@ -84,6 +85,7 @@ function EventInfo({ path, type, data, setData }) {
                   type="email"
                   className="form-control"
                   name="speakerMail"
+                  defaultValue={data.speakerEmail}
                   onChange={(e) =>
                     setContent({ ...content, speakerEmail: e.target.value })
                   }
@@ -99,6 +101,7 @@ function EventInfo({ path, type, data, setData }) {
                   type="text"
                   className="form-control"
                   name="title"
+                  defaultValue={data.title}
                   onChange={(e) => {
                     setContent({ ...content, title: e.target.value });
                   }}
@@ -110,6 +113,7 @@ function EventInfo({ path, type, data, setData }) {
                   type="file"
                   className="form-control"
                   name="poster"
+                  // defaultValue={data.img}
                   onChange={(e) => {
                     setContent({ ...content, img: e.target.files[0] });
                   }}
@@ -124,6 +128,7 @@ function EventInfo({ path, type, data, setData }) {
                   type="text"
                   className="form-control"
                   name="title"
+                  defaultValue={data.title}
                   onChange={(e) => {
                     setContent({ ...content, title: e.target.value });
                   }}
@@ -135,6 +140,7 @@ function EventInfo({ path, type, data, setData }) {
                   type="file"
                   className="form-control"
                   name="poster"
+                  // defaultValue={data.img}
                   onChange={(e) => {
                     setContent({ ...content, img: e.target.files[0] });
                   }}

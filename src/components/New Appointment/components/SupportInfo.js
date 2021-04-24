@@ -6,15 +6,15 @@ function SupportInfo({ path, type, data, setData }) {
   const history = useHistory();
 
   const [support, setSupport] = useState({
-    description: "",
-    deliveryType: "",
-    remainder: "",
-    comments: "",
-    purpose: "",
-    dimensions: "",
-    wordsCount: "",
-    url: "",
-    img: "",
+    description: data.description,
+    deliveryType: data.deliveryType,
+    remainder: data.remainder,
+    comments: data.comments,
+    purpose: data.purpose,
+    dimensions: data.dimensions,
+    wordsCount: data.wordsCount,
+    url: data.url,
+    img: data.img,
   });
 
   function nextButton(event) {
@@ -57,6 +57,7 @@ function SupportInfo({ path, type, data, setData }) {
                     </label>
                   <textarea
                     rows="3"
+                    defaultValue={data.description}
                     className="form-control"
                     name="supportDesc"
                     onChange={(e) => {
@@ -69,6 +70,7 @@ function SupportInfo({ path, type, data, setData }) {
                   <input
                     type="text"
                     className="form-control"
+                    defaultValue={data.purpose}
                     name="purpose"
                     onChange={(e) => {
                       setSupport({ ...support, purpose: e.target.value });
@@ -112,6 +114,7 @@ function SupportInfo({ path, type, data, setData }) {
                         type="text"
                         className="form-control"
                         name="posterDimensions"
+                        defaultValue={data.dimensions}
                         onChange={(e) => {
                           setSupport({
                             ...support,
@@ -129,6 +132,7 @@ function SupportInfo({ path, type, data, setData }) {
                         type="number"
                         className="form-control"
                         name="wordsCount"
+                        defaultValue={data.wordsCount}
                         onChange={(e) => {
                           setSupport({
                             ...support,
@@ -143,6 +147,7 @@ function SupportInfo({ path, type, data, setData }) {
                     <label className="form-label">URL</label>
                     <input
                       type="text"
+                      defaultValue={data.url}
                       className="form-control"
                       name="mockup"
                       onChange={(e) => {
@@ -156,6 +161,7 @@ function SupportInfo({ path, type, data, setData }) {
                   <textarea
                     rows="3"
                     className="form-control"
+                    defaultValue={data.comments}
                     name="comments"
                     onChange={(e) => {
                       setSupport({ ...support, comments: e.target.value });
@@ -166,12 +172,14 @@ function SupportInfo({ path, type, data, setData }) {
 
             </div>
 
-              <button
-                type="button"
-                className="back-btn"
-                onClick={() => history.push(path + "/date-time")}
-              >
-                Prev
+            <button
+              type="button"
+              className="back-btn"
+              onClick={() => {
+                
+                history.push(path + "/date-time")}}
+            >
+              Prev
               </button>
             <button className="btn btn-primary next-btn">Next</button>
           </form>
@@ -186,6 +194,7 @@ function SupportInfo({ path, type, data, setData }) {
                     rows="3"
                     className="form-control"
                     name="enoticeDesc"
+                    defaultValue={data.description}
                     onChange={(e) => {
                       setSupport({ ...support, description: e.target.value });
                     }}
@@ -194,6 +203,7 @@ function SupportInfo({ path, type, data, setData }) {
                 <div className="mb-4">
                   <label className="form-label">Delivery Type</label>
                   <select
+                    defaultValue={data.deliveryType}
                     className="form-select"
                     name="deliveryType"
                     onChange={(e) => {
@@ -203,7 +213,7 @@ function SupportInfo({ path, type, data, setData }) {
                       });
                     }}
                   >
-                    <option selected disabled>
+                    <option >
                       Select
                       </option>
                     <option>Express</option>
@@ -239,6 +249,7 @@ function SupportInfo({ path, type, data, setData }) {
                     </p>
                   <div className="form-check form-check-inline">
                     <input
+                      defaultValue={data.remainder}
                       className="form-check-input"
                       type="radio"
                       name="remainderEnotice"
@@ -250,6 +261,7 @@ function SupportInfo({ path, type, data, setData }) {
                   </div>
                   <div className="form-check form-check-inline">
                     <input
+                      defaultValue={data.remainder}
                       className="form-check-input"
                       type="radio"
                       name="remainderEnotice"
@@ -264,6 +276,7 @@ function SupportInfo({ path, type, data, setData }) {
                   <label className="form-label">Comments</label>
                   <textarea
                     rows="3"
+                    defaultValue={data.comments}
                     className="form-control"
                     name="comments"
                     onChange={(e) => {
@@ -275,12 +288,14 @@ function SupportInfo({ path, type, data, setData }) {
 
             </div>
 
-              <button
-                type="button"
-                className="back-btn"
-                onClick={() => history.push(path + "/date-time")}
-              >
-                Prev
+            <button
+              type="button"
+              className="back-btn"
+              onClick={() => {
+               
+                history.push(path + "/date-time")}}
+            >
+              Prev
 
               </button>
             <button className="btn btn-primary next-btn">Next</button>
