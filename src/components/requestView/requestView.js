@@ -17,7 +17,7 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
             setData(req);
         }
         else {
-            const url = "http://localhost:5000/api/my-approvals";
+            const url = "/api/my-approvals";
             axios.get(url, { withCredentials: true })
                 .then((d) => {
                     setData(d.data[0]);

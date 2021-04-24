@@ -10,7 +10,7 @@ export default function Admin({ setUser }) {
     const header = ['Id', "Name", "Email", "Role", ""];
     const [data,setData] = useState(null);
     useEffect(() => {
-        const url = "http://localhost:5000/api/users?role=admin";
+        const url = "/api/users?role=admin";
         axios.get(url, { withCredentials: true })
             .then((d) => {
                 setData(d.data);
