@@ -55,7 +55,7 @@ function Row({ data, type, setRequest, setUser }) {
 
 
 
-        <tr>
+        <tr className={data.encourages===0?"discouraged-row":(data.encourages==1?"encouraged-row":"")}>
 
             <td data-label="id">{data.id}</td>
             <td data-label="Name">

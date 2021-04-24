@@ -59,7 +59,7 @@ module.exports = function(app){
 
                 if(req.body.type == "publicity")
                     req.body.publishTime = req.body.startTime;
-                req.body.img = req.file.filename;
+                req.body.img = req.file?req.file.filename:null;
                 req.body.creatorId = req.user._id;
                 AppointmentClass= getClass(req.body.type);
                 newAppointment = new AppointmentClass(req.body);
