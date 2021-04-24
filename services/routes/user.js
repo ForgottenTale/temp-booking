@@ -2,10 +2,20 @@ const auth = require('../auth.js');
 const {getClass, User} = require('../controller.js');
 const database = require('../database/database.js');
 const upload = require('../upload.js');
+const fs = require('fs');
 
 function respondError(err, res){
     console.error(err);
     res.status(400).json({error: err.message || err});
+}
+
+function removeImg(imgName){
+    fs.unlink(("/uploads/" + imgName), err=>{
+        if(err)
+            console.error(err);
+        else
+            console.log()
+    })
 }
 
 module.exports = function(app){
@@ -31,6 +41,11 @@ module.exports = function(app){
         }
     })
 
+    app.route('/image/:fileName')
+    .get(auth.ensureAuthenticated, (req, res)=>{
+        res.sendFile(process.cwd() + '/uploads/' + req.params.fileName)
+    })
+
     app.route('/book/appointment')
     .get(auth.ensureAuthenticated, (req, res)=>{
         res.sendFile(process.cwd() + '/coverage/new_appointment.html');
@@ -45,7 +60,6 @@ module.exports = function(app){
                 if(req.body.type == "publicity")
                     req.body.publishTime = req.body.startTime;
 
-                req.body.img = req.file?req.file.filename:null;
                 req.body.creatorId = req.user._id;
                 AppointmentClass= getClass(req.body.type);
                 newAppointment = new AppointmentClass(req.body);
@@ -57,6 +71,7 @@ module.exports = function(app){
                 })
             }
             catch(err){
+                removeImg(req.body.img);
                 respondError(err, res);
             }
         })

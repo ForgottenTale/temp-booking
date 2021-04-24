@@ -3,6 +3,7 @@ const passport = require('passport');
 const session = require('express-session');
 const flash = require('connect-flash');
 require('dotenv').config();
+const fs = require('fs');
 const database = require('./services/database/database.js');
 const routes = require('./services/routes/index.js');
 const auth = require('./services/auth.js');
@@ -27,10 +28,9 @@ app.use(session({
 app.use(flash());
 app.use(passport.initialize())
 app.use(passport.session());
-app.get("/hi", (req, res) => {
-    res.send("Hi")
-})
 
+var access = fs.createWriteStream(process.cwd() + '/logs/stdout.log');
+process.stdout.write = process.stderr.write = access.write.bind(access);
 
 database.connect((err)=>{
     if(err){
