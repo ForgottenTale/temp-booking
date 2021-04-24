@@ -74,7 +74,10 @@ function Verify({ path, type, data, setId, setErr}) {
           <div className="col">
             <div className="mb-2">
               <p className="label">Time:</p>
-              <p>05:00 - 06:00</p>
+              {console.log(data.endTime)}
+
+              {/* Temporary fix */}
+              <p>{new Date(data.startTime).toLocaleTimeString()}{(data.endTime !=="2021-05-07T18:30:00.000Z" ?"-"+ new Date(data.endTime).toLocaleTimeString():null)}</p>
             </div>
           </div>
         </div>

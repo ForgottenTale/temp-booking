@@ -51,7 +51,28 @@ function Services({ path, type, data, setData }) {
           <button
             type="button"
             className="mt-5 back-btn"
-            onClick={() => history.push(path)}
+            onClick={() => {
+              setData({
+                startTime: "",
+                endTime: "",
+                title: "",
+                speakerName: "",
+                speakerEmail: "",
+                coHosts: JSON.stringify([["", ""]]),
+                type: "",
+                serviceName: "",
+                description: "",
+                deliveryType: "",
+                remainder: "",
+                comments: "",
+                purpose: "",
+                dimensions: "",
+                wordsCount: "",
+                url: "",
+                schedule:"",
+                img: "",
+              });
+              history.push(path)}}
           >
             Prev
           </button>

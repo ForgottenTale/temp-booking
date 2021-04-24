@@ -55,7 +55,11 @@ export default function AdminDashboard({role, setErr}) {
                         approved: (data.data.approved!==undefined?data.data.approved:0),
                         denied:(data.data.declined!==undefined?data.data.declined:0),
                         pending: (data.data.pending!==undefined?data.data.pending:0),
-                        total: (data.data.pending!==undefined?data.data.approved + data.data.pending + data.data.pending:0)
+                        total: (data.data.pending!==undefined&&
+                            data.data.declined!==undefined&&
+                            data.data.approved!==undefined
+                            ?
+                            data.data.approved + data.data.pending + data.data.pending:0)
                     });
                 })
                 .catch(err =>{
@@ -96,7 +100,7 @@ export default function AdminDashboard({role, setErr}) {
                         
 
                         <Input2 className="request_sub_input" placeholder="Search for requests" onChange={(e) => setSearchTerm(e.target.value)} />
-                        <button className="appointments_header_button" onClick={()=>{setPop(true)}}>+ New Appointment</button>
+                        <button className="button" onClick={()=>{setPop(true)}}>+ New Appointment</button>
                     </div>
 
                     <Table headers={header} data={data} type='request' setRequest={setRequest} searchTerm={searchTerm} />

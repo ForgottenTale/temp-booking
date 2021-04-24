@@ -177,6 +177,10 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                             <p>Program Schedule</p>
                             <input value={data.schedule} readOnly />
                         </div>,
+                        <div className="requestView_con_item" key="1">
+                        <p>Publish Time</p>
+                        <input value={new Date(data.publishTime).toLocaleTimeString()} readOnly />
+                    </div>,
 
                     ] : null}
 
@@ -228,13 +232,13 @@ function Message({ setMessage, setRefresh, data, setSpinner, refresh,setErr }) {
         const formData = new URLSearchParams();
         formData.append('id', data.id);
         formData.append('action', action);
-        formData.append('response', "This is just a test dffhasdifhpadohfpoasjdfoiasdhfio");
+        formData.append('response', msg);
         try {
             const headers = {
                 'Content-Type': 'application/x-www-form-urlencoded',
             }
 
-            const url = "http://localhost:5000/api/my-approvals/"
+            const url = "/api/my-approvals/"
             await axios.post(url, formData, { headers: headers, withCredentials: true });
             setRefresh(!refresh);
             setSpinner(false);
