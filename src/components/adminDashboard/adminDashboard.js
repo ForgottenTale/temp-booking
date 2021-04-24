@@ -46,9 +46,9 @@ export default function AdminDashboard({role}) {
                 .then((data) => {
 
                     setValues({
-                        approved: data.data.approved===undefined?data.data.approved:0,
-                        denied:data.data.declined===undefined?data.data.declined:0,
-                        pending: data.data.pending===undefined?data.data.pending:0,
+                        approved: data.data.approved!==undefined?data.data.approved:0,
+                        denied:data.data.declined!==undefined?data.data.declined:0,
+                        pending: data.data.pending!==undefined?data.data.pending:0,
                         total: data.data.approved + data.data.pending + data.data.pending
                     });
                 })
