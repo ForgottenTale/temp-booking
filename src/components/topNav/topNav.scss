@@ -16,6 +16,23 @@
         }
     }
     &_icons {
+        display: flex;
+        align-items: center;
+
+        & button {
+            width: 100px;
+            ;
+            margin: 10px 20px 10px 0;
+            padding: 8px;
+            outline: none;
+            background-color: rgb(245, 245, 245);
+            border: none;
+            border-radius: 10px;
+            
+            &:hover {
+              background-color: rgb(235, 235, 235);
+            }
+          }
         svg {
             padding-right: 30px;
         }

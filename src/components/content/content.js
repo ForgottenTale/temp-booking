@@ -20,7 +20,7 @@ function All(props) {
         <div className="content">
             <Menu toggle={setOpen} state={open} setActiveComponent={setActiveComponent} role={props.role}/>
             <div className={open ? "content_container open" : "content_container"} >
-                <TopNav activeComponent={activeComponent} />
+                <TopNav activeComponent={activeComponent}  setUser={props.setUser} />
 
                 <Switch>
                     <Route path="/dashboard" >

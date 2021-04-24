@@ -46,8 +46,6 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                         <p>Email</p>
                         <input value={data.email} readOnly/>
                     </div>
-
-
                     <div className="requestView_con_item">
                         <p>Phone No</p>
                         <input value={data.phone} readOnly/>
@@ -99,13 +97,13 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                                 ]
                             ) : null,
 
-                            <div className="requestView_con_item">
+                            <div className="requestView_con_item" key = "5">
                                 <p>Speaker</p>
-                                <input value={data.speakerName} readOnly/>
+                                <input value={data.speakerName}  readOnly/>
                             </div>,
-                            <div className="requestView_con_item">
+                            <div className="requestView_con_item" key = "6">
                                 <p>Speaker Email</p>
-                                <input value={data.speakerEmail} readOnly/>
+                                <input value={data.speakerEmail}  readOnly/>
 
                             </div>
 
@@ -186,23 +184,23 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                         <h4>Endorsements</h4>
                     </div>
                     <div className="requestView_con_item">
-                        <h4></h4>
+                        <h4>{""}</h4>
                     </div>
 
-                    {data.otherResponses !== [] ?
+                    {data.otherResponses.length >0 ?
 
 
                         data.otherResponses.map((approver, index) =>
 
                             <div key={index} className="requestView_con_item">
                                 <p>{approver.name}</p>
-                                <textarea value={approver.response} readOnly />
+                                <textarea value={approver.response===null?"":approver.response} readOnly />
                             </div>
 
 
 
                         ) : <div className="requestView_con_item">
-                            <input value={"No one has endorsed this request"} />
+                            <input value={"No one has endorsed this request"}   readOnly/>
                         </div>}
 
                 </div>

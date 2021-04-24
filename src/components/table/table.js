@@ -19,7 +19,7 @@ export default function Table({ headers, data, type, setUser, setRequest, search
 
 
                     {
-                        (data !== null && data.length > 0 && data !== []) ?
+                        (data !== null && data.length >= 0) ?
                             data.filter((val) => {
                                 if (searchTerm === "") {
                                     return val;
@@ -29,6 +29,7 @@ export default function Table({ headers, data, type, setUser, setRequest, search
                                     || val.type.toLowerCase().includes(searchTerm.toLowerCase())
                                     || new Date(val.startTime).toDateString().toLowerCase().includes(searchTerm.toLowerCase())
                                     || val.serviceName.toLowerCase().includes(searchTerm.toLowerCase())
+                                    || val.id.toString().includes(searchTerm)
                                 ) {
                                     return val;
                                 }
