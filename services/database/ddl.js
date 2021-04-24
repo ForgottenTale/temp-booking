@@ -23,7 +23,7 @@ module.exports = {
             service_name VARCHAR(30) NOT NULL,
             title VARCHAR(30) NOT NULL,
             description VARCHAR(200),
-            img VARCHAR(50),
+            img VARCHAR(255),
             comments VARCHAR(30),
             start_time DATETIME NOT NULL,
             end_time DATETIME NOT NULL,
