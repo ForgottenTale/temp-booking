@@ -55,7 +55,7 @@ export default function Request({ role, setErr}) {
                 </div>
             </Route>
             <Route path={path + '/:id'}>
-                <RequestView req={request} setRefresh={setRefresh} refresh={refresh} showButton={true} />
+                <RequestView req={request} setRefresh={setRefresh} refresh={refresh} showButton={true} setErr={setErr}/>
             </Route>
         </Switch>
 

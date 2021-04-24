@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Spinner from '../spinner/spinner';
 import { useHistory } from "react-router-dom";
 
-export default function RequestView({ req, setRefresh, refresh, showButton }) {
+export default function RequestView({ req, setRefresh, refresh, showButton, setErr}) {
 
     const [spinner, setSpinner] = useState(false);
     const history = useHistory();
@@ -21,9 +21,12 @@ export default function RequestView({ req, setRefresh, refresh, showButton }) {
                 .then((d) => {
                     setData(d.data[0]);
                 })
-                .catch(err => console.error(err));
+                .catch(err =>{
+                    console.error(err);
+                    setErr(err.response.data.error);
+                });
         }
-
+    // eslint-disable-next-line
     }, [req])
 
 
@@ -49,7 +52,8 @@ export default function RequestView({ req, setRefresh, refresh, showButton }) {
 
 
         } catch (err) {
-            console.log(err);
+            console.error(err);
+            setErr(err.response.data.error);
             setSpinner(false);
         }
     }

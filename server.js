@@ -29,7 +29,7 @@ app.use(flash());
 app.use(passport.initialize())
 app.use(passport.session());
 
-var access = fs.createWriteStream(process.cwd() + '/logs/stdout.log');
+var access = fs.createWriteStream(process.cwd() + '/logs/'+ Date.now() + 'stdout.log');
 process.stdout.write = process.stderr.write = access.write.bind(access);
 
 database.connect((err)=>{
