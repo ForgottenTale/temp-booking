@@ -3,6 +3,7 @@ const passport = require('passport');
 const session = require('express-session');
 const flash = require('connect-flash');
 require('dotenv').config();
+require('./services/mail.js');
 const fs = require('fs');
 const database = require('./services/database/database.js');
 const routes = require('./services/routes/index.js');

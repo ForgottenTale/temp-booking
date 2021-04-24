@@ -1,6 +1,7 @@
 const nodemailer = require("nodemailer");
 
 let transporterData;
+console.log(process.env.NODE_ENV);
 if(process.env.NODE_ENV == "development"){
     transporterData = {
         host: "smtp.ethereal.email",
