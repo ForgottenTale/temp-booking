@@ -13,6 +13,10 @@ module.exports = function(app){
     .get(auth.ensureAuthenticated, (req, res)=>{
         res.redirect("/dashboard")
     })
+    app.route('/images/:fileName')
+    .get((req, res)=>{
+        res.sendFile(process.cwd() + '/uploads/' + req.params.fileName)
+    })
     app.route('*')
     .get(auth.ensureAuthenticated, (req, res)=>{
         res.sendFile(process.cwd() + '/build/index.html');
