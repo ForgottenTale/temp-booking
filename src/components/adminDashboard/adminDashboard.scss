@@ -1,3 +1,19 @@
+
+.button{
+    
+        border: none;
+        background-color: rgb(255, 255, 255);
+        border-radius: 10px;
+        border: 0.5px rgb(223, 223, 223) solid;
+        padding: 10px;
+        font-weight: 500;
+        transition: background-color 150ms ease;
+        outline: none;
+  
+        &:hover {
+          background-color: rgb(240, 240, 240);
+        }
+}
 .adminDashboard {
     padding: 30px;
 

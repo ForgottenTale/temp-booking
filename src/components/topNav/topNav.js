@@ -13,9 +13,9 @@ export default function TopNav({activeComponent,setUser}){
     const load =async()=>{
 
         try{
-             await axios.post("http://localhost:5000/api/logout",{ withCredentials: true });
+             await axios.get("/api/logout",{ withCredentials: true });
              setUser({id: null, name: null, role: null, email: null})
-             history.push("/login")
+             history.push("/login");
         }catch(error){
             console.log(error)
         }

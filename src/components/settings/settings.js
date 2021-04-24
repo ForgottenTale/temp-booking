@@ -15,7 +15,7 @@ export default function Setting({setErr}) {
 
     useEffect(() => {
 
-        const url = "http://localhost:5000/api/credentials/"
+        const url = "/api/credentials/"
         axios.get(url, { withCredentials: true })
             .then((data) => {
                 if (data.status === 200)
@@ -45,7 +45,7 @@ export default function Setting({setErr}) {
         const headers = {
             'Content-Type': 'application/x-www-form-urlencoded',
         }
-        const url = "http://localhost:5000/api/user ";
+        const url = "/api/user ";
         axios.patch(url, formData, { headers: headers, withCredentials: true })
             .then((data) => {
                 console.log(data);
@@ -63,7 +63,7 @@ export default function Setting({setErr}) {
         const headers = {
             'Content-Type': 'application/x-www-form-urlencoded',
         }
-        const url = "http://localhost:5000/api/user ";
+        const url = "/api/user ";
         axios.patch(url, formData, { headers: headers, withCredentials: true })
             .then((data) => {
                 console.log(data);

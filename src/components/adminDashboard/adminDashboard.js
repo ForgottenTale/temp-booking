@@ -24,7 +24,7 @@ export default function AdminDashboard({role, setErr}) {
     useEffect(() => {
         var url = ""
         if(role==="ALPHA_ADMIN" || role==="BETA_ADMIN"){
-            url = "http://localhost:5000/api/my-approvals/history";
+            url = "/api/my-approvals/history";
             axios.get(url, { withCredentials: true })
                 .then((data) => {
                     if(data.status===200)
@@ -36,7 +36,7 @@ export default function AdminDashboard({role, setErr}) {
                 });
            
             }else if(role==="REGULAR"){
-                url = "http://localhost:5000/api/my-appointments";
+                url = "/api/my-appointments";
                 axios.get(url, { withCredentials: true })
                     .then((data) => {
                         if(data.status===200)
@@ -47,7 +47,7 @@ export default function AdminDashboard({role, setErr}) {
                         setErr(err.response.data.error);
                     });
             }
-            url = "http://localhost:5000/api/activity";
+            url = "/api/activity";
             axios.get(url, { withCredentials: true })
                 .then((data) => {
 
@@ -55,7 +55,11 @@ export default function AdminDashboard({role, setErr}) {
                         approved: (data.data.approved!==undefined?data.data.approved:0),
                         denied:(data.data.declined!==undefined?data.data.declined:0),
                         pending: (data.data.pending!==undefined?data.data.pending:0),
-                        total: (data.data.pending!==undefined?data.data.approved + data.data.pending + data.data.pending:0)
+                        total: (data.data.pending!==undefined&&
+                            data.data.declined!==undefined&&
+                            data.data.approved!==undefined
+                            ?
+                            data.data.approved + data.data.pending + data.data.pending:0)
                     });
                 })
                 .catch(err =>{
@@ -96,7 +100,7 @@ export default function AdminDashboard({role, setErr}) {
                         
 
                         <Input2 className="request_sub_input" placeholder="Search for requests" onChange={(e) => setSearchTerm(e.target.value)} />
-                        <button className="appointments_header_button" onClick={()=>{setPop(true)}}>+ New Appointment</button>
+                        <button className="button" onClick={()=>{setPop(true)}}>+ New Appointment</button>
                     </div>
 
                     <Table headers={header} data={data} type='request' setRequest={setRequest} searchTerm={searchTerm} />

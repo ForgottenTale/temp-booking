@@ -20,9 +20,9 @@ function Calender({setErr}) {
     const [value, setValue] = useState(moment());
     const [dayList, setDayList] = useState([]);
     const [data, setData] = useState([]);
-
+  console.log(dayList);
     useEffect(() => {
-        const url = "http://localhost:5000/api/calendar?month=" + (value.clone().format('M') - 1) + "&year=" + value.clone().format('Y');
+        const url = "/api/calendar?month=" + (value.clone().format('M') - 1) + "&year=" + value.clone().format('Y');
         axios.get(url, { withCredentials: true })
             .then((d) => {
                 console.log(d)
@@ -170,11 +170,11 @@ function Calender({setErr}) {
             <div className="calender_menu">
                 <h2 className="calender_menu_today">
        
-                    <select defaultValue={value.clone().format('D')} onChange={(e)=>handleSelectChange(e)}>
+                    {/* <select defaultValue={value.clone().format('D')} >
                         {dayList.map((val, key) =>
                             <option value={val} key={key}>{val}</option>
                         )}
-                    </select>
+                    </select> */}
                     <select defaultValue={value.clone().format('MMMM')} onChange={(e)=>handleSelectChange(e)}>
                         {monthList.map((val, key) =>
                             <option value={val} key={key} >{val}</option>
