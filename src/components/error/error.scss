@@ -1,0 +1,31 @@
+.error {
+    width: 300px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.02), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
+    min-height: 60px;
+    position: fixed;
+    overflow: hidden;
+    bottom: 0;
+    right: 0;
+    margin: 30px;
+    background-color: white;
+    color: black;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    border-radius: 5px;
+   
+    & span {
+        margin-left: 30px;
+        color: red;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+    
+    }
+    & p{
+       margin: 10px;
+       font-size: 12px;
+       word-break: break-all;
+
+    }
+}

@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import axios from 'axios';
 import './App.scss';
 import {useState} from 'react';
-
+import Error from './components/error/error';
 
 
 
@@ -36,6 +36,7 @@ function App() {
 
   return (
     <div className="App">
+      <Error msg="dfsdfsdfsdfsdf"/>
         <Content {...user}/>
     </div>
   );

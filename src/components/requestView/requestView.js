@@ -215,7 +215,7 @@ export default function RequestView({ req, setRefresh, refresh, showButton }) {
 
 
                 </div>
-                {data.img !== null ? <img src={data.img} alt='poster' /> : null}
+                {data.img !== null ? <img src={"/image/"+data.img} alt='poster' /> : null}
 
 
 
