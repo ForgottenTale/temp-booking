@@ -3,7 +3,7 @@ import './settings.scss';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 
-export default function Setting() {
+export default function Setting({setErr}) {
 
     const [refresh, setRefresh] = useState(true);
     const [userDetails, setUserDetails] = useState({
@@ -16,11 +16,12 @@ export default function Setting() {
     useEffect(() => {
 
         const url = "http://localhost:5000/api/credentials/"
-        axios.get(url, { withCredentials: true }).then((data) => {
-            if (data.status === 200)
-                return data.data
-           
-        })
+        axios.get(url, { withCredentials: true })
+            .then((data) => {
+                if (data.status === 200)
+                    return data.data
+
+            })
             .then(userInfo => {
                 setUserDetails({
                     name: userInfo.name,
@@ -29,10 +30,11 @@ export default function Setting() {
                 })
             })
             .catch(err => {
-                console.log(err)
+                console.error(err);
+                setErr(err.response.data.error);
             });
 
-
+    // eslint-disable-next-line
     }, [refresh]);
 
     const handleSave = () => {
@@ -49,7 +51,10 @@ export default function Setting() {
                 console.log(data);
                 setRefresh(!refresh);
             })
-            .catch(err => console.error(err));
+            .catch(err =>{
+                console.error(err);
+                setErr(err.response.data.error);
+            });
 
     }
     const handlePasswordSave = () => {
@@ -64,7 +69,10 @@ export default function Setting() {
                 console.log(data);
                 setRefresh(!refresh);
             })
-            .catch(err => console.error(err));
+            .catch(err =>{
+                console.error(err);
+                setErr(err.response.data.error);
+            });
 
     }
 
@@ -76,7 +84,7 @@ export default function Setting() {
                     <p>Name</p>
                     <input placeholder={userDetails.name} onChange={(e) =>
                         setUserDetails({ ...userDetails, name: e.target.value })
-                    }/>
+                    } />
                 </div>
                 {/* <div className="settings_con_item">
                     <p>Email Id</p>
@@ -106,7 +114,7 @@ export default function Setting() {
                 </div>
                 <div className="settings_con_item">
                     <p>Re-enter Password</p>
-                    <input onChange={(e)=>setPassword(e.target.value)}/>
+                    <input onChange={(e) => setPassword(e.target.value)} />
                 </div>
 
             </div>

@@ -8,7 +8,7 @@ import RequestView from '../requestView/requestView';
 import axios from 'axios';
 
 
-export default function Request({ role }) {
+export default function Request({ role, setErr}) {
 
 
     const [data, setData] = useState(null);
@@ -26,9 +26,12 @@ export default function Request({ role }) {
             .then((data) => {
                 setData(data.data);
             })
-            .catch(err => console.error(err));
+            .catch(err =>{
+                console.error(err);
+                setErr(err.response.data.error);
+            });
 
-
+    // eslint-disable-next-line
     }, [refresh])
 
     return (

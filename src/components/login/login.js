@@ -16,26 +16,27 @@ export default function Login(props) {
         const formData = new URLSearchParams();
         formData.append('username', details.username);
         formData.append('password', details.password);
-        try {
             const headers = {
                 'Content-Type': 'application/x-www-form-urlencoded',
               }
           
             const url = "http://localhost:5000/api/login/"
-            const res = await axios.post(url,formData,{headers:headers});
-            if(res.status===200){
-                // setUser({
-                //     id: res.data.id,
-                //     name: res.data.name,
-                //     role: res.data.role,
-                //     email: res.data.email
-                //   })
-                  window.location.replace("/dashboard");
-            }
-
-        } catch (err) {
-            console.log(err);
-        }
+            axios.post(url,formData,{headers:headers})
+            .then((res)=>{
+                if(res.status===200){
+                    // setUser({
+                    //     id: res.data.id,
+                    //     name: res.data.name,
+                    //     role: res.data.role,
+                    //     email: res.data.email
+                    //   })
+                    window.location.replace("/dashboard");
+                }
+            })
+            .catch(err=>{
+                console.error(err.response || err);
+                props.setErr(err.response.data.error);
+            })
     }
 
     const handleChange = (e) => {

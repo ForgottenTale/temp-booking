@@ -70,7 +70,7 @@ function App(props) {
             <SupportInfo path={path} type={type} data={data} setData={setData} />
           </Route>
           <Route path={path + "/verify"}>
-            <Verify path={path} type={type} data={data} setId={setId} />
+            <Verify path={path} type={type} data={data} setId={setId} setErr={props.setErr}/>
           </Route>
           <Route path={path + "/confirmation"}>
             <Confirmation path={path} type={type} data={data} id={id} />
