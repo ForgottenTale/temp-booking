@@ -3,7 +3,7 @@ export function pushEvents(d,data){
 
     var temp = data.filter((Obj) => {
 
-        if (Obj.date.toString() === d.toISOString()) {
+        if (new Date(Obj.date).toUTCString() === d._d.toUTCString()) {
             return Obj
         }
         else {
