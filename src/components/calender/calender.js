@@ -9,7 +9,7 @@ import { pushEvents } from '../utils/date';
 import axios from 'axios';
 
 
-function Calender({setErr}) {
+function Calender({ setErr }) {
 
     const [monthView, setMonthView] = useState(true);
     const [weekView, setWeekView] = useState(false);
@@ -19,21 +19,23 @@ function Calender({setErr}) {
     const [day, setDay] = useState({});
     const [value, setValue] = useState(moment());
     const [dayList, setDayList] = useState([]);
-    const [data, setData] = useState([]);
-  console.log(dayList);
+    const [data, setData] = useState([
+      
+      ]);
+    console.log(dayList);
     useEffect(() => {
         const url = "/api/calendar?month=" + (value.clone().format('M') - 1) + "&year=" + value.clone().format('Y');
         axios.get(url, { withCredentials: true })
             .then((d) => {
                 console.log(d)
-                setData(d.data);
+                // setData(d.data);
             })
-            .catch(err =>{
+            .catch(err => {
                 console.error(err);
-                
+
                 setErr(err.response.data.error);
             });
-    // eslint-disable-next-line
+        // eslint-disable-next-line
     }, [value])
 
     useEffect(() => {
@@ -158,29 +160,29 @@ function Calender({setErr}) {
 
     const monthList = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "Novemeber", "December"];
     const yearList = ["2021", "2022", "2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030", "2031"];
-    
-    const handleSelectChange =(e)=>{
+
+    const handleSelectChange = (e) => {
         console.log(e.target.value)
-        console.log(value.clone().set(e.target.value,"MMMM"));
-        setValue(value.clone().set(e.target.value,"MMMM"))
+        console.log(value.clone().set(e.target.value, "MMMM"));
+        setValue(value.clone().set(e.target.value, "MMMM"))
     }
-    
+
     return (
         <div className="calender">
             <div className="calender_menu">
                 <h2 className="calender_menu_today">
-       
+
                     {/* <select defaultValue={value.clone().format('D')} >
                         {dayList.map((val, key) =>
                             <option value={val} key={key}>{val}</option>
                         )}
                     </select> */}
-                    <select defaultValue={value.clone().format('MMMM')} onChange={(e)=>handleSelectChange(e)}>
+                    <select defaultValue={value.clone().format('MMMM')} onChange={(e) => handleSelectChange(e)}>
                         {monthList.map((val, key) =>
                             <option value={val} key={key} >{val}</option>
                         )}
                     </select>
-                    <select defaultValue={value.clone().format('YYYY')} onChange={(e)=>handleSelectChange(e)}>
+                    <select defaultValue={value.clone().format('YYYY')} onChange={(e) => handleSelectChange(e)}>
                         {yearList.map((val, key) =>
                             <option value={val} key={key}>{val}</option>
                         )}
