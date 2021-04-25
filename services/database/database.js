@@ -313,7 +313,11 @@ module.exports = {
 				.then(datesAndEvents=>{
 					if(datesAndEvents[0][0])
 						datesAndEvents.forEach(distinctDateEvents=>{
-							distinctDate = new Date(convertSqlDateTimeToDate(distinctDateEvents[0].start_time));
+							distinctDate = distinctDateEvents[0].start_time.split(" ");
+							distinctDate.pop();
+							distinctDate.push("18:30:00");
+							distinctDate = distinctDate.join(" ");
+							distinctDate = new Date(convertSqlDateTimeToDate(distinctDate));
 							distinctDateEvents = distinctDateEvents.map(event=>{
 								event.type = constraint.type;
 								AppointmentClass = getClass(constraint.type);
@@ -325,7 +329,11 @@ module.exports = {
 						})
 					else
 						datesAndEvents.forEach(distinctDateEvents=>{
-							distinctDate = new Date(convertSqlDateTimeToDate(distinctDateEvents.start_time));
+							distinctDate = distinctDateEvents.start_time.split(" ");
+							distinctDate.pop();
+							distinctDate.push("18:30:00");
+							distinctDate = distinctDate.join(" ");
+							distinctDate = new Date(convertSqlDateTimeToDate(distinctDate));
 							distinctDateEvents.type = constraint.type;
 							AppointmentClass = getClass(constraint.type);
 							AppointmentClass.convertSqlTimesToDate(distinctDateEvents);
