@@ -24,7 +24,7 @@ function Calender({ setErr }) {
       ]);
     console.log(dayList);
     useEffect(() => {
-        const url = "http://localhost:5000/api/calendar?month=" + (value.clone().format('M') - 1) + "&year=" + value.clone().format('Y');
+        const url = "/api/calendar?month=" + (value.clone().format('M') - 1) + "&year=" + value.clone().format('Y');
         axios.get(url, { withCredentials: true })
             .then((d) => {
                 console.log(d)
