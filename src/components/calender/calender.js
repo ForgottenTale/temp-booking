@@ -20,11 +20,48 @@ function Calender({ setErr }) {
     const [value, setValue] = useState(moment());
     const [dayList, setDayList] = useState([]);
     const [data, setData] = useState([
-      
+        {
+          "date": "2021-05-06T18:30:00.000Z",
+          "events": [
+            {
+              "id": 1,
+              "serviceName": "webex",
+              "title": "SpaceX",
+              "description": "This is a test",
+              "img": "1619278428240ms-homepage-desktop.jpg",
+              "comments": null,
+              "startTime": "2021-05-06T18:30:00.000Z",
+              "endTime": "2021-05-06T20:30:00.000Z",
+              "speakerName": "Elon musk",
+              "speakerEmail": "elonmusck@ieee.org",
+              "coHosts": "[[\"dsf\", \"sdfsd\"]]",
+              "type": "online_meeting"
+            }
+          ]
+        },
+        {
+          "date": "2021-05-24T18:30:00.000Z",
+          "events": [
+            {
+              "id": 2,
+              "serviceName": "zoom",
+              "title": "A very important job",
+              "description": "This is asking for intern support",
+              "img": "1619292671235ms-homepage-desktop.jpg",
+              "comments": "nothing to say",
+              "startTime": "2021-05-24T18:30:00.000Z",
+              "endTime": "2021-05-24T05:30:00.000Z",
+              "speakerName": "Arundhathi",
+              "speakerEmail": "arundhathi@gmail.com",
+              "coHosts": null,
+              "type": "online_meeting"
+            }
+          ]
+        }
       ]);
     console.log(dayList);
     useEffect(() => {
-        const url = "/api/calendar?month=" + (value.clone().format('M') - 1) + "&year=" + value.clone().format('Y');
+        const url = "http://localhost:5000/api/calendar?month=" + (value.clone().format('M') - 1) + "&year=" + value.clone().format('Y');
         axios.get(url, { withCredentials: true })
             .then((d) => {
                 console.log(d)
