@@ -65,7 +65,7 @@ function Calender({ setErr }) {
         axios.get(url, { withCredentials: true })
             .then((d) => {
                 console.log(d)
-                // setData(d.data);
+                setData(d.data);
             })
             .catch(err => {
                 console.error(err);
