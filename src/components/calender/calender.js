@@ -177,7 +177,7 @@ function Calender({ setErr }) {
                             <option value={val} key={key}>{val}</option>
                         )}
                     </select> */}
-                    <select defaultValue={value.clone().format('MMMM')} onChange={(e) => handleSelectChange(e)}>
+                    {/* <select defaultValue={value.clone().format('MMMM')} onChange={(e) => handleSelectChange(e)}>
                         {monthList.map((val, key) =>
                             <option value={val} key={key} >{val}</option>
                         )}
@@ -186,7 +186,8 @@ function Calender({ setErr }) {
                         {yearList.map((val, key) =>
                             <option value={val} key={key}>{val}</option>
                         )}
-                    </select>
+                    </select> */}
+                      {value.format("MMMM")} {value.format("YYYY")}
                 </h2>
                 <div className="calender_menu_buttons">
                     <button className="calender_menu_buttons_button" onClick={() => setValue(prevMonth())}>&#60;</button>
