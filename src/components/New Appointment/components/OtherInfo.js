@@ -31,10 +31,10 @@ function OtherInfo({ path, type, data, setData }) {
   const history = useHistory();
   let [count, setCount] = useState(1);
   const [cohost, setCohost] = useState(JSON.parse(data.coHosts));
-  const [content,setContent] = useState({
-    schedule:data.schedule,
-    comments:data.comments,
-  })
+  const [content, setContent] = useState({
+    schedule: data.schedule,
+    comments: data.comments,
+  });
 
   function nextButton(event) {
     event.preventDefault();
@@ -42,9 +42,8 @@ function OtherInfo({ path, type, data, setData }) {
     setData({
       ...data,
       coHosts: JSON.stringify(cohost),
-      schedule:content.schedule,
-      comments:content.comments,
-     
+      schedule: content.schedule,
+      comments: content.comments,
     });
 
     history.push(path + "/verify");
@@ -94,17 +93,16 @@ function OtherInfo({ path, type, data, setData }) {
           <form onSubmit={nextButton}>
             <div className="row mb-3">
               <div className="col-8">
-                <label className="form-label">
-                  Program schedule (if any)
-                  </label>
-                <input type="text" 
-                className="form-control" 
-                name="schedule"
-                defaultValue={data.schedule}
-                onChange={(e) => {
-                  setContent({ ...content, schedule: e.target.value });
-                }}
-                 />
+                <label className="form-label">Program schedule (if any)</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="schedule"
+                  defaultValue={data.schedule}
+                  onChange={(e) => {
+                    setContent({ ...content, schedule: e.target.value });
+                  }}
+                />
               </div>
             </div>
             <div className="row mb-5">
@@ -127,7 +125,7 @@ function OtherInfo({ path, type, data, setData }) {
               onClick={() => history.push(path + "/event-info")}
             >
               Prev
-              </button>
+            </button>
             <button className="btn btn-primary next-btn">Next</button>
           </form>
         ) : (
@@ -165,7 +163,7 @@ function OtherInfo({ path, type, data, setData }) {
               onClick={() => history.push(path + "/event-info")}
             >
               Prev
-              </button>
+            </button>
             <button className="btn btn-primary mt-5 next-btn">Next</button>
           </form>
         )}

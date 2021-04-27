@@ -10,7 +10,7 @@ function EventInfo({ path, type, data, setData }) {
     speakerName: data.speakerName,
     speakerEmail: data.speakerEmail,
     img: data.img,
-    title:data.title
+    title: data.title,
   });
 
   function next(event) {
@@ -43,7 +43,7 @@ function EventInfo({ path, type, data, setData }) {
             <div className="col">
               <label className="form-label">
                 Content/ description of the event
-                </label>
+              </label>
               <textarea
                 rows="3"
                 className="form-control"
@@ -76,8 +76,8 @@ function EventInfo({ path, type, data, setData }) {
                   defaultValue={data.speakerName}
                   onChange={(e) =>
                     setContent({ ...content, speaker: e.target.value })
-                  }/
-                >
+                  }
+                />
               </div>
               <div className="col">
                 <label className="form-label">Speaker email</label>
@@ -146,10 +146,7 @@ function EventInfo({ path, type, data, setData }) {
                   }}
                 />
               </div>
-
             </div>
-
-
           )}
           <button
             type="button"
@@ -157,8 +154,7 @@ function EventInfo({ path, type, data, setData }) {
             onClick={() => history.push(path + "/date-time")}
           >
             Prev
-
-            </button>
+          </button>
           <button className="btn btn-primary next-btn">Next</button>
         </form>
       </div>
