@@ -35,13 +35,13 @@ function DateTime({ path, type, setData, data }) {
     var toHour = endTime.slice(0, 2);
     var toMin = endTime.slice(3, 5);
     let tempStartTime = new Date(date);
-    tempStartTime.setHours(fromHour, fromMin, 0, 0)
+    tempStartTime.setHours(fromHour, fromMin, 0, 0);
     let tempEndtime = new Date(date);
     tempEndtime.setHours(toHour, toMin, 0, 0);
     setData({
       ...data,
       startTime: tempStartTime.toISOString(),
-      endTime: tempEndtime.toISOString()
+      endTime: tempEndtime.toISOString(),
     });
 
     if (type === "online_meeting" || type === "publicity") {
@@ -52,19 +52,17 @@ function DateTime({ path, type, setData, data }) {
     // }
   };
 
-  const setdate = ()=>{
+  const setdate = () => {
     var d = new Date(data.startTime),
-        month = '' + (d.getMonth() + 1),
-        day = '' + d.getDate(),
-        year = d.getFullYear();
+      month = "" + (d.getMonth() + 1),
+      day = "" + d.getDate(),
+      year = d.getFullYear();
 
-    if (month.length < 2) 
-        month = '0' + month;
-    if (day.length < 2) 
-        day = '0' + day;
+    if (month.length < 2) month = "0" + month;
+    if (day.length < 2) day = "0" + day;
 
-    return [year, month, day].join('-');
-  }
+    return [year, month, day].join("-");
+  };
 
   return (
     <div className="service-container row">
@@ -128,9 +126,7 @@ function DateTime({ path, type, setData, data }) {
                   required
                 />
               </div>
-
             </div>
-
           )}
           <button
             type="button"
@@ -138,8 +134,7 @@ function DateTime({ path, type, setData, data }) {
             onClick={() => history.push(path + "/services")}
           >
             Prev
-
-            </button>
+          </button>
           <button className="btn btn-primary mt-5 next-btn">Next</button>
         </form>
       </div>

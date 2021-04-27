@@ -33,9 +33,9 @@ function ContactInfo({ type, setData, data }) {
         <img src={infoIcon} alt="" />
         <h2>Enter Information</h2>
         <p>
-          Please provide your contact info and other details so that we can
-          send you a confirmation and other info.
-          </p>
+          Please provide your contact info and other details so that we can send
+          you a confirmation and other info.
+        </p>
         <h3>Questions?</h3>
         <p>Call (858) 939-3746 for help.</p>
       </div>
@@ -97,10 +97,10 @@ function ContactInfo({ type, setData, data }) {
           onClick={() => history.push("/date-time/")}
         >
           Prev
-          </button>
+        </button>
         <button onClick={nextButton} className="btn btn-primary next-btn">
           Next
-          </button>
+        </button>
       </div>
     </div>
   );
