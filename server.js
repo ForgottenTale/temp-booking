@@ -8,12 +8,7 @@ const fs = require('fs');
 const database = require('./services/database/database.js');
 const routes = require('./services/routes/index.js');
 const auth = require('./services/auth.js');
-var cors = require('cors');
 const app = express();
-app.use(cors({
-    origin: 'http://localhost:3000',
-    credentials:true
-}));
 app.use(express.static(__dirname + '/build'));
 app.use(express.static(__dirname + '/public'));
 app.use(express.json());
