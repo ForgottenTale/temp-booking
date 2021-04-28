@@ -16,10 +16,6 @@ function respondError(err, res){
 }
 
 module.exports = function(app){
-    app.route('/register')
-    .get((req, res)=>{
-        res.sendFile(process.cwd() + '/coverage/register.html')
-    })
     
     app.route('/login')
     .get((req, res)=>{

@@ -1,23 +1,49 @@
 module.exports = {
     schema: [
-        `CREATE TABLE IF NOT EXISTS user(
+        `CREATE TABLE IF NOT EXISTS person(
             _id INT PRIMARY KEY AUTO_INCREMENT,
             role VARCHAR(20),
             name VARCHAR(30) NOT NULL,
             email VARCHAR(30) UNIQUE NOT NULL,
-            phone VARCHAR(15) NOT NULL,
-            password VARCHAR(80) NOT NULL
+            phone VARCHAR(15) NOT NULL
         );`,
+        `CREATE TABLE IF NOT EXISTS user(
+            _id INT PRIMARY KEY AUTO_INCREMENT,
+            person_id INT,
+            password VARCHAR(80) NOT NULL,
+            FOREIGN KEY (person_id) REFERENCES person_id
+        );`,
+        `CREATE TABLE IF NOT EXISTS group_admin(
+            _id INT PRIMARY KEY AUTO_INCREMENT,
+            person_id INT,
+            FOREIGN KEY (person_id) REFERENCES person_id
+        );`,
+        `CREATE TABLE IF NOT EXISTS ou(
+            _id INT PRIMARY KEY AUTO_INCREMENT,
+            name VARCHAR(100)
+        )`,
         `CREATE TABLE IF NOT EXISTS service_config(
             _id INT PRIMARY KEY AUTO_INCREMENT,
             type VARCHAR(20) NOT NULL,
             service_name VARCHAR(30),
-            follow_hierarchy BOOLEAN DEFAULT 0,
-            follow_assignment BOOLEAN DEFAULT 1,
+            global_restraint BOOLEAN DEFAULT 1,
+            group_restraint BOOLEAN DEFAULT 0,
+            reviewer_restraint BOOLEAN DEFAULT 0,
             advance_days INT DEFAULT 5,
-            padding_between_bookings_mins INT DEFAULT 15,
-            assigned_to INT NOT NULL
+            padding_between_bookings_mins INT DEFAULT 15
         );`,
+        `CREATE TABLE IF NOT EXISTS ou_map(
+            ou_id INT,
+            person_id INT,
+            FOREIGN KEY(ou_id) REFERENCES ou(_id),
+            FOREIGN KEY(person_id) REFERENCES perons(_id)
+        );`,
+        `CREATE TABLE IF NOT EXISTS reviewer_map(
+            user_id INT,
+            service_id INT,
+            FOREIGN KEY (user_id) REFERENCES user(_id),
+            FOREIGN KEY (service_id) REFERENCES service(_id)
+        );`
         `CREATE TABLE IF NOT EXISTS online_meeting(
             _id INT PRIMARY KEY AUTO_INCREMENT,
             service_name VARCHAR(30) NOT NULL,
