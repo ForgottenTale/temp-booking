@@ -89,3 +89,12 @@
     }
 }
 
+@media only screen and (max-width: 768px) {
+    .inputTag2 {
+        width: 100%;
+        & input{
+            width: 100%;
+        }
+    }
+
+}

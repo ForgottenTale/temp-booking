@@ -10,7 +10,7 @@
         align-items: center;
         height: 100%;
 
-        & p{
+        & p {
             margin-left: 5px;
         }
         &_pic {
@@ -25,10 +25,10 @@
         width: 100%;
         border-spacing: 0;
         border-collapse: collapse;
-        & .encouraged-row{
+        & .encouraged-row {
             color: green;
         }
-        & .discouraged-row{
+        & .discouraged-row {
             color: red;
         }
         & tr {
@@ -135,7 +135,7 @@
 
 @media only screen and (max-width: 1207px) {
     .tableTag {
-        & table {
+        &table {
             & tr {
                 & td {
                     padding-right: 30px;
@@ -154,7 +154,6 @@
     .tableTag {
         & table {
             & tr {
-             
                 margin-bottom: 30px;
                 & td {
                     padding-right: 20px;
@@ -173,22 +172,18 @@
     .tableTag {
         z-index: 0;
         &_user {
-            display: flex;
-            align-items: center;
-            height: 100%;
-    
-            & p{
+            display: block;
+
+            & p {
                 margin-left: 0;
                 text-align: right;
                 padding-left: 50%;
             }
             &_pic {
-               display: none;
+                display: none;
             }
         }
         & table {
-            display: block;
-
             & tr {
                 height: auto;
                 display: block;
@@ -197,7 +192,7 @@
                     box-shadow: unset;
                 }
 
-                & th{
+                & th {
                     display: none;
                     & .pending {
                         font-size: 8px;
@@ -212,10 +207,12 @@
                     padding: 10px;
                     padding-left: 50%;
                     position: relative;
-                    &:nth-child(1){
+
+                   
+                    &:nth-child(1) {
                         padding-left: 0;
                     }
-                    &::before{
+                    &::before {
                         content: attr(data-label);
                         position: absolute;
                         left: 0;
@@ -225,7 +222,6 @@
                         font-weight: 600;
                         color: rgb(175, 175, 175);
                     }
-                   
                 }
             }
         }

@@ -2,13 +2,12 @@
 export function pushEvents(d,data){
 
     var temp = data.filter((Obj) => {
-
-        if (new Date(Obj.date).toUTCString() === d._d.toUTCString()) {
-            return Obj
+       var dataObj = new Date(Obj.date).toLocaleDateString();
+       var dMoment = d._d.toLocaleDateString()
+        if (dataObj === dMoment) {
+            return dataObj
         }
-        else {
-            return null
-        }
+    
 
     });
 
@@ -21,3 +20,5 @@ export function pushEvents(d,data){
  
 
 }
+
+

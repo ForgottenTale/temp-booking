@@ -9,6 +9,7 @@
     transition: width 150ms ease;
     width: 60px;
     overflow-x: hidden;
+    z-index: 6;
 
 
     &.open {

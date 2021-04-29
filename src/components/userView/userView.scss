@@ -48,3 +48,16 @@
         }
     }
 }
+@media only screen and (max-width: 786px) {
+    .user {
+        margin: 60px 0;
+        &_details {
+            width: 85%;
+            &_con{
+                grid-template-columns: 1fr;
+            }
+            
+        }
+    }
+
+}

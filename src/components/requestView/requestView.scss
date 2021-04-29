@@ -68,6 +68,7 @@
   left: 0;
   width: 100%;
   height: 100%;
+  z-index: 7;
 
   &_overlay {
     width: 100%;
@@ -91,6 +92,7 @@
     height: 300px;
     display: flex;
     flex-direction: column;
+   
 
     & button {
       margin: 10px 20px 10px 0;
@@ -112,6 +114,46 @@
       border: none;
       font: "Inter";
       outline: none;
+    }
+  }
+}
+
+@media only screen and (max-width: 1000px) {
+  .requestView {
+
+    &_con{
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+@media only screen and (max-width: 1000px) {
+  .requestView {
+
+    &_con{
+      margin-top: 90px;
+      &_item{
+
+        & input{
+          width: 100%;
+          padding-right: 0;
+        }
+        & textarea{
+          width: 100%;
+          padding-right: 0;
+        }
+
+      }
+    }
+    &_button{
+         margin-bottom: 60px;
+    }
+  }
+
+  .message{
+    &_box{
+      width: 80%;
+      min-width: unset;
     }
   }
 }

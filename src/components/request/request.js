@@ -21,7 +21,7 @@ export default function Request({ role, setErr}) {
 
     useEffect(() => {
 
-        const url = "/api/my-approvals";
+        const url = "http://localhost:5000/api/my-approvals";
         axios.get(url, { withCredentials: true })
             .then((data) => {
                 setData(data.data);
@@ -31,7 +31,7 @@ export default function Request({ role, setErr}) {
                 setErr(err.response.data.error);
             });
 
-    // eslint-disable-next-line
+
     }, [refresh])
 
     return (
