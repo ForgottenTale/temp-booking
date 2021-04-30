@@ -9,19 +9,19 @@ module.exports = {
         );`,
         `CREATE TABLE IF NOT EXISTS user(
             _id INT PRIMARY KEY AUTO_INCREMENT,
-            person_id INT,
-            password VARCHAR(80) NOT NULL,
-            FOREIGN KEY (person_id) REFERENCES person_id
+            person_id INT UNIQUE,
+            password VARCHAR(80),
+            FOREIGN KEY (person_id) REFERENCES person(_id)
         );`,
         `CREATE TABLE IF NOT EXISTS group_admin(
             _id INT PRIMARY KEY AUTO_INCREMENT,
             person_id INT,
-            FOREIGN KEY (person_id) REFERENCES person_id
+            FOREIGN KEY (person_id) REFERENCES person(_id)
         );`,
         `CREATE TABLE IF NOT EXISTS ou(
             _id INT PRIMARY KEY AUTO_INCREMENT,
             name VARCHAR(100)
-        )`,
+        );`,
         `CREATE TABLE IF NOT EXISTS service_config(
             _id INT PRIMARY KEY AUTO_INCREMENT,
             type VARCHAR(20) NOT NULL,
@@ -35,15 +35,16 @@ module.exports = {
         `CREATE TABLE IF NOT EXISTS ou_map(
             ou_id INT,
             person_id INT,
+            role VARCHAR(50),
             FOREIGN KEY(ou_id) REFERENCES ou(_id),
-            FOREIGN KEY(person_id) REFERENCES perons(_id)
+            FOREIGN KEY(person_id) REFERENCES person(_id)
         );`,
         `CREATE TABLE IF NOT EXISTS reviewer_map(
             user_id INT,
             service_id INT,
             FOREIGN KEY (user_id) REFERENCES user(_id),
-            FOREIGN KEY (service_id) REFERENCES service(_id)
-        );`
+            FOREIGN KEY (service_id) REFERENCES service_config(_id)
+        );`,
         `CREATE TABLE IF NOT EXISTS online_meeting(
             _id INT PRIMARY KEY AUTO_INCREMENT,
             service_name VARCHAR(30) NOT NULL,
@@ -99,11 +100,13 @@ module.exports = {
             publicity_id INT,
             creator_id INT NOT NULL,
             status VARCHAR(10) DEFAULT "PENDING",
+            ou_id INT NOT NULL,
             FOREIGN KEY(online_meeting_id) REFERENCES online_meeting(_id),
             FOREIGN KEY(intern_support_id) REFERENCES intern_support(_id),
             FOREIGN KEY(e_notice_id) REFERENCES e_notice(_id),
             FOREIGN KEY(publicity_id) REFERENCES publicity(_id),
-            FOREIGN KEY(creator_id) REFERENCES user(_id)
+            FOREIGN KEY(creator_id) REFERENCES user(_id),
+            FOREIGN KEY(ou_id) REFERENCES ou(_id)
         );`,
         `CREATE TABLE IF NOT EXISTS next_to_approve(
             user_id INT NOT NULL,

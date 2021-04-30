@@ -1,45 +1,17 @@
-function convertDateToSqlDateTime(dateTime){
-    return dateTime.toISOString().replace("T", " ").replace("Z", "");
-}
-
-function convertSqlDateTimeToDate(mysqlTime){
-    return new Date(mysqlTime.replace(" ", "T") + "Z");
-}
+const {convertSqlDateTimeToDate, convertDateToSqlDateTime} = require('./utils.js');
 
 class User {
     constructor(user){
-        this.required = ["name", "email", "phone", "password"];
         try{
-            this.checkRequired(user);
             this._id = user._id;
             this.role = user.role?user.role.toUpperCase():null;
             this.name = user.name.trim();
             this.email = user.email.trim();
             this.phone = (user.phone+"").trim();
             this.password = user.password.trim();
-            this.validate();
         }catch(err){
             throw err;
         }
-    }
-
-    checkRequired(input){
-        this.required.forEach(param=>{
-            if(!input[param])
-                throw new Error(param + " is required");
-            else if((input[param] + "").trim() < 1)
-                throw new Error(param + " cannot be empty");
-        })
-    }
-
-    validate(){
-        //validate email
-        if(!(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(this.email))){
-            throw new Error("Invalid email");
-        }
-        //validate phone
-        if(!(this.phone.match(/\d/g).length == 10))
-            throw new Error("Invalid phone number");
     }
 
     getPublicInfo(){
@@ -88,9 +60,10 @@ class NewUser extends User{
     constructor(input){
         try{
             super(input);
-            this.required = ["confirmPassword"];
+            this.required = ["name", "email", "phone", "password", "confirmPassword"];
             this.checkRequired(input);
             this.confirmPassword = input.confirmPassword.trim();
+            this.validate();
             if(this.confirmPassword != this.password)
                 throw new Error("Passwords mismatch");
         }catch(err){
@@ -98,23 +71,42 @@ class NewUser extends User{
         }
     }
 
+    checkRequired(input){
+        this.required.forEach(param=>{
+            if(!input[param])
+                throw new Error(param + " is required");
+            else if((input[param] + "").trim() < 1)
+                throw new Error(param + " cannot be empty");
+        })
+    }
+
+    validate(){
+        //validate email
+        if(!(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(this.email))){
+            throw new Error("Invalid email");
+        }
+        //validate phone
+        if(!(this.phone.match(/\d/g).length == 10))
+            throw new Error("Invalid phone number");
+    }
+
 }
 
 class Service{
     constructor(input){
         try{
-            this.required = ["type", "serviceName", "creatorId", "title"];
+            this.required = ["type", "serviceName", "creatorId", "title", "ouId"];
             this.checkRequired(input);
             this._id = input._id;
             this.type = input.type.trim();
             this.serviceName = input.serviceName.trim().toLowerCase();
+            this.creatorId = input.creatorId;
             this.title = input.title?input.title.trim():"null";
+            this.ouId = input.ouId;
             this.description = input.description?input.description.trim():null;
             this.status = input.status?input.status:"PENDING";
             this.comments = input.comments?input.comments.trim():null;
             this.img = input.img?input.img.trim():null;
-            this.creatorId = input.creatorId;
-            this.convertISOToSql = convertDateToSqlDateTime;
         }catch(err){
             throw err;
         }
@@ -131,10 +123,11 @@ class Service{
 
     getAllNamesAndValues(){
         return({
-            names: ['service_name', 'title', 'description', 'comments', 'img'],
+            names: ['service_name', 'title','ouId', 'description', 'comments', 'img'],
             values: [
                 this.serviceName?("'" + this.serviceName + "'"):"null",
                 this.title?("'" + this.title + "'"):"null",
+                this.ouId?this.ouId:"null",
                 this.description?("'" + this.description + "'"):"null",
                 this.comments?("'" + this.comments + "'"):"null",
                 this.img?("'" + this.img + "'"):"null",
@@ -170,14 +163,13 @@ class OnlineMeeting extends Service {
         super.checkRequired(input);
         this.speakerName = input.speakerName.trim();
         this.speakerEmail = input.speakerEmail.trim();
-        input.startTime = input.startTime[input.startTime.length-1]=="Z"?input.startTime:convertSqlDateTimeToDate(input.startTime);
-        input.endTime = input.endTime[input.endTime.length-1]=="Z"?input.endTime:convertSqlDateTimeToDate(input.endTime);
         this.startTime = new Date(input.startTime);
         this.endTime = new Date(input.endTime);
-        if(typeof(input.coHosts)=="string")
-            input.coHosts = JSON.parse(input.coHosts);
+        if(typeof(input.coHosts)=="string"){
+            input.coHosts = input.coHosts.trim()?JSON.parse(input.coHosts):null;
+        }
         this.coHosts = input.coHosts?input.coHosts.map(coHost=>{
-            return [coHost[0].trim(), coHost[1].trim()]
+            return [coHost[0].trim(), coHost[1].trim()];
         }):null;
     }
 

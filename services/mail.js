@@ -1,7 +1,6 @@
 const nodemailer = require("nodemailer");
 
 let transporterData;
-console.log(process.env.NODE_ENV);
 if(process.env.NODE_ENV=="testing"){
     transporterData = {
         host: "smtp.ethereal.email",
@@ -28,6 +27,8 @@ if(process.env.NODE_ENV=="testing"){
         }
     };
 }
+
+console.log("Mail: ", transporterData.auth.user || null);
 
 module.exports= {
     newAppointment: function(input){
