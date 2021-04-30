@@ -7,6 +7,9 @@ export function pushEvents(d,data){
         if (dataObj === dMoment) {
             return dataObj
         }
+        else{
+            return null
+        }
     
 
     });

@@ -55,7 +55,7 @@ function Row({ data, type, setRequest, setUser }) {
 
 
 
-        <tr className={data.encourages===0?"discouraged-row":(data.encourages==1?"encouraged-row":"")}>
+        <tr className={data.encourages === 0 ? "discouraged-row" : (data.encourages === 1 ? "encouraged-row" : "")}>
 
             <td data-label="id">{data.id}</td>
             <td data-label="Name">
@@ -75,7 +75,7 @@ function Row({ data, type, setRequest, setUser }) {
             {type === 'request' ? [
                 <td data-label="Service" key="1">{data.type.replace('_', ' ')}</td>,
                 <td data-label="Type" key="2">{data.serviceName}</td>,
-                <td data-label="Time" key="3">{data.type==="publicity"||data.type==="e_notice"?new Date(data.publishTime).toDateString() :new Date(data.startTime).toDateString()}</td>,
+                <td data-label="Time" key="3">{data.type === "publicity" || data.type === "e_notice" ? new Date(data.publishTime).toDateString() : new Date(data.startTime).toDateString()}</td>,
                 <td data-label="Status" key="4">
                     <p >
                         {data.status.toLowerCase()}
@@ -85,7 +85,75 @@ function Row({ data, type, setRequest, setUser }) {
 
             <td>
                 {type === 'request' ?
-                    <NavLink to={path + "/" + data.id} onClick={() => setRequest(data)}>View</NavLink>
+                    [
+                      
+                        <NavLink key='1' to={path + "/" + data.id} onClick={() => setRequest(data)}>
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="18"
+                                height="18"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                className="feather feather-eye"
+                                viewBox="0 0 24 24"
+                            >
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </NavLink>,
+                        <svg
+                            key='3'
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="18"
+                            height="18"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="feather feather-edit"
+                            viewBox="0 0 24 24"
+                        >
+                            <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>,
+                        <svg
+                            key='4'
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="18"
+                            height="18"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="feather feather-x-circle"
+                            viewBox="0 0 24 24"
+                        >
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M15 9L9 15"></path>
+                            <path d="M9 9L15 15"></path>
+                        </svg>,
+                        <svg
+                            key='5'
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="18"
+                            height="18"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="feather feather-trash-2"
+                            viewBox="0 0 24 24"
+                        >
+                            <path d="M3 6L5 6 21 6"></path>
+                            <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path>
+                            <path d="M10 11L10 17"></path>
+                            <path d="M14 11L14 17"></path>
+                        </svg>
+
+
+                    ]
                     : <NavLink to={path + '/user/' + data.id} onClick={() => setUser(data)}>View</NavLink>}
 
             </td>
@@ -94,5 +162,5 @@ function Row({ data, type, setRequest, setUser }) {
 
     );
 }
-// 
+//
 

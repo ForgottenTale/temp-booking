@@ -32,7 +32,7 @@ export default function Request({ role, setErr}) {
             });
 
 
-    }, [refresh])
+    }, [refresh,setErr])
 
     return (
         <Switch>

@@ -49,6 +49,9 @@
                 &:nth-child(1) {
                     padding-left: 30px;
                 }
+                & svg {
+                    margin-right: 10px;
+                }
 
                 & .pending {
                     font-weight: 500;
@@ -208,7 +211,6 @@
                     padding-left: 50%;
                     position: relative;
 
-                   
                     &:nth-child(1) {
                         padding-left: 0;
                     }

@@ -68,7 +68,7 @@ export default function AdminDashboard({ role, setErr }) {
                 setErr(err.response.data.err);
             });
 
-    }, [role]);
+    }, [role,setErr]);
 
     return (
         <Switch>
