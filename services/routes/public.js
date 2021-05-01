@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const passport = require('passport');
-const database = require('../database/database.js');
+const database = require('../database/index.js');
 const {NewUser} = require('../controller.js');
 const {respondError} = require('../utils.js');
 

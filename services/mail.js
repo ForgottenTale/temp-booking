@@ -1,7 +1,7 @@
 const nodemailer = require("nodemailer");
 
 let transporterData;
-if(process.env.NODE_ENV=="testing"){
+if(process.env.NODE_ENV=="testing" || process.env.NODE_ENV=="development"){
     transporterData = {
         host: "smtp.ethereal.email",
         port: 587,
@@ -14,7 +14,7 @@ if(process.env.NODE_ENV=="testing"){
             rejectUnauthorized:false
         }
     };    
-}else if(process.env.NODE_ENV=="production" || process.env.NODE_ENV == "development"){
+}else if(process.env.NODE_ENV=="production"){
     transporterData = {
         host: process.env.MAIL_HOST,
         port: process.env.MAIL_PORT,
@@ -28,9 +28,28 @@ if(process.env.NODE_ENV=="testing"){
     };
 }
 
-console.log("Mail: ", transporterData.auth.user || null);
+console.log("Mail: ", transporterData.auth.user || "INACTIVE");
 
 module.exports= {
+    accountInitiated: function(person, link){
+        return new Promise(async(resolve, reject)=>{
+            let transporter = nodemailer.createTransport(transporterData);
+            try{
+                let info = await transporter.sendMail({
+                    from: '<' + transporterData.auth.user + '>',
+                    to: person.email,
+                    subject: "Account creation",
+                    html: "An account creation has been initiated follow <a href='" + link +"'>this link</a> to complete the process"
+                })
+                console.log("Message sent: %s", info.messageId);
+                console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+                resolve("message send");
+            }catch(err){
+                reject(err);
+            }
+        })
+    },
+
     newAppointment: function(input){
         return new Promise(async(resolve, reject)=>{
             let transporter = nodemailer.createTransport(transporterData);
@@ -48,7 +67,7 @@ module.exports= {
                 console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
                 resolve("message send");
             }catch(err){
-                console.error(err);
+                reject(err);
             }
         })
     },
@@ -69,7 +88,7 @@ module.exports= {
                 console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
                 resolve("Message Send");
             }catch(err){
-                console.error(err);
+                reject(err);
             }
         })
     },
@@ -95,7 +114,7 @@ module.exports= {
                 console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
                 resolve("Message Send");
             }catch(err){
-                console.error(err);
+                reject(err);
             }
         })
     },
@@ -120,7 +139,7 @@ module.exports= {
                 console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
                 resolve("Message Send");
             }catch(err){
-                console.error(err);
+                reject(err);
             }
         })
     }

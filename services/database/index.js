@@ -19,6 +19,15 @@ function transmuteSnakeToCamel(input){
     return output;
 }
 
+function executeQuery(query){
+	return new Promise((resolve, reject)=>{
+		connection.query(query, (err, results)=>{
+			if(err) return reject(err);
+			return resolve(results);
+		})
+	})
+}
+
 function getAppointmentTypes(){
 	return new Promise((resolve, reject)=>{
 		connection.query("SELECT DISTINCT(type) FROM service_config;", (err, results)=>{
@@ -44,15 +53,6 @@ function getConfig(type, serviceName, done){
 					return done(null, results);
 			})
 		return done(null, results[0]);
-	})
-}
-
-function executeQuery(query){
-	return new Promise((resolve, reject)=>{
-		connection.query(query, (err, results)=>{
-			if(err) return reject(err);
-			return resolve(results);
-		})
 	})
 }
 
@@ -107,19 +107,24 @@ module.exports = {
 						connection.query("INSERT INTO person (role, name, email) VALUES('REVIEWER', '" + process.env.SUPER_NAME + "', '" + process.env.SUPER_EMAIL +"');",
 						(err, result)=>{
 							if(err) return done(err);
-							console.log("Added SUPER");
 							connection.query("INSERT INTO user(person_id, password, super_admin) VALUES (" + result.insertId + ",'" + process.env.SUPER_PSW + "', true);", 
 							(err, result)=>{
 								if(err) return done(err);
+								console.log("Added SUPER");
 								return done(null);
 							});
 						});
+					}else{
+						return done(null);
 					}
-					return done(null);
 				});
 			});
 		});
 	},
+
+	connection: connection,
+
+	executeQuery: executeQuery,
 
 	findUser: function (params, done) {
 		let values = User.getValues(params).join(' AND ');
@@ -130,19 +135,8 @@ module.exports = {
 				let user = new User(results[0]);
 				return done(null, user);
 			}catch(err){
-				return done(null, undefined);
+				return done(err);
 			}
-		})
-	},
-
-	addUser: function (user, done) {
-		let {names, values} = user.getAllNamesAndValues();
-		let query = "INSERT INTO user(" + names.join(',') +") VALUES(" + values.join(',') + ");";
-		connection.query(query, (err, results, fields) => {
-			if(err) {
-				return done(err, false);
-			};
-			return done(null, results);
 		})
 	},
 

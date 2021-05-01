@@ -1,6 +1,6 @@
 const auth = require('../auth.js');
 const {getClass} = require('../controller.js');
-const database = require('../database/database.js');
+const database = require('../database/index.js');
 const {respondError} = require('../utils.js');
 
 module.exports = function(app){

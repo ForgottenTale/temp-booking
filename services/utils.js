@@ -1,6 +1,7 @@
-const csv = require('csv-parser');
+const csv = require('csv-parse');
 const fs = require('fs');
 const path = require('path');
+
 
 module.exports = {
     convertSqlDateTimeToDate: function (mysqlTime){
@@ -12,14 +13,26 @@ module.exports = {
     },
 
     parseCsv: function(filepath){
-        fs.createReadStream('data.csv')
-        .pipe(csv())
-        .on('data', data => results.push(data))
-        .on('end', () => {
-            console.log(results);
-        });
+        return new Promise((resolve, reject)=>{
+            try{
+                let results = [];
+                fs.createReadStream(path.join(filepath))
+                .pipe(csv({columns: true}))
+                .on('data', data =>{
+                    results.push(data);
+                })
+                .on('end', () => {
+                    resolve(results);
+                });      
+            }catch(err){
+                reject(err);
+            }
+        })
     },
 
+    generateAccRegLink: function(code){
+        return (process.env.DOMAIN_NAME || ("http://localhost:" + process.env.PORT) + "/create-account/" + code);
+    },
     
     respondError: function(err, res){
         console.error(err);

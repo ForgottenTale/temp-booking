@@ -12,11 +12,12 @@ module.exports = {
             person_id INT UNIQUE,
             password VARCHAR(80),
             super_admin BOOLEAN DEFAULT false,
+            super_creator BOOLEAN DEFAULT false,
             FOREIGN KEY (person_id) REFERENCES person(_id)
         );`,
-        `CREATE TABLE IF NOT EXISTS group_admin(
-            _id INT PRIMARY KEY AUTO_INCREMENT,
-            person_id INT,
+        `CREATE TABLE IF NOT EXISTS unique_code(
+            code INT PRIMARY KEY AUTO_INCREMENT,
+            person_id INT UNIQUE,
             FOREIGN KEY (person_id) REFERENCES person(_id)
         );`,
         `CREATE TABLE IF NOT EXISTS ou(
@@ -37,6 +38,7 @@ module.exports = {
             ou_id INT,
             person_id INT,
             role VARCHAR(50),
+            admin BOOLEAN DEFAULT FALSE,
             FOREIGN KEY(ou_id) REFERENCES ou(_id),
             FOREIGN KEY(person_id) REFERENCES person(_id)
         );`,

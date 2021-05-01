@@ -1,17 +1,31 @@
 const {convertSqlDateTimeToDate, convertDateToSqlDateTime} = require('./utils.js');
 
-class User {
-    constructor(user){
+class Person{
+    constructor(person){
         try{
-            this._id = user._id;
-            this.role = user.role?user.role.toUpperCase():null;
-            this.name = user.name.trim();
-            this.email = user.email.trim();
-            this.phone = (user.phone+"").trim();
-            this.password = user.password.trim();
-            this.superAdmin = user.super_admin;
+            this.validate(person);
+            this._id = person._id;
+            this.role = person.role?person.role.toUpperCase():null;
+            this.name = person.name.trim();
+            this.email = person.email.trim();
+            this.phone = (person.phone+"").trim();
+            this.role = person.role;
+            if(person.ouIds)
+                this.ouIds = person.ouIds.split(",").map(ouId=>parseInt(ouId));
+            else
+                this.ouIds = null;
         }catch(err){
             throw err;
+        }
+    }
+
+    validate(person){
+        switch(person.role){
+            case "GLOBAL_ADMIN": break;
+            case "GROUP_ADMIN": break;
+            case "USER": break;
+            case "REVIEWER": break;
+            default: throw new Error("Invalid role");
         }
     }
 
@@ -20,21 +34,42 @@ class User {
             name: this.name,
             role: this.role,
             email: this.email,
-            phone: this.phone
+            phone: this.phone,
+            ouIds: this.ouIds
         }
     }
 
     getAllNamesAndValues(){
         return({
-            names: ['name', 'role', 'email', 'password', 'phone'],
+            names: ['name', 'role', 'email', 'phone'],
             values: [
                 this.name?("'" + this.name + "'"):"null",
                 this.role?("'" + this.role + "'"):"null",
                 "'" + this.email + "'",
-                "'" + this.password + "'",
                 "'" + this.phone + "'"
             ]
         })
+    }
+}
+
+
+class User extends Person{
+    constructor(user){
+        try{
+            super(user);
+            this._id = user._id;
+            this.password = user.password.trim();
+            this.superAdmin = user.super_admin;
+        }catch(err){
+            throw err;
+        }
+    }
+
+    getAllNamesAndValues(){
+        let {names, values} = super.getAllNamesAndValues();
+        names.push("password");
+        values.push("'" + this.password + "'");
+        return {names, values};
     }
 
     static getValues(params){
@@ -402,6 +437,7 @@ function getClass(type){
 }
 
 module.exports = {
+    Person: Person,
     User: User,
     NewUser: NewUser,
     OnlineMeeting: OnlineMeeting,
