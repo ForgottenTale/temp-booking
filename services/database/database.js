@@ -100,14 +100,30 @@ module.exports = {
 			console.log("Connection established");
 			connection.query(schema.join(''), function (err, results, fields) {
 				if (err) return done(err);
-				return done(null);
+				//Check if atleast one superAdmin exists and add one if not
+				connection.query("SELECT * FROM user WHERE super_admin is true", (err, results)=>{
+					if(err) return done(err);
+					if(results.length<1){
+						connection.query("INSERT INTO person (role, name, email) VALUES('REVIEWER', '" + process.env.SUPER_NAME + "', '" + process.env.SUPER_EMAIL +"');",
+						(err, result)=>{
+							if(err) return done(err);
+							console.log("Added SUPER");
+							connection.query("INSERT INTO user(person_id, password, super_admin) VALUES (" + result.insertId + ",'" + process.env.SUPER_PSW + "', true);", 
+							(err, result)=>{
+								if(err) return done(err);
+								return done(null);
+							});
+						});
+					}
+					return done(null);
+				});
 			});
 		});
 	},
 
 	findUser: function (params, done) {
 		let values = User.getValues(params).join(' AND ');
-		let query = "SELECT * FROM user WHERE " + values + ";";
+		let query = "SELECT * FROM user INNER JOIN person ON person._id = user.person_id WHERE " + values + ";";
 		connection.query(query, (err, results, fields) => {
 			if (err) {return done(err)};
 			try{

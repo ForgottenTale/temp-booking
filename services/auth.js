@@ -17,7 +17,7 @@ module.exports = {
     },
 
     ensureSuperAdmin: function(req, res, next){
-        if(req.user.role=="SUPER_ADMIN")
+        if(req.user.superAdmin)
             return next();
         res.redirect('/unauthorized');
     },

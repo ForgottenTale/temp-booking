@@ -2,18 +2,7 @@ const bcrypt = require('bcrypt');
 const passport = require('passport');
 const database = require('../database/database.js');
 const {NewUser} = require('../controller.js');
-
-function respondError(err, res){
-    console.error(err);
-    let message;
-    if(err.code == 'ER_BAD_NULL_ERROR')
-        message = err.sqlMessage;
-    else if(err.code=='ER_DUP_ENTRY' && (/for key 'user.email'/).test(err.message))
-        message = "User already exists";
-    else
-        message = err.message || err;
-    res.status(400).json({error: message});
-}
+const {respondError} = require('../utils.js');
 
 module.exports = function(app){
     

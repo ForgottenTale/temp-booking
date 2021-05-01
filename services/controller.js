@@ -9,6 +9,7 @@ class User {
             this.email = user.email.trim();
             this.phone = (user.phone+"").trim();
             this.password = user.password.trim();
+            this.superAdmin = user.super_admin;
         }catch(err){
             throw err;
         }

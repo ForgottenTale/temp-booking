@@ -5,12 +5,13 @@ module.exports = {
             role VARCHAR(20),
             name VARCHAR(30) NOT NULL,
             email VARCHAR(30) UNIQUE NOT NULL,
-            phone VARCHAR(15) NOT NULL
+            phone VARCHAR(15)
         );`,
         `CREATE TABLE IF NOT EXISTS user(
             _id INT PRIMARY KEY AUTO_INCREMENT,
             person_id INT UNIQUE,
             password VARCHAR(80),
+            super_admin BOOLEAN DEFAULT false,
             FOREIGN KEY (person_id) REFERENCES person(_id)
         );`,
         `CREATE TABLE IF NOT EXISTS group_admin(

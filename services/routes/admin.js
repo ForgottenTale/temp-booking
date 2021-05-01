@@ -1,11 +1,7 @@
 const auth = require('../auth.js');
 const {getClass} = require('../controller.js');
 const database = require('../database/database.js');
-
-function respondError(err, res){
-    console.error(err);
-    res.status(400).json({error: err.message || err});
-}
+const {respondError} = require('../utils.js');
 
 module.exports = function(app){
     
