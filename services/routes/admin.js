@@ -1,6 +1,6 @@
 const auth = require('../auth.js');
 const {getClass} = require('../controller.js');
-const database = require('../database/index.js');
+const {allUsers: getAllUsers} = require('../database/get.js');
 const {respondError} = require('../utils.js');
 
 module.exports = function(app){
@@ -12,7 +12,7 @@ module.exports = function(app){
 
     app.route('/api/users')
     .get(auth.ensureAuthenticated, auth.ensureAdmin, (req, res)=>{
-        database.getUsers({role: req.query.role}, (err, results)=>{
+        getAllUsers({role: req.query.role}, (err, results)=>{
             if(err) return respondError(err, res);
             res.status(200).json(results);
         });

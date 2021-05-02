@@ -3,16 +3,7 @@ const {getClass, User} = require('../controller.js');
 const database = require('../database/index.js');
 const upload = require('../upload.js');
 const fs = require('fs');
-const {respondError} = require('../utils.js');
-
-function removeImg(imgName){
-    fs.unlink(("/uploads/" + imgName), err=>{
-        if(err)
-            console.error(err);
-        else
-            console.log()
-    })
-}
+const {respondError, removeImg} = require('../utils.js');
 
 module.exports = function(app){
 
@@ -42,10 +33,11 @@ module.exports = function(app){
         res.sendFile(process.cwd() + '/uploads/' + req.params.fileName)
     })
 
-    app.route('/book/appointment')
-    .get(auth.ensureAuthenticated, (req, res)=>{
-        res.sendFile(process.cwd() + '/coverage/new_appointment.html');
+    app.route('/api/service')
+    .patch(auth.ensureAuthenticated, (req, res)=>{
+        res.status(200).json(req.body);
     })
+
     app.route('/api/book')
     .post(auth.ensureAuthenticated, (req, res)=>{
         upload.single('img')(req, res, (err)=>{

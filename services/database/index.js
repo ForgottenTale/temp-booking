@@ -1,23 +1,10 @@
 const mysql = require('mysql');
 const { schema } = require('./ddl.js');
 const { User, convertDateToSqlDateTime, convertSqlDateTimeToDate, getClass } = require('../controller.js');
+const { transmuteSnakeToCamel } = require('../utils.js');
 const mail = require('../mail.js');
 
 let connection;
-
-function transmuteSnakeToCamel(input){
-	let output = {};
-    for(let param in input){
-		let temp = param;
-		output[param.replace(
-            /((?<=[a-z])_[a-z])|(_)/g,
-            (group) => group.toUpperCase()
-                            .replace('-', '')
-                            .replace('_', '')
-        )] = input[temp];
-    }
-    return output;
-}
 
 function executeQuery(query){
 	return new Promise((resolve, reject)=>{
@@ -125,20 +112,6 @@ module.exports = {
 	connection: connection,
 
 	executeQuery: executeQuery,
-
-	findUser: function (params, done) {
-		let values = User.getValues(params).join(' AND ');
-		let query = "SELECT * FROM user INNER JOIN person ON person._id = user.person_id WHERE " + values + ";";
-		connection.query(query, (err, results, fields) => {
-			if (err) {return done(err)};
-			try{
-				let user = new User(results[0]);
-				return done(null, user);
-			}catch(err){
-				return done(err);
-			}
-		})
-	},
 
 	addAppointment: async function(newAppointment, done){
 		try{
@@ -551,28 +524,6 @@ module.exports = {
 		}catch(err){
 			return done(err);
 		}
-	},
-
-	getUsers: function(constraint, done){
-		let query = "SELECT _id, name, email, phone, role FROM user ";
-		if(constraint.role == "admin")
-			query+="WHERE role='ALPHA_ADMIN' OR role='BETA_ADMIN'";
-		else if(constraint.role == "regular")
-			query+="WHERE role='REGULAR'";
-		else if(!constraint.role)
-			query+=";";
-		else
-			query+="WHERE role is null;";
-		executeQuery(query)
-		.then(results=>{
-			results = results.map(result=>{
-				result.id = result._id;
-				delete result._id;
-				return result;
-			})
-			return done(null, results);
-		})
-		.catch(err=>done(err));
 	},
 
 	updateUser: function(input, done){

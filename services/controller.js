@@ -4,7 +4,7 @@ class Person{
     constructor(person){
         try{
             this.validate(person);
-            this._id = person._id;
+            this.id = person.id;
             this.role = person.role?person.role.toUpperCase():null;
             this.name = person.name.trim();
             this.email = person.email.trim();
@@ -57,9 +57,10 @@ class User extends Person{
     constructor(user){
         try{
             super(user);
-            this._id = user._id;
+            this.id = user.id;
+            this.personId = user.personId;
             this.password = user.password.trim();
-            this.superAdmin = user.super_admin;
+            this.superAdmin = user.superAdmin;
         }catch(err){
             throw err;
         }

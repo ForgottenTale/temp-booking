@@ -44,6 +44,15 @@ module.exports = {
             }
         })
     },
+    
+    removeImg: function (imgName){
+        fs.unlink(("/uploads/" + imgName), err=>{
+            if(err)
+                console.error(err);
+            else
+                console.log()
+        })
+    },
 
     respondError: function(err, res){
         console.error(err);
@@ -55,6 +64,20 @@ module.exports = {
         else
             message = err.message || err;
         res.status(400).json({error: message});
+    },
+
+    transmuteSnakeToCamel: function(input){
+        let output = {};
+        for(let param in input){
+            let temp = param;
+            output[param.replace(
+                /((?<=[a-z])_[a-z])|(_)/g,
+                (group) => group.toUpperCase()
+                                .replace('-', '')
+                                .replace('_', '')
+            )] = input[temp];
+        }
+        return output;
     }
 
 };

@@ -1,5 +1,5 @@
 const passport = require("passport");
-const database = require('./database/index.js');
+const {user: getUser} = require('./database/get.js');
 const bcrypt = require('bcrypt');
 const LocalStrategy = require('passport-local');
 
@@ -11,7 +11,7 @@ module.exports = {
     },
 
     ensureAdmin: function(req, res, next){
-        if(req.user.role=="ALPHA_ADMIN" || req.user.role=="BETA_ADMIN" || req.user.role=="SUPER_ADMIN")
+        if(req.user.role=="GLOBAL_ADMIN" || req.user.role=="GROUP_ADMIN" || req.user.superAdmin)
             return next();
         res.redirect('/unauthorized');
     },
@@ -28,14 +28,14 @@ module.exports = {
         });
 
         passport.deserializeUser((id, done) => {
-            database.findUser({ email: id }, (err, doc) => {
+            getUser({ email: id }, (err, doc) => {
                 done(null, doc);
             })
         });
 
         passport.use(new LocalStrategy(
             function (email, password, done) {
-                database.findUser({ email: email}, function (err, user) {
+                getUser({ email: email}, function (err, user) {
                     console.log('User ' + email + ' attempted to log in.');
                     if (err) { return done(err); }
                     if (!user) { return done(null, false, {message: 'User does not exist'}); }
