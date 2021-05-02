@@ -17,11 +17,22 @@ module.exports = {
         }
 	},
 
-    uniqueCode: function(personId){
+    hash: function(personId, hash){
         return new Promise(async (resolve, reject)=>{
             try{
-                let result = await executeQuery("INSERT INTO unique_code (person_id) VALUES(" + personId + ");");
+                let result = await executeQuery("INSERT INTO hash (person_id, hash) VALUES(" + personId + ", '"+ hash +"');");
                 resolve(result.insertId);
+            }catch(err){
+                reject(err);
+            }
+        })
+    },
+
+    userAccount: function(person){
+        return new Promise(async (resolve, reject)=>{
+            try{
+                await executeQuery("INSERT INTO user (person_id, password) VALUES(" + person._id + ",'" + person.password +"');");
+                resolve(person);
             }catch(err){
                 reject(err);
             }

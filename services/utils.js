@@ -2,7 +2,6 @@ const csv = require('csv-parse');
 const fs = require('fs');
 const path = require('path');
 
-
 module.exports = {
     convertSqlDateTimeToDate: function (mysqlTime){
         return new Date(mysqlTime.replace(" ", "T") + "Z");
@@ -34,6 +33,18 @@ module.exports = {
         return (process.env.DOMAIN_NAME || ("http://localhost:" + process.env.PORT) + "/create-account/" + code);
     },
     
+    generateHash: function(key){
+        return new Promise((resolve, reject)=>{
+            try{
+                let hash = new Buffer.from(key+"newemail");
+                resolve(hash.toString('base64'));   
+            }catch(err){
+                console.error(err);
+                throw new Error("Error generating hash");
+            }
+        })
+    },
+
     respondError: function(err, res){
         console.error(err);
         let message;

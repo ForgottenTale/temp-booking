@@ -15,9 +15,9 @@ module.exports = {
             super_creator BOOLEAN DEFAULT false,
             FOREIGN KEY (person_id) REFERENCES person(_id)
         );`,
-        `CREATE TABLE IF NOT EXISTS unique_code(
-            code INT PRIMARY KEY AUTO_INCREMENT,
+        `CREATE TABLE IF NOT EXISTS hash(
             person_id INT UNIQUE,
+            hash VARCHAR(80),
             FOREIGN KEY (person_id) REFERENCES person(_id)
         );`,
         `CREATE TABLE IF NOT EXISTS ou(

@@ -1,23 +1,18 @@
 const auth = require('../auth.js');
-const insert = require('../database/insert.js');
+const {hash: insertHash, person: insertPerson} = require('../database/insert.js');
 const upload = require('../upload.js');
-const { parseCsv, respondError, generateAccRegLink } = require('../utils.js');
+const { parseCsv, respondError, generateAccRegLink, generateHash} = require('../utils.js');
 const {Person} = require('../controller.js');
-const {accountInitiated} = require('../mail.js');
-const bcrypt = require('bcrypt');
+const {accountInitiated: mailAccInitiated} = require('../mail.js');
 
 function createPerson(person){
     return new Promise((resolve, reject)=>{
         try{
             let newPerson = new Person(person);
-            insert.person(newPerson, (err, doc)=>{
+            insertPerson(newPerson, (err, doc)=>{
                 if(err) return reject(err);
                 return resolve(newPerson);
             })
-            // bcrypt.hash(newPerson.password, 12, (err, hash)=>{
-            //     if(err) return reject(err);
-            //     newPerson.password = process.env.NODE_ENV=="development"?req.body.password:hash;
-            // })
         }catch(err){
             err.person = person;
             err.message += " with email " + person.email;
@@ -30,8 +25,9 @@ function initiateUser(person){
     return new Promise(async (resolve, reject)=>{
         try{
             person = await createPerson(person);
-            let uniqueCode = await insert.uniqueCode(person._id);
-            await accountInitiated(person, generateAccRegLink(uniqueCode));
+            let hash = await generateHash(person.email);
+            await insertHash(person._id, hash);
+            await mailAccInitiated(person, generateAccRegLink(hash));
             resolve(person.getPublicInfo());
         }catch(err){
             reject(err);
