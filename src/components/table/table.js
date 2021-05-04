@@ -48,12 +48,11 @@ export default function Table({ headers, data, type, setUser, setRequest, search
     )
 }
 
+var list = ["Name","Email",""]
 
 function Row({ data, type, setRequest, setUser }) {
     const { path } = useRouteMatch();
     return (
-
-
 
         <tr className={data.encourages === 0 ? "discouraged-row" : (data.encourages === 1 ? "encouraged-row" : "")}>
 
@@ -162,5 +161,5 @@ function Row({ data, type, setRequest, setUser }) {
 
     );
 }
-//
+
 

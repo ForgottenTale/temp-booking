@@ -40,7 +40,7 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                 <div className="requestView_con">
                     <div className="requestView_con_item">
                         <p>Name</p>
-                        <input value={data.name} readOnly/>
+                        <input value={data.name} readOnly onChange={()=>{console.log("Hi")}}/>
                     </div>
                     <div className="requestView_con_item">
                         <p>Email</p>
