@@ -47,7 +47,7 @@ export default function Events({ day }) {
         else {
             dates.push(new Date());
         }
-        console.log(dates)
+       
         var minTime = new Date(dates[0]);
         minTime.setHours(0, 0, 0, 0);
 
@@ -132,7 +132,6 @@ export default function Events({ day }) {
         <div className="events">
             {prevDay ? <div className={active ? "events_date_active" : "events_date"}>{day.format("DD")}</div> :
                 <div className="events_date prevDay">{day.format("DD")}</div>}
-            {/* <div className={active ? "events_date_active" : "events_date"}>{day.format("DD")}</div> */}
             {prevDay ? <svg className="svg" ref={ref} /> : <svg className="svg prevDay" ref={ref} />}
         </div>
     );

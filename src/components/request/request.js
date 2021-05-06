@@ -10,7 +10,6 @@ import axios from 'axios';
 
 export default function Request({ role, setErr}) {
 
-
     const [data, setData] = useState(null);
     const header = ['Id', "Name", "Service", "Type", "Time", "Status", "Action"];
     const { path } = useRouteMatch();
@@ -54,8 +53,11 @@ export default function Request({ role, setErr}) {
 
                 </div>
             </Route>
-            <Route path={path + '/:id'}>
-                <RequestView req={request} setRefresh={setRefresh} refresh={refresh} showButton={true} setErr={setErr}/>
+            <Route path={path + '/:id'} exact>
+                <RequestView req={request} setRefresh={setRefresh} refresh={refresh} showButton={true} setErr={setErr} readProtect={true}/>
+            </Route>
+            <Route path={path + '/:id/edit'} exact>
+                <RequestView req={request} setRefresh={setRefresh} refresh={refresh} showButton={true} setErr={setErr} readProtect={false}/>
             </Route>
         </Switch>
 

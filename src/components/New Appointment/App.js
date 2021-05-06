@@ -36,6 +36,7 @@ function App(props) {
   const [id, setId] = useState("Loading...");
   const { path } = useRouteMatch();
   const history = useHistory();
+  console.log(props.user)
   // const [poster, setPoster] = useState("{}");
 
   return (

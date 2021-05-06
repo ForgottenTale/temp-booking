@@ -59,17 +59,15 @@ function Calender({ setErr }) {
             ]
         }
     ]);
-    console.log(dayList);
+
     useEffect(() => {
         const url = "http://localhost:5000/api/calendar?month=" + (value.clone().format('M') - 1) + "&year=" + value.clone().format('Y');
         axios.get(url, { withCredentials: true })
             .then((d) => {
-                console.log(d)
                 setData(d.data);
             })
             .catch(err => {
                 console.error(err);
-
                 setErr(err.response.data.error);
             });
         // eslint-disable-next-line

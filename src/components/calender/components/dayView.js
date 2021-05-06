@@ -3,7 +3,7 @@ import Events from './events';
 import TimeSeries from './timeSeries';
 
 export default function DayView({day}) {
-    console.log(day.events);
+
     return (
         <div className="timeGrid">
             <TimeSeries />

@@ -26,7 +26,7 @@ function All(props) {
                     <Route path="/dashboard" >
 
                         <h5 className="content_container_user">Welcome {props.name} !</h5>
-                        <AdminDashboard setErr={props.setErr} role={props.role}/>
+                        <AdminDashboard setErr={props.setErr} role={props.role} user={props.user}/>
                     </Route>
                     <Route path="/calendar" >
                         <Calender setErr={props.setErr}/>
@@ -60,8 +60,11 @@ export default function Content(props) {
                 <Route path='/login'>
                     <Login setErr={props.setErr} {...props} />
                 </Route>
+                <Route path="/" exact>
+                <Calender setErr={props.setErr}/>
+                </Route>
                 <Route path="/*">
-                    <All {...props}/>
+                    <All {...props} user={props.user}/>
                 </Route>
                 {/* <Route path="/*">
                     <PageNotFound/>

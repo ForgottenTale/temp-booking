@@ -7,7 +7,7 @@ import RequestView from '../requestView/requestView';
 import axios from 'axios';
 import ServiceSelection from '../New Appointment/App';
 
-export default function AdminDashboard({ role, setErr }) {
+export default function AdminDashboard({ role, setErr,user }) {
     const [data, setData] = useState(null);
     const header = ['Id', "Name", "Service", "Type", "Time", "Status", "Action"];
     const { path } = useRouteMatch();
@@ -74,7 +74,7 @@ export default function AdminDashboard({ role, setErr }) {
         <Switch>
 
             <Route exact path={path}>
-                {pop ? <ServiceSelection setErr={setErr} setPop={setPop} pop={pop} /> : null}
+                {pop ? <ServiceSelection setErr={setErr} setPop={setPop} pop={pop} user={user} /> : null}
                 <div className="request">
                     <div className="adminDashboard">
                         <div className="adminDashboard_con">

@@ -14,7 +14,6 @@ function DateBody(props) {
 
     return (
         <div className="daytime"
-            onClick={() => console.log(props.day.key)}
             onMouseEnter={() => { setEventList(!showEventList) }}
             onMouseLeave={() => { setEventList(!showEventList) }}
         >

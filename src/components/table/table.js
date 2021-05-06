@@ -48,7 +48,7 @@ export default function Table({ headers, data, type, setUser, setRequest, search
     )
 }
 
-var list = ["Name","Email",""]
+
 
 function Row({ data, type, setRequest, setUser }) {
     const { path } = useRouteMatch();

@@ -37,7 +37,7 @@ function App() {
   return (
     <div className="App">
       {err && <Error msg={err} setErr={setErr} />}
-      <Content setErr={setErr} {...user} setUser={setUser} />
+      <Content setErr={setErr} {...user} setUser={setUser} user={user}/>
     </div>
   );
 }
