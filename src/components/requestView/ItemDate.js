@@ -6,19 +6,7 @@ import { useState, useEffect } from 'react';
 export default function ItemDate({ title, value, readOnly, setData, name }) {
 
     const [selectedDate, setSelectedDate] = useState(value);
-    const setdate = () => {
-        var d = new Date(value),
-            month = '' + (d.getMonth() + 1),
-            day = '' + d.getDate(),
-            year = d.getFullYear();
 
-        if (month.length < 2)
-            month = '0' + month;
-        if (day.length < 2)
-            day = '0' + day;
-
-        return [year, month, day].join('-');
-    }
     const handleChange = (e) => {
 
 

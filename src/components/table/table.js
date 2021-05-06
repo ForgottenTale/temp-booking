@@ -85,7 +85,7 @@ function Row({ data, type, setRequest, setUser }) {
             <td>
                 {type === 'request' ?
                     [
-                      
+
                         <NavLink key='1' to={path + "/" + data.id} onClick={() => setRequest(data)}>
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -102,21 +102,23 @@ function Row({ data, type, setRequest, setUser }) {
                                 <circle cx="12" cy="12" r="3"></circle>
                             </svg>
                         </NavLink>,
-                        <svg
-                            key='3'
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="18"
-                            height="18"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            className="feather feather-edit"
-                            viewBox="0 0 24 24"
-                        >
-                            <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path>
-                            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                        </svg>,
+                        <NavLink key='1' to={`${path}/${data.id}/edit`} onClick={() => setRequest(data)}>
+                            <svg
+                                key='3'
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="18"
+                                height="18"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                className="feather feather-edit"
+                                viewBox="0 0 24 24"
+                            >
+                                <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                        </NavLink>,
                         <svg
                             key='4'
                             xmlns="http://www.w3.org/2000/svg"

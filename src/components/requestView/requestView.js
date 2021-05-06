@@ -11,7 +11,6 @@ import ItemDate from './ItemDate';
 
 
 
-
 export default function RequestView({ req, setRefresh, refresh, showButton, setErr, readProtect }) {
 
     const [spinner, setSpinner] = useState(false);
@@ -41,11 +40,6 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
     const { params } = useRouteMatch();
     const history = useHistory();
 
-
-
-
-
-
     useEffect(() => {
 
         if (req !== undefined && req !== null) {
@@ -65,6 +59,38 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
         // eslint-disable-next-line
     }, [req])
 
+    const handleSave = () => {
+        console.log(data);
+        const keys = Object.keys(data);
+        const values = Object.values(data);
+        const formData = new FormData();
+        const length = keys.length;
+
+        for (let i = 0; i < length; i++) {
+            formData.append(keys[i], values[i]);
+        }
+
+        handleUpload(formData);
+
+        console.log(Array.from(formData));
+    };
+
+    const handleUpload = async (data) => {
+        try {
+            const url = "/api/book/";
+            const res = await axios.post(url, data, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+                withCredentials: true
+
+            });
+            console.log(res)
+        } catch (err) {
+            console.error(err);
+            setErr(err.response.data.error);
+        }
+    };
 
     var list = ["Name", "Email", "Phone", "Service", "Service Type"];
     var resList = ["name", "email", "phone", "type", "serviceName"]
@@ -134,34 +160,30 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                 </div >
                 {data.img !== null ? <img src={"/image/" + data.img} alt='poster' /> : null}
 
-                {
-                    showButton ? <div className="requestView_button">
-                        <button onClick={() => setMessage(true)}>Approve</button>
-                        <button onClick={() => setMessage(true)}>Reject</button>
+                {showButton ? <div className="requestView_button">
+                    <button onClick={() => setMessage(true)}>Approve</button>
+                    <button onClick={() => setMessage(true)}>Reject</button>
+                    <button onClick={() => {
+                        setReadOnly(false)
+                        history.push(`${params.id}/edit`)
+
+                    }}>Edit</button>
+                    {readOnly ? null : <button onClick={() => {
+                        setReadOnly(true);
+                        handleSave();
+                        history.push(`/requests/${params.id}`)
+                    }}>Save</button>}
+                </div> :
+                    <div className="requestView_button">
                         <button onClick={() => {
                             setReadOnly(false)
-                            history.push(`${params.id}/edit`)
 
                         }}>Edit</button>
-                        {readOnly ? null : <button onClick={() => {
-                            setReadOnly(false)
-
-                        }}>Save</button>}
-                    </div> :
-                        <div className="requestView_button">
-                            <button onClick={() => {
-                                setReadOnly(false)
-
-                            }}>Edit</button>
-                            <button onClick={() => setReadOnly(true)}>Cancel</button>
-                            {readOnly ? null : <button onClick={() => {
-                                setReadOnly(false)
-
-                            }}>Save</button>}
-                        </div>
+                        <button onClick={() => setReadOnly(true)}>Cancel</button>
+                        {readOnly ? null :
+                            <button onClick={() => { setReadOnly(false); }}>Save</button>}
+                    </div>
                 }
-
-
                 {message ? <Message setMessage={setMessage} setRefresh={setRefresh} setSpinner={setSpinner} refresh={refresh} data={data} setErr={setErr} /> : null}
             </div >
             : null
