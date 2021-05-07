@@ -9,6 +9,7 @@ import Request from '../request/request';
 import Users from '../users/users';
 import Login from '../login/login';
 import AdminDashboard from '../adminDashboard/adminDashboard';
+import HomePage from '../Homepage/homepage';
 // import PageNotFound from '../404/pageNotFound';
 
 
@@ -18,27 +19,27 @@ function All(props) {
 
     return (
         <div className="content">
-            <Menu toggle={setOpen} state={open} setActiveComponent={setActiveComponent} role={props.role}/>
+            <Menu toggle={setOpen} state={open} setActiveComponent={setActiveComponent} role={props.role} user={props.user} setOU={props.setOU}/>
             <div className={open ? "content_container open" : "content_container"} >
-                <TopNav activeComponent={activeComponent}  setUser={props.setUser} />
+                <TopNav activeComponent={activeComponent} setUser={props.setUser} />
 
                 <Switch>
                     <Route path="/dashboard" >
 
                         <h5 className="content_container_user">Welcome {props.name} !</h5>
-                        <AdminDashboard setErr={props.setErr} role={props.role} user={props.user}/>
+                        <AdminDashboard setErr={props.setErr} role={props.role} user={props.user} />
                     </Route>
                     <Route path="/calendar" >
-                        <Calender setErr={props.setErr}/>
+                        <Calender setErr={props.setErr} />
                     </Route>
                     <Route path={'/settings'}>
-                        <Setting setErr={props.setErr}/>
+                        <Setting setErr={props.setErr} />
                     </Route>
                     <Route path={'/requests'}>
-                        <Request setErr={props.setErr}/>
+                        <Request setErr={props.setErr} />
                     </Route>
                     <Route path={'/users'}>
-                        <Users setErr={props.setErr}/>
+                        <Users setErr={props.setErr} />
                     </Route>
                 </Switch>
 
@@ -61,10 +62,10 @@ export default function Content(props) {
                     <Login setErr={props.setErr} {...props} />
                 </Route>
                 <Route path="/" exact>
-                <Calender setErr={props.setErr}/>
+                    <HomePage setErr={props.setErr} />
                 </Route>
                 <Route path="/*">
-                    <All {...props} user={props.user}/>
+                    <All {...props} user={props.user} role={props.role} setOU={props.setOU}/>
                 </Route>
                 {/* <Route path="/*">
                     <PageNotFound/>

@@ -102,7 +102,7 @@ function Row({ data, type, setRequest, setUser }) {
                                 <circle cx="12" cy="12" r="3"></circle>
                             </svg>
                         </NavLink>,
-                        <NavLink key='1' to={`${path}/${data.id}/edit`} onClick={() => setRequest(data)}>
+                        <NavLink key='2' to={`${path}/${data.id}/edit`} onClick={() => setRequest(data)}>
                             <svg
                                 key='3'
                                 xmlns="http://www.w3.org/2000/svg"

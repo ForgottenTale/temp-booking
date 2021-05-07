@@ -12,10 +12,20 @@
     z-index: 6;
 
 
+
+
     &.open {
         width: 220px;
     }
-
+    
+    &_select{
+        padding:10px 0px 10px 20px;
+        outline: none;
+        border: none;
+        background-color: rgb(245, 245, 245);
+        margin-bottom: 10px;
+     
+    }
     &_item {
         display: flex;
         align-items: center;

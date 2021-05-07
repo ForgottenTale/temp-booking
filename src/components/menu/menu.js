@@ -1,19 +1,32 @@
 import './menu.scss';
 import logo from '../../images/logo.png';
 import { useState, useRef } from 'react';
-import { NavLink} from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 
-export default function Menu({ toggle, state, setActiveComponent, role }) {
+export default function Menu({ toggle, state, setActiveComponent, role, user, ou, setOU }) {
 
     const ref = useRef();
-
     const [open, setOpen] = useState(true);
+
+    const handleOUChange = (e) => {
+
+        var selectedOU = user.ou.filter((ou) =>
+            ou.name === e.target.value ? ou : null
+
+        )
+        setOU(selectedOU[0])
+    }
+
     return (
         <div className={open ? "menu open" : "menu"} ref={ref}>
             <div className="menu_item">
                 <img src={logo} alt="logo" />
             </div>
+
+            <select className="menu_select" defaultValue={ou} onChange={(e) => handleOUChange(e)}>
+                {user.ou !== undefined && user.ou !== null && user.ou.length > 1 ? user.ou.map((ou, i) => <option key={i} id={i}>{ou.name}</option>) : null}
+            </select>
             <NavLink to="/dashboard" className="menu_item" activeClassName="active" onClick={() => setActiveComponent("Dashboard")} exact >
                 <div className="menu_item_deo"></div>
                 <svg
@@ -53,7 +66,7 @@ export default function Menu({ toggle, state, setActiveComponent, role }) {
                 </svg>
                 <p className={open ? "menu_item_name open" : "menu_item_name"}>Calender</p>
             </NavLink>
-            {role !== "REGULAR" ? [<NavLink key="1" to="/requests" className="menu_item" activeClassName="active" onClick={() => setActiveComponent("Requests")}>
+            {role === "Admin" ? [<NavLink key="1" to="/requests" className="menu_item" activeClassName="active" onClick={() => setActiveComponent("Requests")}>
                 <div className="menu_item_deo"></div>
                 <svg
                     xmlns="http://www.w3.org/2000/svg"

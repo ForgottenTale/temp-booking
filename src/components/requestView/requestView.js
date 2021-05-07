@@ -118,18 +118,18 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                             data.coHosts !== null ? JSON.parse(data.coHosts).map((cohost, index) =>
 
                                 [
-                                    <Item title={`Co-host ${String(index + 1)}`} value={cohost[0]} key="1" readOnly={readOnly} setData={setData} />,
-                                    <Item title={`Co-host ${String(index + 1)} email`} value={cohost[1]} key="2" readOnly={readOnly} setData={setData} />,
+                                    <Item title={`Co-host ${String(index + 1)}`} value={cohost[0]} key="5" readOnly={readOnly} setData={setData} />,
+                                    <Item title={`Co-host ${String(index + 1)} email`} value={cohost[1]} key="6" readOnly={readOnly} setData={setData} />,
                                 ]
                             ) : null,
-                            <Item title="Speaker" value={data.speakerName} name="speakerName" key="5" readOnly={readOnly} setData={setData} />,
-                            <Item title="Speaker Email" value={data.speakerEmail} name="speakerEmail" key="6" readOnly={readOnly} setData={setData} />,
+                            <Item title="Speaker" value={data.speakerName} name="speakerName" key="7" readOnly={readOnly} setData={setData} />,
+                            <Item title="Speaker Email" value={data.speakerEmail} name="speakerEmail" key="8" readOnly={readOnly} setData={setData} />,
 
 
                         ] : [
-                            <ItemTime title="Date" value={data.date} key="3" readOnly={readOnly} setData={setData} />,
-                            <ItemTime title="Time" value={data.time} key="4" readOnly={readOnly} setData={setData} />,
-                            <Item title="Comments" value={data.comments} key="3" name="comments" readOnly={readOnly} setData={setData} />
+                            <ItemTime title="Date" value={data.date} key="9" readOnly={readOnly} setData={setData} />,
+                            <ItemTime title="Time" value={data.time} key="10" readOnly={readOnly} setData={setData} />,
+                            <Item title="Comments" value={data.comments} key="11" name="comments" readOnly={readOnly} setData={setData} />
                         ]
                     }
 
@@ -140,8 +140,8 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                     {data.type === "Website development" ? <Item title="URL" value={data.url} name="url" /> : null}
                     {data.service === "e_notice" ? <Item title="Delivery Type" value={data.deliveryType} name="deliveryType" readOnly={readOnly} /> : null}
                     {data.service === "Publicity" ? [
-                        <Item title="Program Schedule" value={data.schedule} key="1" name="schedule" readOnly={readOnly} />,
-                        <Item title="Publish Time" value={new Date(data.publishTime).toLocaleTimeString()} key="1" name="publishTime" readOnly={readOnly} />] : null
+                        <Item title="Program Schedule" value={data.schedule} key="12" name="schedule" readOnly={readOnly} />,
+                        <Item title="Publish Time" value={new Date(data.publishTime).toLocaleTimeString()} key="13" name="publishTime" readOnly={readOnly} />] : null
                     }
 
                     <div className="requestView_con_item">
@@ -154,7 +154,7 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                     {data.otherResponses.length > 0 ?
                         data.otherResponses.map((approver, index) =>
                             <ItemTextArea key={index} title={approver.name} value={approver.response === null ? "" : approver.response} readOnly />) :
-                        <Item title="" value="No one has endorsed this request" key="1" readOnly />
+                        <Item title="" value="No one has endorsed this request" key="14" readOnly />
                     }
 
                 </div >
