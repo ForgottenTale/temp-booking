@@ -163,11 +163,7 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                 {showButton ? <div className="requestView_button">
                     <button onClick={() => setMessage(true)}>Approve</button>
                     <button onClick={() => setMessage(true)}>Reject</button>
-                    <button onClick={() => {
-                        setReadOnly(false)
-                        history.push(`${params.id}/edit`)
 
-                    }}>Edit</button>
                     {readOnly ? null : <button onClick={() => {
                         setReadOnly(true);
                         handleSave();
@@ -175,13 +171,16 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                     }}>Save</button>}
                 </div> :
                     <div className="requestView_button">
-                        <button onClick={() => {
-                            setReadOnly(false)
 
-                        }}>Edit</button>
-                        <button onClick={() => setReadOnly(true)}>Cancel</button>
-                        {readOnly ? null :
-                            <button onClick={() => { setReadOnly(false); }}>Save</button>}
+                        {readOnly ?
+                            <>
+                                <button onClick={() => {
+                                    setReadOnly(false)
+                                    history.push(`${params.id}/edit`)
+                                }}>Edit</button>
+                                <button onClick={() => setReadOnly(true)}>Cancel</button>
+                            </>
+                            : <button onClick={() => { setReadOnly(false); }}>Save</button>}
                     </div>
                 }
                 {message ? <Message setMessage={setMessage} setRefresh={setRefresh} setSpinner={setSpinner} refresh={refresh} data={data} setErr={setErr} /> : null}
