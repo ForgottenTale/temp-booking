@@ -14,8 +14,8 @@ import OtherInfo from "./components/OtherInfo";
 import SupportInfo from "./components/SupportInfo";
 import Verify from "./components/Verify";
 import Confirmation from "./components/Confirmation";
-import "./ub.css";
-import "./style.css";
+import "./ub.scss";
+import "./style.scss";
 
 function App(props) {
   const [data, setData] = useState({
