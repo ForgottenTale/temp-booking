@@ -21,6 +21,7 @@ function App(props) {
   const [data, setData] = useState({
     startTime: "",
     endTime: "",
+    publishTime: "",
     title: "",
     speakerName: "",
     speakerEmail: "",
@@ -28,8 +29,8 @@ function App(props) {
     type: "",
     serviceName: "",
     description: "",
-    deliveryType: "",
-    remainder: "",
+    express: "",
+    reminder: "",
     comments: "",
     purpose: "",
     dimensions: "",

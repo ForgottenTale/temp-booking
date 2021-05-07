@@ -21,6 +21,7 @@ function DateTime({ path, type, setData, data }) {
   const [date, setDate] = useState("");
   const [startTime, setTimeFrom] = useState("");
   const [endTime, setTimeTo] = useState("");
+  const [publishTime, setPublishTime] = useState("");
 
   const history = useHistory();
 
@@ -34,14 +35,20 @@ function DateTime({ path, type, setData, data }) {
     var fromMin = startTime.slice(3, 5);
     var toHour = endTime.slice(0, 2);
     var toMin = endTime.slice(3, 5);
+    var pubHour = publishTime.slice(0, 2);
+    var pubMin = publishTime.slice(3, 5);
     let tempStartTime = new Date(date);
     tempStartTime.setHours(fromHour, fromMin, 0, 0);
     let tempEndtime = new Date(date);
     tempEndtime.setHours(toHour, toMin, 0, 0);
+    let tempPublishTime = new Date(date);
+    tempPublishTime.setHours(pubHour, pubMin, 0, 0);
+
     setData({
       ...data,
       startTime: tempStartTime.toISOString(),
       endTime: tempEndtime.toISOString(),
+      publishTime: tempPublishTime.toISOString(),
     });
 
     if (type === "online_meeting" || type === "publicity") {
@@ -122,7 +129,7 @@ function DateTime({ path, type, setData, data }) {
                   type="time"
                   className="form-control"
                   name="time"
-                  onChange={(e) => setTimeFrom(e.target.value)}
+                  onChange={(e) => setPublishTime(e.target.value)}
                   required
                 />
               </div>

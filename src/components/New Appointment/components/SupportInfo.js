@@ -6,9 +6,10 @@ function SupportInfo({ path, type, data, setData }) {
   const history = useHistory();
 
   const [support, setSupport] = useState({
+    title: data.title,
     description: data.description,
-    deliveryType: data.deliveryType,
-    remainder: data.remainder,
+    express: data.express,
+    reminder: data.reminder,
     comments: data.comments,
     purpose: data.purpose,
     dimensions: data.dimensions,
@@ -22,9 +23,10 @@ function SupportInfo({ path, type, data, setData }) {
 
     setData({
       ...data,
+      title: support.title,
       description: support.description,
-      deliveryType: support.deliveryType,
-      remainder: support.remainder,
+      express: support.express,
+      reminder: support.reminder,
       comments: support.comments,
       purpose: support.purpose,
       dimensions: support.dimensions,
@@ -54,7 +56,7 @@ function SupportInfo({ path, type, data, setData }) {
                 <div className="mb-4">
                   <label className="form-label">
                     Content/ description for the support
-                    </label>
+                  </label>
                   <textarea
                     rows="3"
                     defaultValue={data.description}
@@ -80,7 +82,7 @@ function SupportInfo({ path, type, data, setData }) {
                 <div className="mb-5">
                   <label className="form-label">
                     Upload relevant files (if any)
-                    </label>
+                  </label>
                   <input
                     type="file"
                     multiple
@@ -104,12 +106,12 @@ function SupportInfo({ path, type, data, setData }) {
                   />
                 </div>
                 {data.serviceName === "Poster Design" ||
-                  data.serviceName === "Content Writing" ? (
+                data.serviceName === "Content Writing" ? (
                   data.serviceName === "Poster Design" ? (
                     <div className="mb-4">
                       <label className="form-label">
                         Poster dimensions (if any)
-                        </label>
+                      </label>
                       <input
                         type="text"
                         className="form-control"
@@ -127,7 +129,7 @@ function SupportInfo({ path, type, data, setData }) {
                     <div className="mb-4">
                       <label className="form-label">
                         Writeup words count (if any)
-                        </label>
+                      </label>
                       <input
                         type="number"
                         className="form-control"
@@ -169,18 +171,17 @@ function SupportInfo({ path, type, data, setData }) {
                   ></textarea>
                 </div>
               </div>
-
             </div>
 
             <button
               type="button"
               className="back-btn"
               onClick={() => {
-                
-                history.push(path + "/date-time")}}
+                history.push(path + "/date-time");
+              }}
             >
               Prev
-              </button>
+            </button>
             <button className="btn btn-primary next-btn">Next</button>
           </form>
         ) : (
@@ -189,8 +190,8 @@ function SupportInfo({ path, type, data, setData }) {
             <div className="row">
               <div className="col">
                 <div className="mb-4">
-                  <label className="form-label">Content/ description</label>
                   <textarea
+                    placeholder="Content/ description"
                     rows="3"
                     className="form-control"
                     name="enoticeDesc"
@@ -201,21 +202,32 @@ function SupportInfo({ path, type, data, setData }) {
                   ></textarea>
                 </div>
                 <div className="mb-4">
-                  <label className="form-label">Delivery Type</label>
+                  <input
+                    placeholder="Title"
+                    type="text"
+                    className="form-control"
+                    name="title"
+                    defaultValue={data.title}
+                    onChange={(e) => {
+                      setSupport({ ...support, title: e.target.value });
+                    }}
+                  />
+                </div>
+                <div className="mb-4">
                   <select
-                    defaultValue={data.deliveryType}
+                    defaultValue={data.express}
                     className="form-select"
-                    name="deliveryType"
+                    name="express"
                     onChange={(e) => {
                       setSupport({
                         ...support,
-                        deliveryType: e.target.value,
+                        express: e.target.value,
                       });
                     }}
                   >
-                    <option >
-                      Select
-                      </option>
+                    <option value="" disabled>
+                      --Delivery Type--
+                    </option>
                     <option>Express</option>
                     <option>Normal</option>
                   </select>
@@ -232,9 +244,9 @@ function SupportInfo({ path, type, data, setData }) {
                   />
                 </div>
               </div>
+
               <div className="col">
                 <div className="mb-4">
-                  <label className="form-label">Service name</label>
                   <input
                     type="text"
                     className="form-control"
@@ -244,37 +256,35 @@ function SupportInfo({ path, type, data, setData }) {
                   />
                 </div>
                 <div className="mb-4">
-                  <p className="remainder-enotice-label">
-                    Remainder e-notice:
-                    </p>
+                  <p className="remainder-enotice-label">Remainder e-notice:</p>
                   <div className="form-check form-check-inline">
                     <input
-                      defaultValue={data.remainder}
+                      defaultValue={data.reminder}
                       className="form-check-input"
                       type="radio"
                       name="remainderEnotice"
                       onChange={() => {
-                        setSupport({ ...support, remainder: "yes" });
+                        setSupport({ ...support, reminder: "yes" });
                       }}
                     />
                     <label className="form-check-label">Yes</label>
                   </div>
                   <div className="form-check form-check-inline">
                     <input
-                      defaultValue={data.remainder}
+                      defaultValue={data.reminder}
                       className="form-check-input"
                       type="radio"
                       name="remainderEnotice"
                       onChange={(e) => {
-                        setSupport({ ...support, remainder: "no" });
+                        setSupport({ ...support, reminder: "no" });
                       }}
                     />
                     <label className="form-check-label">No</label>
                   </div>
                 </div>
                 <div className="mb-5">
-                  <label className="form-label">Comments</label>
                   <textarea
+                    placeholder="Comments"
                     rows="3"
                     defaultValue={data.comments}
                     className="form-control"
@@ -285,19 +295,17 @@ function SupportInfo({ path, type, data, setData }) {
                   ></textarea>
                 </div>
               </div>
-
             </div>
 
             <button
               type="button"
               className="back-btn"
               onClick={() => {
-               
-                history.push(path + "/date-time")}}
+                history.push(path + "/date-time");
+              }}
             >
               Prev
-
-              </button>
+            </button>
             <button className="btn btn-primary next-btn">Next</button>
           </form>
         )}
