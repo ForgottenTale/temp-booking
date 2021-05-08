@@ -4,7 +4,7 @@ import dateIcon from "../../../images/date.png";
 
 function minDay() {
   let newday = new Date();
-  newday.setDate(newday.getDate() + 5);
+  newday.setDate(newday.getDate() + 6);
   let year = newday.getFullYear();
   let month = newday.getMonth() + 1;
   let day = newday.getDate();
@@ -98,7 +98,7 @@ function DateTime({ path, type, setData, data }) {
               />
             </div>
           </div>
-          {data.type === "online_meeting" ? (
+          {data.type === "online_meeting" || data.type === "intern_support" ? (
             <div className="row mb-5">
               <div className="col-5">
                 <label className="form-label">From</label>
@@ -121,7 +121,8 @@ function DateTime({ path, type, setData, data }) {
                 />
               </div>
             </div>
-          ) : (
+          ) : null}
+          {data.type === "e_notice" || data.type === "publicity" ? (
             <div className="row mb-5">
               <div className="col-5">
                 <label className="form-label">Time</label>
@@ -134,7 +135,7 @@ function DateTime({ path, type, setData, data }) {
                 />
               </div>
             </div>
-          )}
+          ) : null}
           <button
             type="button"
             className="mt-5 back-btn"
