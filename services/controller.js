@@ -133,7 +133,6 @@ class Service{
     constructor(input){
         try{
             this.required = ["type", "serviceName", "creatorId", "title", "ouId"];
-            this.checkRequired(input);
             this._id = input._id;
             this.type = input.type.trim();
             this.serviceName = input.serviceName.trim().toLowerCase();
@@ -160,11 +159,10 @@ class Service{
 
     getAllNamesAndValues(){
         return({
-            names: ['service_name', 'title','ouId', 'description', 'comments', 'img'],
+            names: ['service_name', 'title', 'description', 'comments', 'img'],
             values: [
                 this.serviceName?("'" + this.serviceName + "'"):"null",
                 this.title?("'" + this.title + "'"):"null",
-                this.ouId?this.ouId:"null",
                 this.description?("'" + this.description + "'"):"null",
                 this.comments?("'" + this.comments + "'"):"null",
                 this.img?("'" + this.img + "'"):"null",
@@ -197,7 +195,7 @@ class OnlineMeeting extends Service {
     constructor(input){
         super(input);
         this.required = ["speakerName", "speakerEmail", "startTime", "endTime"];
-        super.checkRequired(input);
+        this.checkRequired = super.checkRequired(input);
         this.speakerName = input.speakerName.trim();
         this.speakerEmail = input.speakerEmail.trim();
         this.startTime = new Date(input.startTime);
@@ -247,8 +245,8 @@ class OnlineMeeting extends Service {
         namesAndValues.values.push(this.speakerName?("'" + this.speakerName + "'"):"null");
         namesAndValues.values.push(this.speakerEmail?("'" + this.speakerEmail + "'"):"null");
         namesAndValues.values.push(this.coHosts?("'" + JSON.stringify(this.coHosts) + "'"):"null");
-        namesAndValues.values.push(this.startTime?("'" + this.convertISOToSql(this.startTime) + "'"):"null");
-        namesAndValues.values.push(this.endTime?("'" + this.convertISOToSql(this.endTime) + "'"):"null");
+        namesAndValues.values.push(this.startTime?("'" + convertDateToSqlDateTime(this.startTime) + "'"):"null");
+        namesAndValues.values.push(this.endTime?("'" + convertDateToSqlDateTime(this.endTime) + "'"):"null");
         return(namesAndValues);
     }
 
@@ -267,7 +265,7 @@ class InternSupport extends Service{
     constructor(input){
         super(input);
         this.required = ["startTime", "endTime"];
-        super.checkRequired(input);
+        this.checkRequired = super.checkRequired(input);
         this.startTime = new Date(input.startTime);
         this.endTime = new Date(input.endTime);
         this.wordsCount = input.wordsCount;
@@ -332,7 +330,7 @@ class ENotice extends Service{
     constructor(input){
         super(input);
         this.required = ["express", "reminder", "publishTime"];
-        super.checkRequired(input);
+        this.checkRequired = super.checkRequired(input);
         this.express = input.express=="express"||(input.express+"")=="1"?true:false;
         this.reminder = input.reminder=="yes"||(input.reminder+"")=="1"?true:false;
         this.publishTime = new Date(input.publishTime);
@@ -383,7 +381,7 @@ class Publicity extends Service{
     constructor(input){
         super(input);
         this.required = ["publishTime"];
-        super.checkRequired(input);
+        this.checkRequired = super.checkRequired(input);
         this.publishTime = new Date(input.publishTime);
     }
 

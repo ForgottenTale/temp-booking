@@ -113,74 +113,7 @@ module.exports = {
 
 	executeQuery: executeQuery,
 
-	addAppointment: async function(newAppointment, done){
-		try{
-			newAppointment.status = "PENDING";
-			let {names, values} = newAppointment.getAllNamesAndValues();
-			let config = await new Promise((resolve, reject)=>{
-				getConfig(newAppointment.type, newAppointment.serviceName, (err, result)=>{
-					if(err) return reject(err);
-					return resolve(result);
-				})
-			})
-			await new Promise((resolve, reject)=>{
-				this.checkAvailability(newAppointment, (err, msg)=>{
-					if(err) return reject(err);
-					return resolve(msg);
-				});
-			})
-			let nextApprovers = [];
-			let nextMails = [];
-			if(config.follow_assignment){
-				//find Assignees
-				let assignee = await(executeQuery("SELECT * FROM user WHERE _id=" + config.assigned_to));
-				assignee = assignee[0];
-				if(nextApprovers.indexOf(assignee._id)==-1){
-					nextApprovers.push(assignee._id);
-					nextMails.push(assignee.email)
-				}
-			}else{
-				//find Beta Admins
-				[...await(executeQuery("SELECT * FROM user WHERE role='BETA_ADMIN';"
-				))]
-				.forEach(user=>{
-					if(nextApprovers.indexOf(user._id)==-1){
-						nextApprovers.push(user._id);
-						nextMails.push(user.email)
-					}
-				})
-			}
-			if(!config.follow_hierarchy){
-				//find Alpha Admins
-				[...await(executeQuery("SELECT * FROM user WHERE role='ALPHA_ADMIN';"
-				))]
-				.forEach(user=>{
-					if(nextApprovers.indexOf(user._id)==-1){
-						nextApprovers.push(user._id);
-						nextMails.push(user.email);
-					}
-				})
-			}
-			let addedAppointment = await executeQuery("INSERT INTO " + newAppointment.type 
-				+ "(" + names.join(',') + ") VALUES(" + values.join(',') + ");"
-			);
-			let altAppointment = await executeQuery("INSERT INTO alt(" + newAppointment.type + "_id, creator_id, status) VALUES("
-				+ addedAppointment.insertId + "," + newAppointment.creatorId + ",'" + newAppointment.status + "');");
-			let addNextApprovers = nextApprovers.map(userId=>{
-				return ("INSERT INTO next_to_approve(user_id, alt_id) VALUES("
-					+ userId + "," + altAppointment.insertId
-					+ ");"
-				)
-			}).join("");
-			await executeQuery(addNextApprovers);
-			let creator = await executeQuery("SELECT * FROM user WHERE _id=" + newAppointment.creatorId);
-			mail.newAppointment({id: altAppointment.insertId, type: newAppointment.type, emailIds: nextMails});
-			return done(null, {id: altAppointment.insertId});
-		}
-		catch(err){
-			return done(err);
-		}
-	},
+	getConfig: getConfig,
 
 	checkAvailability: function(input, done){
 		AppointmentClass = getClass(input.type);

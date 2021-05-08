@@ -1,8 +1,8 @@
 const auth = require('../auth.js');
 const {getClass, User} = require('../controller.js');
-const database = require('../database/index.js');
+const {appointment: addAppointment} = require('../database/insert.js');
+const {ou: getOu} = require('../database/get.js');
 const upload = require('../upload.js');
-const fs = require('fs');
 const {respondError, removeImg} = require('../utils.js');
 
 module.exports = function(app){
@@ -38,17 +38,29 @@ module.exports = function(app){
         res.status(200).json(req.body);
     })
 
+    app.route('/api/ou')
+    .get(auth.ensureAuthenticated, (req, res)=>{
+        getOu(req.user.personId, (err, results)=>{
+            if(err) respondError(err, res);
+            res.status(200).json(results);
+        })
+    })
+
     app.route('/api/book')
+    .patch(auth.ensureAuthenticated, (req, res)=>{
+        respondError(new Error("Inworks"), res);
+    })
     .post(auth.ensureAuthenticated, (req, res)=>{
         upload.single('img')(req, res, (err)=>{
             try{
                 if(err) throw err;
                 let newAppointment;
                 req.body.img = req.file?req.file.filename:null;
-                req.body.creatorId = req.user._id;
+                req.body.creatorId = req.user.id;
                 AppointmentClass= getClass(req.body.type);
                 newAppointment = new AppointmentClass(req.body);
-                database.addAppointment(newAppointment, (err, doc)=>{
+                newAppointment.checkRequired(newAppointment);
+                addAppointment(newAppointment, (err, doc)=>{
                     if(err){
                         return respondError(err, res);
                     }

@@ -23,8 +23,10 @@ module.exports = {
     user: async function (params, done) {
         try{
             let values = User.getValues(params).join(' AND ');
-            let results = await executeQuery("SELECT * FROM user INNER JOIN person ON person_id=person._id WHERE " + values + ";")
+            let results = await executeQuery("SELECT user._id, person_id, password, super_admin, super_creator, role, name, email, phone FROM user INNER JOIN person ON person_id = person._id WHERE " + values + ";")
             let user = new User(transmuteSnakeToCamel(results[0]));
+            let ouIds = await executeQuery("SELECT ou_id FROM ou_map WHERE person_id=" + user.personId);
+            user.ouIds = ouIds.map(e=>e.ou_id);
             done(null, user);
         }catch(err){
             done(err);
@@ -47,5 +49,14 @@ module.exports = {
 			return done(null, results);
 		})
 		.catch(err=>done(err));
-	}
+	},
+
+    ou: function(personId, done){
+        executeQuery("SELECT ou._id, ou.name FROM ou_map INNER JOIN ou ON ou._id=ou_id WHERE person_id=" + personId)
+        .then(results=>{
+            results = results.map(result=>transmuteSnakeToCamel(result))
+            return done(null, results);
+        })
+        .catch(err=>done(err));
+    }
 }
