@@ -9,6 +9,7 @@ class Person{
             this.name = person.name.trim();
             this.email = person.email.trim();
             this.phone = (person.phone+"").trim();
+            this.groupAdmin = person.groupAdmin?true:false;
             this.role = person.role;
             if(person.ouIds)
                 this.ouIds = person.ouIds.split(",").map(ouId=>parseInt(ouId));
