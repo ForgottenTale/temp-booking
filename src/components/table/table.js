@@ -39,7 +39,8 @@ export default function Table({ headers, data, type, setUser, setRequest, search
                             }).map((data, key) => <Row key={key} data={data} type={type} setUser={setUser} setRequest={setRequest} />
                             )
 
-                            : (type === "user" || type === "admin" ? [1, 2, 3, 5, 6, 7, 8].map((key) => <SkeletonRowUser key={key} />) : data !== [] && [1, 2, 3, 5, 6, 7, 8].map((key) => <SkeletonRowRequest key={key} />))
+                            : (type === "user" || type === "admin" ? [1, 2, 3, 5, 6, 7, 8].map((key) => <SkeletonRowUser key={key} />) : 
+                             data!==null&&data.length>0 ? [1, 2, 3, 5, 6, 7, 8].map((key) => <SkeletonRowRequest key={key} />):null)
                     }
                 </tbody>
             </table>

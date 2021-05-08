@@ -26,7 +26,7 @@ function All(props) {
                 <Switch>
                     <Route path="/dashboard" >
 
-                        <h5 className="content_container_user">Welcome {props.name} !</h5>
+                        <h5 className="content_container_user">Welcome {props.user.name} !</h5>
                         <AdminDashboard setErr={props.setErr} role={props.role} user={props.user} />
                     </Route>
                     <Route path="/calendar" >
