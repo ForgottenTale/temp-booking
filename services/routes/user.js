@@ -2,7 +2,7 @@ const auth = require('../auth.js');
 const {getClass, User} = require('../controller.js');
 const { checkAvailability } = require('../database/index.js');
 const {appointment: addAppointment} = require('../database/insert.js');
-const {ou: getOu, userAppointments: getUserAppointments} = require('../database/get.js');
+const {ou: getOu, userAppointments: getUserAppointments, activity: getActivity} = require('../database/get.js');
 const {user: updateUser} = require('../database/update.js')
 const {appointment: delAppointment} = require('../database/del.js');
 const upload = require('../upload.js');
@@ -101,7 +101,9 @@ module.exports = function(app){
 
     app.route('/api/activity')
     .get(auth.ensureAuthenticated, (req, res)=>{
-        database.getActivity((err, results)=>{
+        if(!req.query.ouId)
+            return respondError(new Error("OuId is required"), res);
+        getActivity(req.query.ouId, (err, results)=>{
             if(err) return respondError(err, res);
             res.status(200).json(results);
         })

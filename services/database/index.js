@@ -373,18 +373,5 @@ module.exports = {
 		}catch(err){
 			return done(err);
 		}
-	},
-
-	getActivity: async function(done){
-		let returnData = {};
-		try{
-			let data = await executeQuery("SELECT status, count(*) FROM alt GROUP BY status");
-			data.forEach(statusType=>{
-				returnData[statusType.status.toLowerCase()] = statusType["count(*)"];
-			})
-			return done(null, returnData);
-		}catch(err){
-			return done(err);
-		}
 	}
 }
