@@ -13,6 +13,8 @@ class Person{
             this.role = person.role?person.role:null;
             if(person.ouIds)
                 this.ouIds = person.ouIds.split(",").map(ouId=>parseInt(ouId));
+            if(person.ous)
+                this.ous = person.ous;
             else
                 this.ouIds = null;
         }catch(err){
@@ -37,7 +39,7 @@ class Person{
             role: this.role,
             email: this.email,
             phone: this.phone,
-            ouIds: this.ouIds
+            ous: this.ous
         }
     }
 

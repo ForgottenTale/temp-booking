@@ -1,7 +1,9 @@
 const auth = require('../auth.js');
 const {getClass, User} = require('../controller.js');
+const { checkAvailability } = require('../database/index.js');
 const {appointment: addAppointment} = require('../database/insert.js');
-const {ou: getOu} = require('../database/get.js');
+const {ou: getOu, userAppointments: getUserAppointments} = require('../database/get.js');
+const {user: updateUser} = require('../database/update.js')
 const upload = require('../upload.js');
 const {respondError, removeImg} = require('../utils.js');
 
@@ -9,7 +11,7 @@ module.exports = function(app){
 
     app.route('/api/my-appointments')
     .get(auth.ensureAuthenticated, (req, res)=>{
-        database.getUserAppointments({userId: req.user._id}, (err, appointments)=>{
+        getUserAppointments({userId: req.user.id}, (err, appointments)=>{
             if(err) return respondError(err, res);
             res.status(200).json(appointments);
         });
@@ -80,7 +82,7 @@ module.exports = function(app){
             return respondError(new Error("Required fields missing"), res)
         req.body.startTime = new Date(req.body.startTime)   ;
         req.body.endTime = new Date(req.body.endTime);
-        database.checkAvailability(req.body, (err, msg)=>{
+        checkAvailability(req.body, (err, msg)=>{
             if(err) return respondError(err, res);
             res.status(200).json({message: msg});
         });
@@ -88,8 +90,8 @@ module.exports = function(app){
 
     app.route('/api/user')
     .patch(auth.ensureAuthenticated, (req, res)=>{
-        req.body.id = req.user._id;
-        database.updateUser(req.body, (err, result)=>{
+        req.body.id = req.user.id;
+        updateUser(req.body, (err, result)=>{
             if(err) return respondError(err, res);
             res.status(200).json({message: result});
         });
@@ -97,8 +99,7 @@ module.exports = function(app){
 
     app.route('/api/credentials')
     .get(auth.ensureAuthenticated, (req, res)=>{
-        let user = new User(req.user);
-        res.status(200).json(Object.assign({}, {id: req.user._id}, user.getPublicInfo()));
+        res.status(200).json(req.user.getPublicInfo());
     })
 
     app.route('/api/activity')

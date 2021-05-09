@@ -83,48 +83,6 @@ async function findNextOfKin(newAppointment){
 			return reject(err);
 		}
 	})
-	
-	// if(config.follow_assignment){
-	// 	//find Assignees
-	// 	let assignee = await(executeQuery("SELECT * FROM user INNER JOIN person ON person_id = person._id WHERE _id=" + config.assigned_to));
-	// 	assignee = assignee[0];
-	// 	if(nextApprovers.indexOf(assignee._id)==-1){
-	// 		nextApprovers.push(assignee._id);
-	// 		nextMails.push(assignee.email);
-	// 	}
-	// }else{
-	// 	//find Beta Admins
-	// 	[...await(executeQuery("SELECT * FROM user INNER JOIN person ON person_id = person._id WHERE role='BETA_ADMIN';"
-	// 	))]
-	// 	.forEach(user=>{
-	// 		if(nextApprovers.indexOf(user._id)==-1){
-	// 			nextApprovers.push(user._id);
-	// 			nextMails.push(user.email)
-	// 		}
-	// 	})
-	// }
-	// if(!config.follow_hierarchy){
-	// 	//find Alpha Admins
-	// 	[...await(executeQuery("SELECT * FROM user INNER JOIN person ON person_id = person._id WHERE role='ALPHA_ADMIN';"
-	// 	))]
-	// 	.forEach(user=>{
-	// 		if(nextApprovers.indexOf(user._id)==-1){
-	// 			nextApprovers.push(user._id);
-	// 			nextMails.push(user.email);
-	// 		}
-	// 	})
-	// }
-	// let addedAppointment = await executeQuery("INSERT INTO " + newAppointment.type 
-	// 	+ "(" + names.join(',') + ") VALUES(" + values.join(',') + ");"
-	// );
-	// let altAppointment = await executeQuery("INSERT INTO alt(" + newAppointment.type + "_id, creator_id, ou_id,status) VALUES("
-	// 	+ addedAppointment.insertId + "," + newAppointment.creatorId + "," + newAppointment.ouId + ",'" + newAppointment.status + "');");
-	// let addNextApprovers = nextApprovers.map(userId=>{
-	// 	return ("INSERT INTO next_to_approve(user_id, alt_id) VALUES("
-	// 		+ userId + "," + altAppointment.insertId
-	// 		+ ");"
-	// 	)
-	// }).join("");
 }
 
 module.exports = {
@@ -194,6 +152,8 @@ module.exports = {
                 return done(new Error("User not associated with Ou"));
             }
 
+			await checkAvailability(newAppointment);
+
 			//if super creator change status to approved and next approvers and notifiers as empty
 			let creator = await executeQuery("SELECT user._id, user.person_id, person.email, user.super_admin, user.super_creator FROM user INNER JOIN person ON person_id= person._id WHERE user._id=" + newAppointment.creatorId);
 			creator = creator[0];
@@ -211,29 +171,6 @@ module.exports = {
 			newAppointment.id = mails.altAppointment.insertId;
 			await sendNewAppointmentMail(newAppointment, mails);
 			return done(null, newAppointment);
-			// let {nextApprovers, nextNotifiers} = findNextOfKin(newAppointment, creator);
-			
-
-
-			// let {names, values} = newAppointment.getAllNamesAndValues();
-			// let config = await new Promise((resolve, reject)=>{
-			// 	getConfig(newAppointment.type, newAppointment.serviceName, (err, result)=>{
-			// 		if(err) return reject(err);
-			// 		return resolve(result);
-			// 	})
-			// })
-			// await new Promise((resolve, reject)=>{
-			// 	checkAvailability(newAppointment, (err, msg)=>{
-			// 		if(err) return reject(err);
-			// 		return resolve(msg);
-			// 	});
-			// });
-			// let nextApprovers = [];
-			// let nextNotifiers = [];
-			
-			// await executeQuery(addNextApprovers);
-			// mail.newAppointment({id: altAppointment.insertId, type: newAppointment.type, emailIds: nextMails});
-			// return done(null, {id: altAppointment.insertId});
 		}
 		catch(err){
 			return done(err);

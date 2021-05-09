@@ -104,6 +104,8 @@ module.exports = {
             creator_id INT NOT NULL,
             status VARCHAR(10) DEFAULT "PENDING",
             ou_id INT NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP(),
+            approved_at DATETIME,
             FOREIGN KEY(online_meeting_id) REFERENCES online_meeting(_id),
             FOREIGN KEY(intern_support_id) REFERENCES intern_support(_id),
             FOREIGN KEY(e_notice_id) REFERENCES e_notice(_id),
@@ -122,6 +124,7 @@ module.exports = {
             alt_id INT NOT NULL,
             encourages BOOLEAN,
             response VARCHAR(100),
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             final BOOLEAN DEFAULT false NOT NULL,
             FOREIGN KEY(person_id) REFERENCES person(_id),
             FOREIGN KEY(alt_id) REFERENCES alt(_id) 

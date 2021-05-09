@@ -1,5 +1,5 @@
-const {executeQuery} = require('./index.js');
-const {Person, User} = require('../controller.js');
+const {executeQuery, getAppointmentTypes} = require('./index.js');
+const {Person, User, getClass} = require('../controller.js');
 const {transmuteSnakeToCamel} = require('../utils.js');
 
 module.exports = {
@@ -26,7 +26,7 @@ module.exports = {
             let results = await executeQuery("SELECT user._id, person_id, password, super_admin, super_creator, role, name, email, phone FROM user INNER JOIN person ON person_id = person._id WHERE " + values + ";")
             let user = new User(transmuteSnakeToCamel(results[0]));
             let ouIds = await executeQuery("SELECT ou_id, name, role, admin FROM ou_map INNER JOIN ou ON ou_map.ou_id = ou._id WHERE person_id=" + user.personId);
-            user.ouIds = ouIds.map(e=>{
+            user.ous = ouIds.map(e=>{
                 return {
                     ouId: e.ou_id,
                     ouName: e.name,
@@ -65,5 +65,33 @@ module.exports = {
             return done(null, results);
         })
         .catch(err=>done(err));
-    }
+    },
+    userAppointments: async function(constraint, done){
+		try{
+			let types = await getAppointmentTypes();
+			let query = "";
+			types.forEach(appointmentType=>{
+				query+="SELECT *, alt._id as _id FROM alt INNER JOIN " + appointmentType.type + " ON alt." + appointmentType.type + "_id=" + appointmentType.type +"._id"  
+					+ " INNER JOIN user ON user._id=creator_id"
+                    + " INNER JOIN person on person._id=user.person_id"
+					+ " WHERE " + appointmentType.type + "_id IS NOT NULL AND creator_id=" + constraint.userId + ";";
+			})
+			let appointmentsOfAllTypes = await executeQuery(query);
+			query = "";
+			let dataArray = [];
+			for (let mainIdx in appointmentsOfAllTypes){
+				for (let idx in appointmentsOfAllTypes[mainIdx]){
+					AppointmentClass = getClass(types[mainIdx].type);
+					appointmentsOfAllTypes[mainIdx][idx] = AppointmentClass.convertSqlTimesToDate(appointmentsOfAllTypes[mainIdx][idx]);
+					appointmentsOfAllTypes[mainIdx][idx] = transmuteSnakeToCamel(appointmentsOfAllTypes[mainIdx][idx]);
+					appointmentsOfAllTypes[mainIdx][idx].otherResponses = await executeQuery("SELECT name, email, encourages, response FROM response INNER JOIN person on person._id=response.person_id WHERE final=1 AND alt_id=" + appointmentsOfAllTypes[mainIdx][idx].id + ";");
+					appointmentsOfAllTypes[mainIdx][idx].type = types[mainIdx].type;
+					dataArray.push(appointmentsOfAllTypes[mainIdx][idx])
+				}
+			}
+			return done(null, dataArray);
+		}catch(err){
+			return done(err);
+		}
+	}
 }

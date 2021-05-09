@@ -15,15 +15,6 @@ function executeQuery(query){
 	})
 }
 
-function getAppointmentTypes(){
-	return new Promise((resolve, reject)=>{
-		connection.query("SELECT DISTINCT(type) FROM service_config;", (err, results)=>{
-			if(err) reject(err);
-			return resolve(results);
-		})
-	})
-}
-
 function getConfig(type, serviceName){
 	return new Promise((resolve, reject)=>{
 		let query = "SELECT * FROM service_config WHERE type='" + type 
@@ -117,53 +108,33 @@ module.exports = {
 
 	getConfig: getConfig,
 
-	checkAvailability: function(input, done){
-		AppointmentClass = getClass(input.type);
-		getConfig(input.type,input.serviceName, (err, config)=>{
-			if(err) return done(err);
-			let query;
-			try{
-				AppointmentClass.validateTime(input, config);
-				query = AppointmentClass.getTimeAvailQuery(input, config);
-			}catch(err){
-				return done(err);
-			}
-			connection.query(query, (err, results, fields)=>{
-				if(err) return done(err);
-				if(results.length < 1){
-					return done(null, "Available");
-				}
-				return done(new Error("Time slot unavailable"));
+	getAppointmentTypes: function getAppointmentTypes(){
+		return new Promise((resolve, reject)=>{
+			connection.query("SELECT DISTINCT(type) FROM service_config;", (err, results)=>{
+				if(err) reject(err);
+				return resolve(results);
 			})
 		})
 	},
 
-	getUserAppointments: async function(constraint, done){
-		try{
-			let types = await getAppointmentTypes();
-			let query = "";
-			types.forEach(appointmentType=>{
-				query+="SELECT *, alt._id as _id FROM alt INNER JOIN " + appointmentType.type + " ON alt." + appointmentType.type + "_id=" + appointmentType.type +"._id"  
-					+ " INNER JOIN user ON user._id=creator_id"
-					+ " WHERE " + appointmentType.type + "_id IS NOT NULL AND creator_id=" + constraint.userId + ";";
-			})
-			let appointmentsOfAllTypes = await executeQuery(query);
-			query = "";
-			let dataArray = [];
-			for (let mainIdx in appointmentsOfAllTypes){
-				for (let idx in appointmentsOfAllTypes[mainIdx]){
-					AppointmentClass = getClass(types[mainIdx].type);
-					appointmentsOfAllTypes[mainIdx][idx] = AppointmentClass.convertSqlTimesToDate(appointmentsOfAllTypes[mainIdx][idx]);
-					appointmentsOfAllTypes[mainIdx][idx] = transmuteSnakeToCamel(appointmentsOfAllTypes[mainIdx][idx]);
-					appointmentsOfAllTypes[mainIdx][idx].otherResponses = await executeQuery("SELECT name, email, encourages, response FROM response INNER JOIN user on user._id=response.user_id WHERE final=1 AND alt_id=" + appointmentsOfAllTypes[mainIdx][idx].id + ";");
-					appointmentsOfAllTypes[mainIdx][idx].type = types[mainIdx].type;
-					dataArray.push(appointmentsOfAllTypes[mainIdx][idx])
-				}
+	checkAvailability: function(input, done){
+		return new Promise(async (resolve, reject)=>{
+			try{
+				AppointmentClass = getClass(input.type);
+				let config = await getConfig(input.type,input.serviceName);
+				AppointmentClass.validateTime(input, config);
+				let query = AppointmentClass.getTimeAvailQuery(input, config);
+				connection.query(query, (err, results, fields)=>{
+					if(err) return done(err);
+					if(results.length < 1){
+						return resolve("Available");
+					}
+					return reject(new Error("Time slot unavailable"));
+				})
+			}catch(err){
+				return reject(err);
 			}
-			return done(null, dataArray);
-		}catch(err){
-			return done(err);
-		}
+		})
 	},
 
 	removeAppointment: function(input, done){
@@ -459,13 +430,5 @@ module.exports = {
 		}catch(err){
 			return done(err);
 		}
-	},
-
-	updateUser: function(input, done){
-		executeQuery("UPDATE user SET " + User.getValues(input).join(",") + " WHERE _id=" + input.id + ";")
-		.then(data=>{
-			return done(null, "Updated Successfully");
-		})
-		.catch(err=>done(err));
 	}
 }
