@@ -24,12 +24,12 @@ export default function Login(props) {
             axios.post(url,formData,{headers:headers})
             .then((res)=>{
                 if(res.status===200){
-                    // setUser({
-                    //     id: res.data.id,
-                    //     name: res.data.name,
-                    //     role: res.data.role,
-                    //     email: res.data.email
-                    //   })
+                    setUser({
+                        id: res.data.id,
+                        name: res.data.name,
+                        role: res.data.role,
+                        email: res.data.email
+                      })
                     window.location.replace("/dashboard");
                 }
             })
