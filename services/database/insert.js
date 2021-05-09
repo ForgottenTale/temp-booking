@@ -1,8 +1,8 @@
 let {executeQuery, getConfig, checkAvailability} = require('./index.js');
 
-async function addOuIds(personId, ouIds, admin){
+async function addOuIds(person, ouIds){
 	await executeQuery(ouIds.reduce((query, ouId)=>{
-		return query+"INSERT INTO ou_map (person_id, ou_id, admin) VALUES(" + personId + ", " + ouId + "," + admin + ");"
+		return query+"INSERT INTO ou_map (person_id, ou_id, role, admin) VALUES(" + person.id + ", " + ouId + ",'" + person.role + "'," + person.groupAdmin + ");"
 	}, ""));	
 }
 
@@ -68,7 +68,7 @@ module.exports = {
 						return total;
 					}, [])
 					if(ouIdsToAdd.length>0){
-						await addOuIds(person.id, ouIdsToAdd, person.groupAdmin);
+						await addOuIds(person, ouIdsToAdd);
 						return done(null, person.email + " ADDED OUS: " + ouIdsToAdd.join(' '));
 					}
 				}
@@ -79,7 +79,7 @@ module.exports = {
             let result = await executeQuery(query);
             person.id = result.insertId;
             if(person.ouIds){
-				await addOuIds(person.id, person.ouIds, person.groupAdmin);
+				await addOuIds(person, person.ouIds);
 			}
             return done(null, person);
         }catch(err){

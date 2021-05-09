@@ -2,9 +2,9 @@ module.exports = {
     schema: [
         `CREATE TABLE IF NOT EXISTS person(
             _id INT PRIMARY KEY AUTO_INCREMENT,
-            role VARCHAR(20),
-            name VARCHAR(30) NOT NULL,
-            email VARCHAR(30) UNIQUE NOT NULL,
+            role VARCHAR(100),
+            name VARCHAR(100) NOT NULL,
+            email VARCHAR(100) UNIQUE NOT NULL,
             phone VARCHAR(15)
         );`,
         `CREATE TABLE IF NOT EXISTS user(
@@ -29,7 +29,7 @@ module.exports = {
             type VARCHAR(20) NOT NULL,
             service_name VARCHAR(30),
             global_restraint BOOLEAN DEFAULT 1,
-            group_restraint BOOLEAN DEFAULT 0,
+            group_restraint BOOLEAN DEFAULT 1,
             reviewer_restraint BOOLEAN DEFAULT 0,
             advance_days INT DEFAULT 5,
             padding_between_bookings_mins INT DEFAULT 15

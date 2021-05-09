@@ -56,7 +56,6 @@ module.exports = function(app){
                     parseCsv(req.files.groupAdmins[0].path)
                     .then(results=>{
                         Promise.all(results.map(result=>{
-                            result.groupAdmin = true;
                             return createPerson(result);
                         }))
                         .then(usersInfo=>res.status(200).send(usersInfo))

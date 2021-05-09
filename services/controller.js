@@ -6,11 +6,11 @@ class Person{
             this.validate(person);
             this.id = person.id;
             this.role = person.role?person.role.toUpperCase():null;
-            this.name = person.name.trim();
+            this.name = person.name?person.name.trim():null;
             this.email = person.email.trim();
-            this.phone = (person.phone+"").trim();
-            this.groupAdmin = person.groupAdmin?true:false;
-            this.role = person.role;
+            this.phone = person.phone?(person.phone+"").trim():null;
+            this.groupAdmin = person.groupAdmin=='1'?true:false;
+            this.role = person.role?person.role:null;
             if(person.ouIds)
                 this.ouIds = person.ouIds.split(",").map(ouId=>parseInt(ouId));
             else
@@ -21,13 +21,14 @@ class Person{
     }
 
     validate(person){
-        switch(person.role){
-            case "GLOBAL_ADMIN": break;
-            case "GROUP_ADMIN": break;
-            case "USER": break;
-            case "REVIEWER": break;
-            default: throw new Error("Invalid role");
-        }
+        // if(person.role)
+        //     switch(person.role){
+        //         case "GLOBAL_ADMIN": break;
+        //         case "GROUP_ADMIN": break;
+        //         case "USER": break;
+        //         case "REVIEWER": break;
+        //         default: throw new Error("Invalid role");
+        //     }
     }
 
     getPublicInfo(){

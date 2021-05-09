@@ -41,6 +41,7 @@ module.exports= {
                     subject: "Account creation",
                     html: "An account creation has been initiated follow <a href='" + link +"'>this link</a> to complete the process"
                 })
+                console.log("Message Send: %s", person.email);
                 console.log("Message sent: %s", info.messageId);
                 console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
                 resolve("message send");
