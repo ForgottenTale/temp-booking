@@ -137,6 +137,7 @@ class Service{
     constructor(input){
         try{
             this.required = ["type", "serviceName", "creatorId", "title", "ouId"];
+            this.editable = ["description"];
             this._id = input._id;
             this.type = input.type.trim();
             this.serviceName = input.serviceName.trim().toLowerCase();
@@ -151,7 +152,19 @@ class Service{
             throw err;
         }
     }
-    
+
+    static getValuesForEdit(params){
+        let values = [];
+        for(let key in params){
+            switch(key){
+                case 'description':    values.push("description='" + params.description + "'");
+                                break;
+                default     :   throw(new Error(key + " is not editable"));
+            }
+        }
+        return values;
+    }
+
     checkRequired(input){
         this.required.forEach(param=>{
             if(!input[param])
@@ -222,6 +235,20 @@ class OnlineMeeting extends Service {
         if(startOfAdvanceTime<=(new Date())){
             throw new Error('Booking has to be done ' + config.advance_days + ' days in advance');
         }
+    }
+
+    static getValuesForEdit(params){
+        let values = super.getValuesForEdit(params);
+        for(let key in params){
+            switch(key){
+                case 'speakerName':    values.push("speaker_name='" + params.speakerName + "'");
+                                break;
+                case 'speakerEmail':    values.push("speaker_email='" + params.speakerName + "'");
+                                break;
+                default     :   throw(new Error(key + " is not editable"));
+            }
+        }
+        return values;
     }
 
     static getTimeAvailQuery(input, config){
@@ -332,6 +359,7 @@ class ENotice extends Service{
     constructor(input){
         super(input);
         this.required = ["express", "reminder", "publishTime"];
+        this.editable = ["express"];
         this.express = input.express=="express"||(input.express+"")=="1"?true:false;
         this.reminder = input.reminder=="yes"||(input.reminder+"")=="1"?true:false;
         this.publishTime = new Date(input.publishTime);

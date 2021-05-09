@@ -3,7 +3,7 @@ const {getClass, User} = require('../controller.js');
 const { checkAvailability } = require('../database/index.js');
 const {appointment: addAppointment} = require('../database/insert.js');
 const {ou: getOu, userAppointments: getUserAppointments, activity: getActivity} = require('../database/get.js');
-const {user: updateUser} = require('../database/update.js')
+const {user: updateUser, appointment: updateAppointment} = require('../database/update.js')
 const {appointment: delAppointment} = require('../database/del.js');
 const upload = require('../upload.js');
 const {respondError, removeImg} = require('../utils.js');
@@ -31,6 +31,15 @@ module.exports = function(app){
             respondError('Unsupported query', res);
         }
     })
+    .patch(auth.ensureAuthenticated, (req, res)=>{
+        try{
+            updateAppointment(req.body, req.query)
+            .then(data=>res.status(200).json(data))
+            .catch(err=>respondError(err, res));
+        }catch(err){
+            respondError(err, res);
+        }
+    })
 
     app.route('/image/:fileName')
     .get(auth.ensureAuthenticated, (req, res)=>{
@@ -46,9 +55,6 @@ module.exports = function(app){
     })
 
     app.route('/api/book')
-    .patch(auth.ensureAuthenticated, (req, res)=>{
-        respondError(new Error("Inworks"), res);
-    })
     .post(auth.ensureAuthenticated, (req, res)=>{
         upload.single('img')(req, res, (err)=>{
             try{
@@ -101,8 +107,7 @@ module.exports = function(app){
 
     app.route('/api/activity')
     .get(auth.ensureAuthenticated, (req, res)=>{
-        if(!req.query.ouId)
-            return respondError(new Error("OuId is required"), res);
+        
         getActivity(req.query.ouId, (err, results)=>{
             if(err) return respondError(err, res);
             res.status(200).json(results);

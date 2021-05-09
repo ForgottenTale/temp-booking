@@ -38,7 +38,10 @@ async function findNextOfKin(newAppointment){
 				await executeQuery(query);
 				return resolve({altAppointment, mailTo, mailCc});
 			}else{
-				groupAdmins.forEach(admin=>mailCc.push(admin.email));
+				for(let i in groupAdmins){
+					await executeQuery("INSERT INTO response (person_id, alt_id) VALUES(" + groupAdmins[i].person_id + "," + altAppointment.insertId);
+					mailCc.push(groupAdmins[i].email);
+				}
 			}
 
 			//find reviewers
@@ -59,7 +62,10 @@ async function findNextOfKin(newAppointment){
 				await executeQuery(query);
 				return resolve({altAppointment, mailTo, mailCc});
 			}else{
-				reviewers.forEach(reviewer=>mailCc.push(reviewer.email));
+				for(let i in reviewers){
+					await executeQuery("INSERT INTO response (person_id, alt_id) VALUES(" + reviewers[i].person_id + "," + altAppointment.insertId);
+					mailCc.push(reviewers[i].email);
+				}
 			}
 
 			//find global admins
@@ -77,7 +83,10 @@ async function findNextOfKin(newAppointment){
 				await executeQuery(query);
 				return resolve({altAppointment, mailTo, mailCc});
 			}else{
-				globalAdmins.forEach(globalAdmin=>mailCc.push(globalAdmin.email));
+				for(let i in globalAdmins){
+					await executeQuery("INSERT INTO response (person_id, alt_id) VALUES(" + globalAdmins[i].person_id + "," + altAppointment.insertId);
+					mailCc.push(globalAdmins[i].email);
+				}
 			}
 		}catch(err){
 			return reject(err);

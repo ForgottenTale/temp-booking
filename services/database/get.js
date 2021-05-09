@@ -101,7 +101,11 @@ module.exports = {
     activity: async function(ouId, done){
 		let returnData = {};
 		try{
-			let data = await executeQuery("SELECT status, count(*) FROM alt WHERE ou_id=" + ouId + " GROUP BY status;");
+			let query = "SELECT status, count(*) FROM alt";
+            if(ouId)
+                query += " WHERE ou_id=" + ouId ;
+            query+= " GROUP BY status;";
+            let data = await executeQuery(query);
 			data.forEach(statusType=>{
 				returnData[statusType.status.toLowerCase()] = statusType["count(*)"];
 			})
