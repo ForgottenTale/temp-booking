@@ -112,18 +112,18 @@ module.exports = {
             FOREIGN KEY(ou_id) REFERENCES ou(_id)
         );`,
         `CREATE TABLE IF NOT EXISTS next_to_approve(
-            user_id INT NOT NULL,
+            person_id INT NOT NULL,
             alt_id INT NOT NULL,
-            FOREIGN KEY (user_id) REFERENCES user(_id),
+            FOREIGN KEY (person_id) REFERENCES person(_id),
             FOREIGN KEY (alt_id) REFERENCES alt(_id)
         );`,
         `CREATE TABLE IF NOT EXISTS response(
-            user_id INT NOT NULL,
+            person_id INT NOT NULL,
             alt_id INT NOT NULL,
             encourages BOOLEAN,
             response VARCHAR(100),
             final BOOLEAN DEFAULT false NOT NULL,
-            FOREIGN KEY(user_id) REFERENCES user(_id),
+            FOREIGN KEY(person_id) REFERENCES person(_id),
             FOREIGN KEY(alt_id) REFERENCES alt(_id) 
         );`
     ]

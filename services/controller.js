@@ -197,7 +197,6 @@ class OnlineMeeting extends Service {
     constructor(input){
         super(input);
         this.required = ["speakerName", "speakerEmail", "startTime", "endTime"];
-        this.checkRequired = super.checkRequired(input);
         this.speakerName = input.speakerName.trim();
         this.speakerEmail = input.speakerEmail.trim();
         this.startTime = new Date(input.startTime);
@@ -267,7 +266,6 @@ class InternSupport extends Service{
     constructor(input){
         super(input);
         this.required = ["startTime", "endTime"];
-        this.checkRequired = super.checkRequired(input);
         this.startTime = new Date(input.startTime);
         this.endTime = new Date(input.endTime);
         this.wordsCount = input.wordsCount;
@@ -332,7 +330,6 @@ class ENotice extends Service{
     constructor(input){
         super(input);
         this.required = ["express", "reminder", "publishTime"];
-        this.checkRequired = super.checkRequired(input);
         this.express = input.express=="express"||(input.express+"")=="1"?true:false;
         this.reminder = input.reminder=="yes"||(input.reminder+"")=="1"?true:false;
         this.publishTime = new Date(input.publishTime);
@@ -383,7 +380,6 @@ class Publicity extends Service{
     constructor(input){
         super(input);
         this.required = ["publishTime"];
-        this.checkRequired = super.checkRequired(input);
         this.publishTime = new Date(input.publishTime);
     }
 

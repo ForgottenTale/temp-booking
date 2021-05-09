@@ -1,5 +1,5 @@
 const auth = require('../auth.js');
-const {hash: insertHash, person: insertPerson, groupAdmin: addGroupAdmin} = require('../database/insert.js');
+const {hash: insertHash, person: insertPerson} = require('../database/insert.js');
 const upload = require('../upload.js');
 const { parseCsv, respondError, generateAccRegLink, generateHash} = require('../utils.js');
 const {Person} = require('../controller.js');

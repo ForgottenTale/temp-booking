@@ -25,8 +25,15 @@ module.exports = {
             let values = User.getValues(params).join(' AND ');
             let results = await executeQuery("SELECT user._id, person_id, password, super_admin, super_creator, role, name, email, phone FROM user INNER JOIN person ON person_id = person._id WHERE " + values + ";")
             let user = new User(transmuteSnakeToCamel(results[0]));
-            let ouIds = await executeQuery("SELECT ou_id FROM ou_map WHERE person_id=" + user.personId);
-            user.ouIds = ouIds.map(e=>e.ou_id);
+            let ouIds = await executeQuery("SELECT ou_id, name, role, admin FROM ou_map INNER JOIN ou ON ou_map.ou_id = ou._id WHERE person_id=" + user.personId);
+            user.ouIds = ouIds.map(e=>{
+                return {
+                    ouId: e.ou_id,
+                    ouName: e.name,
+                    ouRole: e.role,
+                    ouAdmin: e.admin?true:false
+                }
+            });
             done(null, user);
         }catch(err){
             done(err);

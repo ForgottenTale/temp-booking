@@ -51,19 +51,20 @@ module.exports= {
         })
     },
 
-    newAppointment: function(input){
+    newAppointment: function(input, emailIds){
         return new Promise(async(resolve, reject)=>{
-            let transporter = nodemailer.createTransport(transporterData);
-            let type = input.type.split("_").join(" ");
-            type[0] = type[0].toUpperCase();
             try{
+                let transporter = nodemailer.createTransport(transporterData);
+                let type = input.type.split("_").join(" ");
+                type[0] = type[0].toUpperCase();
                 let info = await transporter.sendMail({
                     from: '<' + transporterData.auth.user + '>',
-                    to: input.emailIds,
+                    to: emailIds.mailTo,
+                    cc: emailIds.mailCc,
                     subject: "New appointment(#" + input.id + ") created and needs your approval",
                     html: "<span>An " + type + " needs your approval </span>"
                 })
-                console.log("Mail sent to:", input.emailIds);
+                console.log("Mail sent to:", emailIds);
                 console.log("Message sent: %s", info.messageId);
                 console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
                 resolve("message send");

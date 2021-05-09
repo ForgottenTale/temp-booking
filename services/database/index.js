@@ -24,22 +24,24 @@ function getAppointmentTypes(){
 	})
 }
 
-function getConfig(type, serviceName, done){
-	let query = "SELECT * FROM service_config WHERE type='" + type 
-		+ "' AND (service_name='" + serviceName + "' OR service_name is null);" ;
-	connection.query(query, (err, results)=>{
-		if(err) return done(err);
-		if(results.length<1){
-			err = new Error("Config not found");
-			err.sql = query;
-			return done(err);
-		}
-		if(results.length>2)
-			results.forEach(result=>{
-				if(result.service_name != null)
-					return done(null, results);
-			})
-		return done(null, results[0]);
+function getConfig(type, serviceName){
+	return new Promise((resolve, reject)=>{
+		let query = "SELECT * FROM service_config WHERE type='" + type 
+			+ "' AND (service_name='" + serviceName + "' OR service_name is null);" ;
+		connection.query(query, (err, results)=>{
+			if(err) return done(err);
+			if(results.length<1){
+				err = new Error("Config not found");
+				err.sql = query;
+				return reject(err);
+			}
+			if(results.length>1)
+				results.forEach(result=>{
+					if(result.service_name != null)
+						return resolve(result);
+				})
+			return resolve(results[0]);
+		})
 	})
 }
 
