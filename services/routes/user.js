@@ -4,6 +4,7 @@ const { checkAvailability } = require('../database/index.js');
 const {appointment: addAppointment} = require('../database/insert.js');
 const {ou: getOu, userAppointments: getUserAppointments} = require('../database/get.js');
 const {user: updateUser} = require('../database/update.js')
+const {appointment: delAppointment} = require('../database/del.js');
 const upload = require('../upload.js');
 const {respondError, removeImg} = require('../utils.js');
 
@@ -11,20 +12,21 @@ module.exports = function(app){
 
     app.route('/api/my-appointments')
     .get(auth.ensureAuthenticated, (req, res)=>{
-        getUserAppointments({userId: req.user.id}, (err, appointments)=>{
+        getUserAppointments({userId: req.user.id, ouId: req.query.ouId}, (err, appointments)=>{
             if(err) return respondError(err, res);
             res.status(200).json(appointments);
         });
     })
     .delete(auth.ensureAuthenticated, (req, res)=>{
         if(req.body.id){
-            database.removeAppointment({
+            delAppointment({
                 user: req.user,
                 appointmentId: req.body.id
-            }, (err, msg)=>{
-                if(err) return respondError(err, res);
+            })
+            .then(msg=>{
                 res.status(200).json({message: msg});
             })
+            .catch(err=>respondError(err, res));
         }else{
             respondError('Unsupported query', res);
         }
@@ -33,11 +35,6 @@ module.exports = function(app){
     app.route('/image/:fileName')
     .get(auth.ensureAuthenticated, (req, res)=>{
         res.sendFile(process.cwd() + '/uploads/' + req.params.fileName)
-    })
-
-    app.route('/api/service')
-    .patch(auth.ensureAuthenticated, (req, res)=>{
-        res.status(200).json(req.body);
     })
 
     app.route('/api/ou')

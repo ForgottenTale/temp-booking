@@ -39,18 +39,18 @@ function getConfig(type, serviceName){
 function findMailsOfInvolved(input){
 	return new Promise((resolve, reject)=>{
 		Promise.all([
-			executeQuery("SELECT * FROM next_to_approve INNER JOIN user ON user._id=user_id WHERE alt_id=" + input.id),
-			executeQuery("SELECT * FROM response INNER JOIN user ON user._id=user_id WHERE alt_id=" + input.id)
+			executeQuery("SELECT * FROM next_to_approve INNER JOIN person ON person._id=person_id WHERE alt_id=" + input.id),
+			executeQuery("SELECT * FROM response INNER JOIN person ON person._id=person_id WHERE alt_id=" + input.id)
 		])
 		.then(data=>{
 			let emailIds = [];
-			data[0].forEach(user=>{
-				if(emailIds.indexOf(user.email)==-1)
-					emailIds.push(user.email);
+			data[0].forEach(person=>{
+				if(emailIds.indexOf(person.email)==-1)
+					emailIds.push(person.email);
 			})
-			data[1].forEach(user=>{
-				if(emailIds.indexOf(user.email)==-1)
-					emailIds.push(user.email);
+			data[1].forEach(person=>{
+				if(emailIds.indexOf(person.email)==-1)
+					emailIds.push(person.email);
 			})
 			resolve(emailIds);
 		})
@@ -108,6 +108,8 @@ module.exports = {
 
 	getConfig: getConfig,
 
+	findMailsOfInvolved: findMailsOfInvolved,
+
 	getAppointmentTypes: function getAppointmentTypes(){
 		return new Promise((resolve, reject)=>{
 			connection.query("SELECT DISTINCT(type) FROM service_config;", (err, results)=>{
@@ -135,52 +137,6 @@ module.exports = {
 				return reject(err);
 			}
 		})
-	},
-
-	removeAppointment: function(input, done){
-		executeQuery("SELECT * FROM alt WHERE _id=" + input.appointmentId + ";")
-		.then(appointment=>{
-			let type = "";
-			let typeId;
-			if(appointment.length < 1)
-				return done(new Error("Appointment not found"))
-			if(appointment[0].creator_id==input.user._id){
-				//find type
-				for(let key in appointment[0]){
-					if(key=="creator_id" || key=="_id")
-						continue;
-					if((/_id$/g).test(key) && appointment[0][key]){
-						type = key.replace("_id", "");
-						typeId = appointment[0][key];
-					}
-				}
-				if(!type)
-					return done(new Error("Appointment type not found"));
-				executeQuery("SELECT * FROM next_to_approve INNER JOIN user ON user._id=user_id WHERE alt_id=" + input.appointmentId)
-				.then(nextToApprove=>{
-					let emailIds = [];
-					findMailsOfInvolved({id: input.appointmentId})
-					.then(involved=>{
-						emailIds.push(...involved);
-						emailIds.push(input.user.email);
-						let query = "DELETE FROM next_to_approve WHERE alt_id=" + input.appointmentId + ";"
-						+ "DELETE FROM response WHERE alt_id=" + input.appointmentId + ";"
-						+ "DELETE FROM alt WHERE _id=" + input.appointmentId + ";"
-						+ "DELETE FROM " + type + " WHERE _id=" + typeId + ";"
-						
-						executeQuery(query)
-						.then(response=>{
-							mail.deleted({id: input.appointmentId, emailIds})
-							return done(null, "Deleted Successfully")
-						})
-						.catch(err=>done(err))
-						})
-					})
-					.catch(err=>done(err));
-			}else
-				return done("Appointments can only be deleted by the creator");
-		})
-		.catch(err=>done(err))
 	},
 
 	getCalendarData: function(constraint, done){

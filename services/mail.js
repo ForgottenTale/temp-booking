@@ -30,6 +30,12 @@ if(process.env.NODE_ENV=="testing" || process.env.NODE_ENV=="development"){
 
 console.log("Mail: ", transporterData.auth.user || "INACTIVE");
 
+function logMailInfo(emailIds, messageId, testUrl){
+    console.log("Mail sent to:", emailIds);
+    console.log("Message sent: %s", messageId);
+    console.log("Preview URL: %s", testUrl);
+}
+
 module.exports= {
     accountInitiated: function(person, link){
         return new Promise(async(resolve, reject)=>{
@@ -64,30 +70,26 @@ module.exports= {
                     subject: "New appointment(#" + input.id + ") created and needs your approval",
                     html: "<span>An " + type + " needs your approval </span>"
                 })
-                console.log("Mail sent to:", emailIds);
-                console.log("Message sent: %s", info.messageId);
-                console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-                resolve("message send");
+                logMailInfo(emailIds, info.messageId, nodemailer.getTestMessageUrl(info));
+                resolve("Message send");
             }catch(err){
                 reject(err);
             }
         })
     },
 
-    deleted: function(input){
+    deleted: function(id, emailIds){
         return new Promise(async(resolve, reject)=>{
             let transporter = nodemailer.createTransport(transporterData);
             try{
                 let info = await transporter.sendMail({
                     from: '<' + transporterData.auth.user + '>',
-                    to: input.emailIds,
-                    subject: "Appointment #" + input.id + " has been deleted",
-                    html: "<span>Appointment # "+input.id+" has been deleted by its creator </span>"
+                    to: emailIds.mailTo,
+                    cc: emailIds.mailCc,
+                    subject: "Appointment #" + id + " has been deleted",
+                    html: "<span>Appointment # " + id + " has been deleted by its creator </span>"
                 })
-                
-                console.log("Email sent to: ", input.emailIds);
-                console.log("Message sent: %s", info.messageId);
-                console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+                logMailInfo(emailIds, info.messageId, nodemailer.getTestMessageUrl(info));
                 resolve("Message Send");
             }catch(err){
                 reject(err);

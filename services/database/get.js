@@ -74,7 +74,10 @@ module.exports = {
 				query+="SELECT *, alt._id as _id FROM alt INNER JOIN " + appointmentType.type + " ON alt." + appointmentType.type + "_id=" + appointmentType.type +"._id"  
 					+ " INNER JOIN user ON user._id=creator_id"
                     + " INNER JOIN person on person._id=user.person_id"
-					+ " WHERE " + appointmentType.type + "_id IS NOT NULL AND creator_id=" + constraint.userId + ";";
+					+ " WHERE " + appointmentType.type + "_id IS NOT NULL AND creator_id=" + constraint.userId ;
+                if(constraint.ouId)
+                    query += " AND alt.ou_id="+constraint.ouId;
+                query += ";";
 			})
 			let appointmentsOfAllTypes = await executeQuery(query);
 			query = "";
