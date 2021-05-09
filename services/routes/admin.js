@@ -1,6 +1,6 @@
 const auth = require('../auth.js');
 const {getClass} = require('../controller.js');
-const {allUsers: getAllUsers} = require('../database/get.js');
+const {allUsers: getAllUsers, userApprovals: getUserApprovals, historyOfApprovals: getHistoryOfApprovals} = require('../database/get.js');
 const {respondError} = require('../utils.js');
 
 module.exports = function(app){
@@ -21,8 +21,8 @@ module.exports = function(app){
     
     app.route('/api/my-approvals')
     .get(auth.ensureAuthenticated, auth.ensureAdmin, (req, res)=>{
-        req.query.user_id = req.user._id;
-        database.findUserApprovals(req.query, (err, results)=>{
+        req.query.user = req.user;
+        getUserApprovals(req.query, (err, results)=>{
             if(err) return respondError(err, res);
             res.status(200).json(results);
         })
@@ -44,8 +44,8 @@ module.exports = function(app){
 
     app.route('/api/my-approvals/history')
     .get(auth.ensureAuthenticated, auth.ensureAdmin, (req, res)=>{
-        req.query.user_id = req.user._id;
-        database.findHistoryOfApprovals(req.query, (err, results)=>{
+        req.query.user = req.user;
+        getHistoryOfApprovals(req.query, (err, results)=>{
             if(err) return respondError(err, res);
             res.status(200).json(results);
         })

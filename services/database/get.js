@@ -1,4 +1,4 @@
-const {executeQuery, getAppointmentTypes} = require('./index.js');
+const {executeQuery, getAppointmentTypes, getConfig} = require('./index.js');
 const {Person, User, getClass} = require('../controller.js');
 const {transmuteSnakeToCamel} = require('../utils.js');
 
@@ -113,5 +113,76 @@ module.exports = {
 		}catch(err){
 			return done(err);
 		}
-	}
+	},
+
+	userApprovals: async function(constraint, done){
+		try{
+			let types = await getAppointmentTypes();
+			let query = "";
+			types.forEach(type=>{
+				query += "SELECT *, alt._id as _id FROM alt"
+					+ " INNER JOIN " + type.type + " ON " + type.type + "_id=" + type.type + "._id"
+					+ " INNER JOIN next_to_approve as n ON n.alt_id=alt._id"
+					+ " INNER JOIN user ON creator_id=user._id"
+					+ " INNER JOIN person ON user.person_id=person._id"
+					+ " WHERE n.person_id=" + constraint.user.personId;
+				if(constraint.id)
+					query += " AND alt._id=" + constraint.id + ";"
+				else
+					query += ";";
+			})
+			let appointmentsOfAllTypes = await executeQuery(query);
+			let dataArray = [];
+			for (let mainIdx in appointmentsOfAllTypes){
+				for (let idx in appointmentsOfAllTypes[mainIdx]){
+					AppointmentClass = getClass(types[mainIdx].type);
+					let config = await getConfig(types[mainIdx].type, appointmentsOfAllTypes[mainIdx][idx].service_name);
+					appointmentsOfAllTypes[mainIdx][idx].encourageMode = !config.follow_hierarchy;
+					appointmentsOfAllTypes[mainIdx][idx] = AppointmentClass.convertSqlTimesToDate(appointmentsOfAllTypes[mainIdx][idx]);
+					appointmentsOfAllTypes[mainIdx][idx] = transmuteSnakeToCamel(appointmentsOfAllTypes[mainIdx][idx]);
+					appointmentsOfAllTypes[mainIdx][idx].otherResponses = await executeQuery("SELECT name, email, encourages, response FROM response INNER JOIN person on person._id=response.person_id WHERE alt_id=" + appointmentsOfAllTypes[mainIdx][idx].id + ";");
+					appointmentsOfAllTypes[mainIdx][idx].type = types[mainIdx].type;
+					delete(appointmentsOfAllTypes[mainIdx][idx].password);
+					dataArray.push(appointmentsOfAllTypes[mainIdx][idx])
+				}
+			}
+			return done(null, dataArray);
+		}catch(err){
+			return done(err);
+		}
+	},
+
+	historyOfApprovals: async function(constraint, done){
+		try{
+			let types = await getAppointmentTypes();
+			let query = "";
+			types.forEach(type=>{
+				query += "SELECT *, alt._id as _id FROM alt"
+					+ " INNER JOIN " + type.type + " ON " + type.type + "_id=" + type.type + "._id"
+					+ " INNER JOIN response as r ON r.alt_id=alt._id"
+					+ " INNER JOIN user ON creator_id=user._id"
+					+ " INNER JOIN person ON user.person_id=person._id"
+					+ " WHERE r.person_id=" + constraint.user.personId;
+					if(constraint.id)
+						query += " AND alt._id=" + constraint.id + ";"
+					else
+						query += ";";
+			})
+			let appointmentsOfAllTypes = await executeQuery(query);
+			let dataArray = [];
+			for (let mainIdx in appointmentsOfAllTypes){
+				for (let idx in appointmentsOfAllTypes[mainIdx]){
+					AppointmentClass = getClass(types[mainIdx].type);
+					appointmentsOfAllTypes[mainIdx][idx] = AppointmentClass.convertSqlTimesToDate(appointmentsOfAllTypes[mainIdx][idx]);
+					appointmentsOfAllTypes[mainIdx][idx] = transmuteSnakeToCamel(appointmentsOfAllTypes[mainIdx][idx]);
+					appointmentsOfAllTypes[mainIdx][idx].otherResponses = await executeQuery("SELECT name, email, encourages, response FROM response INNER JOIN person on person._id=response.person_id WHERE alt_id=" + appointmentsOfAllTypes[mainIdx][idx].id + " AND user_id!=" + constraint.user_id + ";");
+					appointmentsOfAllTypes[mainIdx][idx].type = types[mainIdx].type;
+					dataArray.push(appointmentsOfAllTypes[mainIdx][idx]);
+				}
+			}		
+			return done(null, dataArray);	
+		}catch(err){
+			return done(err);
+		}
+	},
 }
