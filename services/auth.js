@@ -3,17 +3,45 @@ const {user: getUser} = require('./database/get.js');
 const bcrypt = require('bcrypt');
 const LocalStrategy = require('passport-local');
 
+function findAndSetOuInfo(userOus, ouId){
+    if(!ouId)
+            throw new Error("OuId is required");
+    for(let i in userOus)
+        if(userOus[i].ouId==ouId)
+            return {id: id, name: userOus[i].ouName, admin: userOus[i].admin}
+    throw new Error("Forbidden");
+}
+
 module.exports = {
     ensureAuthenticated: function(req, res, next){
         if(req.isAuthenticated())
             return next();
-        res.redirect('/login');
+        res.redirect('/unauthorized');
     },
 
-    ensureAdmin: function(req, res, next){
-        if(req.user.role=="GLOBAL_ADMIN" || req.user.role=="GROUP_ADMIN" || req.user.superAdmin)
+    ensureOu: function(req, res, next){
+        if(req.user.superAdmin)
             return next();
-        res.redirect('/unauthorized');
+        if(!req.activeOu)
+            try{
+                req.user.activeOu = findAndSetOuInfo(req.user.ous, req.query.ouId);
+                return next();
+            }catch(err){
+                console.error(err);
+                res.status(403).json({error: err.message});
+            }
+    },
+
+    ensureOuAdmin: function(req, res, next){
+        try{
+            req.user.activeOu = findAndSetOuInfo(req.user.ous, req.query.ouId);
+            if(!req.activeOu.admin)
+                throw new Error("Forbidden");
+            return next();
+        }catch(err){
+            console.error(err);
+            res.status(403).json({error: err.message});
+        }
     },
 
     ensureSuperAdmin: function(req, res, next){

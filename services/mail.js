@@ -57,7 +57,7 @@ module.exports= {
         })
     },
 
-    newAppointment: function(input, emailIds){
+    newBooking: function(input, emailIds){
         return new Promise(async(resolve, reject)=>{
             try{
                 let transporter = nodemailer.createTransport(transporterData);

@@ -152,9 +152,10 @@ class Service{
         let values = [];
         for(let key in params){
             switch(key){
-                case 'description':    values.push("description='" + params.description + "'");
-                                break;
-                default     :   throw(new Error(key + " is not editable"));
+                case 'description'  : values.push("description='" + params.description + "'");
+                                    delete params[key];
+                                    break;
+                default             :   throw(new Error(key + " is not editable"));
             }
         }
         return values;

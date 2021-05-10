@@ -73,12 +73,12 @@ module.exports = {
 			let types = await getServiceTypes();
 			let query = "";
 			types.forEach(serviceType=>{
-				query+="SELECT *, slt._id as _id FROM slt INNER JOIN " + serviceType.type + " ON slt." + serviceType.type + "_id=" + serviceType.type +"._id"  
+				query+="SELECT *, blt._id as _id FROM blt INNER JOIN " + serviceType.type + " ON blt." + serviceType.type + "_id=" + serviceType.type +"._id"  
 					+ " INNER JOIN user ON user._id=creator_id"
                     + " INNER JOIN person on person._id=user.person_id"
 					+ " WHERE " + serviceType.type + "_id IS NOT NULL AND creator_id=" + constraint.userId ;
                 if(constraint.ouId)
-                    query += " AND slt.ou_id="+constraint.ouId;
+                    query += " AND blt.ou_id="+constraint.ouId;
                 query += ";";
 			})
 			let bookingsOfAllTypes = await executeQuery(query);
@@ -89,7 +89,7 @@ module.exports = {
 					ServiceClass = getClass(types[mainIdx].type);
 					bookingsOfAllTypes[mainIdx][idx] = ServiceClass.convertSqlTimesToDate(bookingsOfAllTypes[mainIdx][idx]);
 					bookingsOfAllTypes[mainIdx][idx] = transmuteSnakeToCamel(bookingsOfAllTypes[mainIdx][idx]);
-					bookingsOfAllTypes[mainIdx][idx].otherResponses = await executeQuery("SELECT name, email, encourages, response FROM response INNER JOIN person on person._id=response.person_id WHERE final=1 AND slt_id=" + bookingsOfAllTypes[mainIdx][idx].id + ";");
+					bookingsOfAllTypes[mainIdx][idx].otherResponses = await executeQuery("SELECT name, email, encourages, response FROM response INNER JOIN person on person._id=response.person_id WHERE final=1 AND blt_id=" + bookingsOfAllTypes[mainIdx][idx].id + ";");
 					bookingsOfAllTypes[mainIdx][idx].type = types[mainIdx].type;
 					dataArray.push(bookingsOfAllTypes[mainIdx][idx])
 				}
@@ -103,7 +103,7 @@ module.exports = {
     activity: async function(ouId, done){
 		let returnData = {};
 		try{
-			let query = "SELECT status, count(*) FROM slt";
+			let query = "SELECT status, count(*) FROM blt";
             if(ouId)
                 query += " WHERE ou_id=" + ouId ;
             query+= " GROUP BY status;";
@@ -122,14 +122,15 @@ module.exports = {
 			let types = await getServiceTypes();
 			let query = "";
 			types.forEach(type=>{
-				query += "SELECT *, slt._id as _id FROM slt"
+				query += "SELECT *, blt._id as _id FROM blt"
 					+ " INNER JOIN " + type.type + " ON " + type.type + "_id=" + type.type + "._id"
-					+ " INNER JOIN next_to_approve as n ON n.slt_id=slt._id"
+					+ " INNER JOIN next_to_approve as n ON n.blt_id=blt._id"
 					+ " INNER JOIN user ON creator_id=user._id"
 					+ " INNER JOIN person ON user.person_id=person._id"
-					+ " WHERE n.person_id=" + constraint.user.personId;
+					+ " WHERE n.person_id=" + constraint.user.personId
+					+ " AND blt.ou_id=" + constraint.ouId;
 				if(constraint.id)
-					query += " AND slt._id=" + constraint.id + ";"
+					query += " AND blt._id=" + constraint.id + ";"
 				else
 					query += ";";
 			})
@@ -142,7 +143,7 @@ module.exports = {
 					bookingsOfAllTypes[mainIdx][idx].encourageMode = !config.follow_hierarchy;
 					bookingsOfAllTypes[mainIdx][idx] = ServiceClass.convertSqlTimesToDate(bookingsOfAllTypes[mainIdx][idx]);
 					bookingsOfAllTypes[mainIdx][idx] = transmuteSnakeToCamel(bookingsOfAllTypes[mainIdx][idx]);
-					bookingsOfAllTypes[mainIdx][idx].otherResponses = await executeQuery("SELECT name, email, encourages, response FROM response INNER JOIN person on person._id=response.person_id WHERE slt_id=" + bookingsOfAllTypes[mainIdx][idx].id + ";");
+					bookingsOfAllTypes[mainIdx][idx].otherResponses = await executeQuery("SELECT name, email, encourages, response FROM response INNER JOIN person on person._id=response.person_id WHERE blt_id=" + bookingsOfAllTypes[mainIdx][idx].id + ";");
 					bookingsOfAllTypes[mainIdx][idx].type = types[mainIdx].type;
 					delete(bookingsOfAllTypes[mainIdx][idx].password);
 					dataArray.push(bookingsOfAllTypes[mainIdx][idx])
@@ -159,14 +160,14 @@ module.exports = {
 			let types = await getServiceTypes();
 			let query = "";
 			types.forEach(type=>{
-				query += "SELECT *, slt._id as _id FROM slt"
+				query += "SELECT *, blt._id as _id FROM blt"
 					+ " INNER JOIN " + type.type + " ON " + type.type + "_id=" + type.type + "._id"
-					+ " INNER JOIN response as r ON r.slt_id=slt._id"
+					+ " INNER JOIN response as r ON r.blt_id=blt._id"
 					+ " INNER JOIN user ON creator_id=user._id"
 					+ " INNER JOIN person ON user.person_id=person._id"
 					+ " WHERE r.person_id=" + constraint.user.personId;
 					if(constraint.id)
-						query += " AND slt._id=" + constraint.id + ";"
+						query += " AND blt._id=" + constraint.id + ";"
 					else
 						query += ";";
 			})
@@ -177,7 +178,7 @@ module.exports = {
 					ServiceClass = getClass(types[mainIdx].type);
 					bookingsOfAllTypes[mainIdx][idx] = ServiceClass.convertSqlTimesToDate(bookingsOfAllTypes[mainIdx][idx]);
 					bookingsOfAllTypes[mainIdx][idx] = transmuteSnakeToCamel(bookingsOfAllTypes[mainIdx][idx]);
-					bookingsOfAllTypes[mainIdx][idx].otherResponses = await executeQuery("SELECT name, email, encourages, response FROM response INNER JOIN person on person._id=response.person_id WHERE slt_id=" + bookingsOfAllTypes[mainIdx][idx].id + " AND user_id!=" + constraint.user_id + ";");
+					bookingsOfAllTypes[mainIdx][idx].otherResponses = await executeQuery("SELECT name, email, encourages, response FROM response INNER JOIN person on person._id=response.person_id WHERE blt_id=" + bookingsOfAllTypes[mainIdx][idx].id + " AND user_id!=" + constraint.user_id + ";");
 					bookingsOfAllTypes[mainIdx][idx].type = types[mainIdx].type;
 					dataArray.push(bookingsOfAllTypes[mainIdx][idx]);
 				}

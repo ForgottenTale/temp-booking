@@ -17,7 +17,7 @@ async function findNextOfKin(newBooking){
 			let {names, values} = newBooking.getAllNamesAndValues();
 			let addedBooking = await executeQuery("INSERT INTO " + newBooking.type 
 				+ "(" + names.join(',') + ") VALUES(" + values.join(',') + ");");
-			let bltBooking = await executeQuery("INSERT INTO slt(" + newBooking.type + "_id, creator_id, ou_id,status) VALUES("
+			let bltBooking = await executeQuery("INSERT INTO blt(" + newBooking.type + "_id, creator_id, ou_id,status) VALUES("
 				+ addedBooking.insertId + "," + newBooking.creatorId + "," + newBooking.ouId + ",'" + newBooking.status + "');");
 
 			let config = await getConfig(newBooking.type, newBooking.serviceName);
@@ -30,7 +30,7 @@ async function findNextOfKin(newBooking){
 					throw new Error("This ou has no admin");
 				let query = "";
 				groupAdmins.forEach(admin=>{
-					query += "INSERT INTO next_to_approve(person_id, slt_id) VALUES("
+					query += "INSERT INTO next_to_approve(person_id, blt_id) VALUES("
 					+ admin.person_id + "," + bltBooking.insertId
 					+ ");";
 					mailTo.push(admin.email);
@@ -39,7 +39,7 @@ async function findNextOfKin(newBooking){
 				return resolve({bltBooking, mailTo, mailCc});
 			}else{
 				for(let i in groupAdmins){
-					await executeQuery("INSERT INTO response (person_id, slt_id) VALUES(" + groupAdmins[i].person_id + "," + bltBooking.insertId);
+					await executeQuery("INSERT INTO response (person_id, blt_id) VALUES(" + groupAdmins[i].person_id + "," + bltBooking.insertId);
 					mailCc.push(groupAdmins[i].email);
 				}
 			}
@@ -54,7 +54,7 @@ async function findNextOfKin(newBooking){
 					throw new Error("This ou has no reviewers");
 				let query = "";
 				reviewers.forEach(reviewer=>{
-					query += "INSERT INTO next_to_approve(person_id, slt_id) VALUES("
+					query += "INSERT INTO next_to_approve(person_id, blt_id) VALUES("
 					+ reviewer.person_id + "," + bltBooking.insertId
 					+ ");";
 					mailTo.push(reviewer.email);
@@ -63,7 +63,7 @@ async function findNextOfKin(newBooking){
 				return resolve({bltBooking, mailTo, mailCc});
 			}else{
 				for(let i in reviewers){
-					await executeQuery("INSERT INTO response (person_id, slt_id) VALUES(" + reviewers[i].person_id + "," + bltBooking.insertId);
+					await executeQuery("INSERT INTO response (person_id, blt_id) VALUES(" + reviewers[i].person_id + "," + bltBooking.insertId);
 					mailCc.push(reviewers[i].email);
 				}
 			}
@@ -75,7 +75,7 @@ async function findNextOfKin(newBooking){
 					throw new Error("There are no Global Admins");
 				let query = "";
 				globalAdmins.forEach(globalAdmin=>{
-					query += "INSERT INTO next_to_approve(person_id, slt_id) VALUES("
+					query += "INSERT INTO next_to_approve(person_id, blt_id) VALUES("
 					+ globalAdmin.person_id + "," + bltBooking.insertId
 					+ ");";
 					mailTo.push(globalAdmin.email);
@@ -84,7 +84,7 @@ async function findNextOfKin(newBooking){
 				return resolve({bltBooking, mailTo, mailCc});
 			}else{
 				for(let i in globalAdmins){
-					await executeQuery("INSERT INTO response (person_id, slt_id) VALUES(" + globalAdmins[i].person_id + "," + bltBooking.insertId);
+					await executeQuery("INSERT INTO response (person_id, blt_id) VALUES(" + globalAdmins[i].person_id + "," + bltBooking.insertId);
 					mailCc.push(globalAdmins[i].email);
 				}
 			}

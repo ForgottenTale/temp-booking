@@ -16,7 +16,7 @@ module.exports = {
     booking: function(input){
         return new Promise(async (resolve, reject)=>{
             try{
-                let booking = await executeQuery("SELECT * FROM slt WHERE _id=" + input.bookingId + ";")
+                let booking = await executeQuery("SELECT * FROM blt WHERE _id=" + input.bookingId + " AND ou_id=" + input.user.activeOu.id +";")
                 let type = "";
                 let typeId;
                 if(booking.length < 1)
@@ -36,16 +36,16 @@ module.exports = {
                     let involved = await findMailsOfInvolved({id: input.bookingId})
                     let emailIds = {mailCc: involved};
                     emailIds.mailTo = [input.user.email];
-                    let query = "DELETE FROM next_to_approve WHERE slt_id=" + input.bookingId + ";"
-                    + "DELETE FROM response WHERE slt_id=" + input.bookingId + ";"
-                    + "DELETE FROM slt WHERE _id=" + input.bookingId + ";"
+                    let query = "DELETE FROM next_to_approve WHERE blt_id=" + input.bookingId + ";"
+                    + "DELETE FROM response WHERE blt_id=" + input.bookingId + ";"
+                    + "DELETE FROM blt WHERE _id=" + input.bookingId + ";"
                     + "DELETE FROM " + type + " WHERE _id=" + typeId + ";";
                     
                     await executeQuery(query);
                     await sendDeletedMail(input.bookingId, emailIds);
                     return resolve("Deleted Successfully");
                 }else
-                    return resolve("Bookings can only be deleted by the creator");
+                    return resolve("Services can only be deleted by the creator");
             }catch(err){
                 return reject(err);
             }

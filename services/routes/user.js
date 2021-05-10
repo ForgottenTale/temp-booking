@@ -10,18 +10,18 @@ const {respondError, removeImg} = require('../utils.js');
 
 module.exports = function(app){
 
-    app.route('/api/my-appointments')
-    .get(auth.ensureAuthenticated, (req, res)=>{
-        getBookings({userId: req.user.id, ouId: req.query.ouId}, (err, appointments)=>{
+    app.route('/api/my-bookings')
+    .get(auth.ensureAuthenticated, auth.ensureOu, (req, res)=>{
+        getBookings({userId: req.user.id, ouId: req.user.activeOu.id}, (err, bookings)=>{
             if(err) return respondError(err, res);
-            res.status(200).json(appointments);
+            res.status(200).json(bookings);
         });
     })
-    .delete(auth.ensureAuthenticated, (req, res)=>{
+    .delete(auth.ensureAuthenticated, auth.ensureOu, (req, res)=>{
         if(req.body.id){
             delBooking({
                 user: req.user,
-                serviceId: req.body.id
+                bookingId: req.body.id
             })
             .then(msg=>{
                 res.status(200).json({message: msg});
@@ -31,7 +31,7 @@ module.exports = function(app){
             respondError('Unsupported query', res);
         }
     })
-    .patch(auth.ensureAuthenticated, (req, res)=>{
+    .patch(auth.ensureAuthenticated, auth.ensureOu, (req, res)=>{
         try{
             updateBooking(req.body, req.query)
             .then(data=>res.status(200).json(data))
@@ -59,17 +59,17 @@ module.exports = function(app){
         upload.single('img')(req, res, (err)=>{
             try{
                 if(err) throw err;
-                let newAppointment;
+                let newbooking;
                 req.body.img = req.file?req.file.filename:null;
                 req.body.creatorId = req.user.id;
-                AppointmentClass= getClass(req.body.type);
-                newAppointment = new AppointmentClass(req.body);
-                newAppointment.checkRequired(newAppointment);
-                addBooking(newAppointment, (err, doc)=>{
+                ServiceClass= getClass(req.body.type);
+                newbooking = new ServiceClass(req.body);
+                newbooking.checkRequired(newbooking);
+                addBooking(newbooking, (err, doc)=>{
                     if(err){
                         return respondError(err, res);
                     }
-                    return res.status(200).json(doc);
+                    return res.status(200).json(doc.getPublicInfo());
                 })
             }
             catch(err){
@@ -85,10 +85,9 @@ module.exports = function(app){
             return respondError(new Error("Required fields missing"), res)
         req.body.startTime = new Date(req.body.startTime)   ;
         req.body.endTime = new Date(req.body.endTime);
-        checkAvailability(req.body, (err, msg)=>{
-            if(err) return respondError(err, res);
-            res.status(200).json({message: msg});
-        });
+        checkAvailability(req.body)
+        .then(msg=>res.status(200).json({message: msg}))
+        .catch(err=>respondError(err, res));
     })
 
     app.route('/api/user')

@@ -39,8 +39,8 @@ function getConfig(type, serviceName){
 function findMailsOfInvolved(input){
 	return new Promise((resolve, reject)=>{
 		Promise.all([
-			executeQuery("SELECT * FROM next_to_approve INNER JOIN person ON person._id=person_id WHERE slt_id=" + input.id),
-			executeQuery("SELECT * FROM response INNER JOIN person ON person._id=person_id WHERE slt_id=" + input.id)
+			executeQuery("SELECT * FROM next_to_approve INNER JOIN person ON person._id=person_id WHERE blt_id=" + input.id),
+			executeQuery("SELECT * FROM response INNER JOIN person ON person._id=person_id WHERE blt_id=" + input.id)
 		])
 		.then(data=>{
 			let emailIds = [];
@@ -119,7 +119,7 @@ module.exports = {
 		})
 	},
 
-	checkAvailability: function(input, done){
+	checkAvailability: function(input){
 		return new Promise(async (resolve, reject)=>{
 			try{
 				ServiceClass = getClass(input.type);
@@ -127,7 +127,7 @@ module.exports = {
 				ServiceClass.validateTime(input, config);
 				let query = ServiceClass.getTimeAvailQuery(input, config);
 				connection.query(query, (err, results, fields)=>{
-					if(err) return done(err);
+					if(err) return reject(err);
 					if(results.length < 1){
 						return resolve("Available");
 					}
