@@ -7,8 +7,17 @@ function Services({ path, type, data, setData }) {
 
   const next = (item) => {
     // if (timeFrom !== "") {
-    setData({ ...data, serviceName: item });
+    if (item === "Content Writing") {
+      setData({ ...data, serviceName: "Content" });
+    } else if (item === "Poster Design") {
+      setData({ ...data, serviceName: "Design" });
+    } else if (item === "Website Development") {
+      setData({ ...data, serviceName: "Web" });
+    } else {
+      setData({ ...data, serviceName: item });
+    }
     // }
+
     history.push(path + "/date-time");
   };
 
