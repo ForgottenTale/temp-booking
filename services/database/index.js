@@ -119,6 +119,21 @@ module.exports = {
 		})
 	},
 
+	findServiceType: function (booking){
+		let type, typeId;
+		for(let key in booking){
+			if(key=="user_id" || key=="_id" || key=="blt_id" || key=="creator_id" || key=="ou_id")
+				continue;
+			if((/_id$/g).test(key) && booking[key]){
+				type = key.replace("_id", "");
+				typeId = booking[key];
+			}
+		}
+		if(!type)
+			throw new Error("Service type not found");
+		return {type, typeId};
+	},
+
 	checkAvailability: function(input){
 		return new Promise(async (resolve, reject)=>{
 			try{

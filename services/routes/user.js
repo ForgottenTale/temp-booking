@@ -10,30 +10,38 @@ const {respondError, removeImg} = require('../utils.js');
 
 module.exports = function(app){
 
-    app.route('/api/my-bookings')
+    app.route('/api/bookings')
     .get(auth.ensureAuthenticated, auth.ensureOu, (req, res)=>{
         getBookings({userId: req.user.id, ouId: req.user.activeOu.id}, (err, bookings)=>{
             if(err) return respondError(err, res);
             res.status(200).json(bookings);
         });
     })
+
+    app.route('/api/bookings/:id')
+    .get(auth.ensureAuthenticated, auth.ensureOu, (req, res)=>{
+        getBookings({userId: req.user.id, ouId: req.user.activeOu.id, bookingId: req.params.id}, (err, bookings)=>{
+            if(err) return respondError(err, res);
+            res.status(200).json(bookings);
+        });
+    })
     .delete(auth.ensureAuthenticated, auth.ensureOu, (req, res)=>{
-        if(req.body.id){
+        if(req.params.id){
             delBooking({
                 user: req.user,
-                bookingId: req.body.id
+                bookingId: req.params.id
             })
             .then(msg=>{
                 res.status(200).json({message: msg});
             })
             .catch(err=>respondError(err, res));
         }else{
-            respondError('Unsupported query', res);
+            respondError(new Error("Id is required as param"), res);
         }
     })
     .patch(auth.ensureAuthenticated, auth.ensureOu, (req, res)=>{
         try{
-            updateBooking(req.body, req.query)
+            updateBooking(req.body, req.params.id, req.user.activeOu.id)
             .then(data=>res.status(200).json(data))
             .catch(err=>respondError(err, res));
         }catch(err){

@@ -68,6 +68,7 @@ module.exports = {
         })
         .catch(err=>done(err));
     },
+
     bookings: async function(constraint, done){
 		try{
 			let types = await getServiceTypes();
@@ -76,12 +77,15 @@ module.exports = {
 				query+="SELECT *, blt._id as _id FROM blt INNER JOIN " + serviceType.type + " ON blt." + serviceType.type + "_id=" + serviceType.type +"._id"  
 					+ " INNER JOIN user ON user._id=creator_id"
                     + " INNER JOIN person on person._id=user.person_id"
-					+ " WHERE " + serviceType.type + "_id IS NOT NULL AND creator_id=" + constraint.userId ;
-                if(constraint.ouId)
-                    query += " AND blt.ou_id="+constraint.ouId;
+					+ " WHERE " + serviceType.type + "_id IS NOT NULL AND creator_id=" + constraint.userId 
+                  	+ " AND blt.ou_id="+constraint.ouId;
+				if(constraint.bookingId)
+					query += " AND blt._id=" + constraint.bookingId;
                 query += ";";
 			})
 			let bookingsOfAllTypes = await executeQuery(query);
+			if(constraint.bookingId)
+				return done(new Error("Unable to find request"));
 			query = "";
 			let dataArray = [];
 			for (let mainIdx in bookingsOfAllTypes){
@@ -117,7 +121,7 @@ module.exports = {
 		}
 	},
 
-	userApprovals: async function(constraint, done){
+	userApprovals: async function(constraint, bltId, done){
 		try{
 			let types = await getServiceTypes();
 			let query = "";
@@ -129,8 +133,8 @@ module.exports = {
 					+ " INNER JOIN person ON user.person_id=person._id"
 					+ " WHERE n.person_id=" + constraint.user.personId
 					+ " AND blt.ou_id=" + constraint.ouId;
-				if(constraint.id)
-					query += " AND blt._id=" + constraint.id + ";"
+				if(bltId)
+					query += " AND blt._id=" + bltId + ";"
 				else
 					query += ";";
 			})
@@ -149,6 +153,8 @@ module.exports = {
 					dataArray.push(bookingsOfAllTypes[mainIdx][idx])
 				}
 			}
+			if(dataArray.length<1 && bltId)
+				return done(new Error("Booking not found"));
 			return done(null, dataArray);
 		}catch(err){
 			return done(err);

@@ -8,7 +8,7 @@ function findAndSetOuInfo(userOus, ouId){
             throw new Error("OuId is required");
     for(let i in userOus)
         if(userOus[i].ouId==ouId)
-            return {id: id, name: userOus[i].ouName, admin: userOus[i].admin}
+            return {id: ouId, name: userOus[i].ouName, admin: userOus[i].ouAdmin}
     throw new Error("Forbidden");
 }
 
@@ -35,7 +35,7 @@ module.exports = {
     ensureOuAdmin: function(req, res, next){
         try{
             req.user.activeOu = findAndSetOuInfo(req.user.ous, req.query.ouId);
-            if(!req.activeOu.admin)
+            if(!req.user.activeOu.admin)
                 throw new Error("Forbidden");
             return next();
         }catch(err){

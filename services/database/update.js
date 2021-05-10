@@ -1,4 +1,4 @@
-const {executeQuery} = require('./index.js');
+const {executeQuery, findServiceType} = require('./index.js');
 const {User, getClass} = require('../controller.js');
 
 module.exports = {
@@ -10,15 +10,15 @@ module.exports = {
 		.catch(err=>done(err));
 	},
 
-	booking: function(input, query){
+	booking: function(newValues, bltId, userActiveOuId){
 		return new Promise(async (resolve, reject)=>{
 			try{
-				let type = query.type;
-				ServiceClass = getClass(type);
-				let bltBooking = await executeQuery("SELECT * FROM blt WHERE _id=" + query.id + " AND " + type + "_id IS NOT NULL");
+				let bltBooking = await executeQuery("SELECT * FROM blt WHERE _id=" + bltId + " AND ou_id=" + userActiveOuId);
 				if(bltBooking.length<1)
 					throw new Error("Booking not found");
-				let values = ServiceClass.getValuesForEdit(input);
+				let {type, typeId} = findServiceType(bltBooking[0]);
+				ServiceClass = getClass(type);
+				let values = ServiceClass.getValuesForEdit(newValues);
 				await executeQuery("UPDATE " + type + " SET " + values.join(", ") + " WHERE _id=" + bltBooking[0][type+"_id"]);
 				resolve({message: "Updated"});
 			}catch(err){
@@ -38,17 +38,7 @@ module.exports = {
 				else
 					throw new Error("Invalid number of bookings");
 			booking = booking[0];
-			let type;
-			for(let key in booking){
-				if(key=="user_id" || key=="_id" || key=="blt_id" || key=="creator_id")
-					continue;
-				if((/_id$/g).test(key) && booking[key]){
-					type = key.replace("_id", "");
-					typeId = booking[key];
-				}
-			}
-			if(!type)
-				return done(new Error("Booking type not found"));
+			let {type, typeId} = findServiceType(booking);
 			let config = await getConfig(type, booking.service_name);
 			config = config[0];
 			let query = "";
