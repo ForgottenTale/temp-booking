@@ -16,6 +16,7 @@ import Verify from "./components/Verify";
 import Confirmation from "./components/Confirmation";
 import "./ub.scss";
 import "./style.scss";
+import "./mv.scss";
 
 function App(props) {
   const [data, setData] = useState({

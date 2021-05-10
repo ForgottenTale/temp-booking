@@ -39,8 +39,8 @@ function EventInfo({ path, type, data, setData }) {
         <h2>Event Details</h2>
 
         <form onSubmit={next}>
-          <div className="row mb-3">
-            <div className="col">
+          <div className="row">
+            <div className="col-sm-6 col-12 mb-3">
               <label className="form-label">
                 Content/ description of the event
               </label>
@@ -54,7 +54,7 @@ function EventInfo({ path, type, data, setData }) {
                 }
               ></textarea>
             </div>
-            <div className="col">
+            <div className="col-sm-6 col-12 mb-3">
               <label className="form-label">Service name</label>
               <input
                 type="text"
@@ -66,8 +66,8 @@ function EventInfo({ path, type, data, setData }) {
             </div>
           </div>
           {type === "online_meeting" ? (
-            <div className="row mb-3">
-              <div className="col">
+            <div className="row">
+              <div className="col-sm-6 col-12 mb-3">
                 <label className="form-label">Speaker name</label>
                 <input
                   type="text"
@@ -79,7 +79,7 @@ function EventInfo({ path, type, data, setData }) {
                   }
                 />
               </div>
-              <div className="col">
+              <div className="col-sm-6 col-12 mb-3">
                 <label className="form-label">Speaker email</label>
                 <input
                   type="email"
@@ -94,8 +94,8 @@ function EventInfo({ path, type, data, setData }) {
             </div>
           ) : null}
           {type === "online_meeting" ? (
-            <div className="row mb-5">
-              <div className="col-6">
+            <div className="row">
+              <div className="col-sm-6 col-12 mb-3">
                 <label className="form-label">Title</label>
                 <input
                   type="text"
@@ -107,7 +107,7 @@ function EventInfo({ path, type, data, setData }) {
                   }}
                 />
               </div>
-              <div className="col-6">
+              <div className="col-sm-6 col-12 mb-5">
                 <label className="form-label">Poster (if any)</label>
                 <input
                   type="file"
@@ -121,8 +121,8 @@ function EventInfo({ path, type, data, setData }) {
               </div>
             </div>
           ) : (
-            <div className="row mb-5">
-              <div className="col-6">
+            <div className="row">
+              <div className="col-sm-6 col-12 mb-3">
                 <label className="form-label">Title</label>
                 <input
                   type="text"
@@ -134,7 +134,7 @@ function EventInfo({ path, type, data, setData }) {
                   }}
                 />
               </div>
-              <div className="col-6">
+              <div className="col-sm-6 col-12 mb-5">
                 <label className="form-label">Poster</label>
                 <input
                   type="file"

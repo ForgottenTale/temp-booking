@@ -85,7 +85,7 @@ function DateTime({ path, type, setData, data }) {
 
         <form onSubmit={next}>
           <div className="row mb-4">
-            <div className="col-5">
+            <div className="col-sm-5 col-6">
               <label className="form-label">Date</label>
               <input
                 defaultValue={setdate()}
@@ -100,7 +100,7 @@ function DateTime({ path, type, setData, data }) {
           </div>
           {data.type === "online_meeting" || data.type === "intern_support" ? (
             <div className="row mb-5">
-              <div className="col-5">
+              <div className="col-sm-5 col-6">
                 <label className="form-label">From</label>
                 <input
                   type="time"
@@ -110,7 +110,7 @@ function DateTime({ path, type, setData, data }) {
                   required
                 />
               </div>
-              <div className="col-5">
+              <div className="col-sm-5 col-6">
                 <label className="form-label">To</label>
                 <input
                   type="time"
@@ -124,7 +124,7 @@ function DateTime({ path, type, setData, data }) {
           ) : null}
           {data.type === "e_notice" || data.type === "publicity" ? (
             <div className="row mb-5">
-              <div className="col-5">
+              <div className="col-sm-5 col-6">
                 <label className="form-label">Time</label>
                 <input
                   type="time"

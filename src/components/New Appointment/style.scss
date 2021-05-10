@@ -12,8 +12,8 @@
 .service-container,
 .info-container {
   padding-top: 50px;
-  width: 800px;
-  height: 530px;
+  max-width: 800px;
+  max-height: 530px;
   position: absolute !important;
   top: 0 !important;
   bottom: 0 !important;
