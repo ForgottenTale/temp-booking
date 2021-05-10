@@ -102,6 +102,7 @@ module.exports = {
             publicity_id INT,
             creator_id INT NOT NULL,
             status VARCHAR(10) DEFAULT "PENDING",
+            level TINYINT DEFAULT 3,
             ou_id INT NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP(),
             approved_at DATETIME,

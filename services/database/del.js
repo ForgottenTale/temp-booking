@@ -50,5 +50,9 @@ module.exports = {
                 return reject(err);
             }
         })
+    },
+
+    response: async function(bltId){
+        await executeQuery("DELETE FROM response WHERE blt_id=" + bltId);
     }
 }
