@@ -3,7 +3,7 @@ const { schema } = require('./ddl.js');
 const { User, convertDateToSqlDateTime, convertSqlDateTimeToDate, getClass } = require('../controller.js');
 const { transmuteSnakeToCamel } = require('../utils.js');
 const {response: delResponse} = require('./del.js') ;
-const mail = require('../mail.js');
+const {nextApprover: addNextApprover} = require('./insert');
 
 let connection;
 
@@ -105,21 +105,21 @@ module.exports = {
 		})
 	},
 
-	tryLevelUp: async function (input, bltId, personId){
+	tryLevelUp: async function (bltId, personId){
 		return new Promise(async (resolve, reject)=>{
 			try{
 				let involved = [];
 				let nextApprovers = [];
 	
-				let bltBooking = await this.executeQuery("SELECT * FROM blt WHERE _id=" + bltId);
+				let bltBooking = await executeQuery("SELECT * FROM blt WHERE _id=" + bltId);
 				if(bltBooking.length!=1)
 					if(bltBooking.length==0)
 						throw new Error("Booking doesn't exist");
 					else
 						throw new Error("Invalid number of bookings");
 				bltBooking = bltBooking[0];
-				let {type, typeId} = this.findServiceType(bltBooking);
-				let booking = await this.executeQuery("SELECT service_name FROM blt INNER JOIN " + type + " ON"
+				let {type, typeId} = findServiceType(bltBooking);
+				let booking = await executeQuery("SELECT service_name FROM blt INNER JOIN " + type + " ON "
 					+ type + "_id=" + type + "._id");
 				booking = booking[0];
 				let config = await getConfig(type, booking.service_name);
@@ -131,7 +131,7 @@ module.exports = {
 	
 				//find group admins
 				found = false;
-				let groupAdmins = await this.findGroupAdmins(bltBooking.ou_id);
+				let groupAdmins = await findGroupAdmins(bltBooking.ou_id);
 				if(level==3){
 					if(config.group_restraint){				
 						if(groupAdmins.length<1)
@@ -157,7 +157,7 @@ module.exports = {
 	
 				//find reviewers
 				found = false;
-				let reviewers = await this.findReviewers(config._id);
+				let reviewers = await findReviewers(config._id);
 				if(level==2){
 					if(config.reviewer_restraint){
 						if(level==2){
@@ -185,7 +185,7 @@ module.exports = {
 	
 				//find global admins
 				found = false;
-				let globalAdmins = await this.findGlobalAdmins();
+				let globalAdmins = await findGlobalAdmins();
 				if(level==1){
 					if(config.global_restraint){
 						if(globalAdmins.length<1)
@@ -208,6 +208,7 @@ module.exports = {
 				}
 				if(level<1)
 					involved.push(...globalAdmins);
+				await Promise.all(nextApprovers.map(person=>addNextApprover(person.person_id, bltId)));
 				return resolve({nextApprovers, involved, level});
 			}catch(err){
 				return reject(err);

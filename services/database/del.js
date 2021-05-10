@@ -1,4 +1,4 @@
-let {executeQuery, findMailsOfInvolved} = require('./index.js');
+const {executeQuery, findMailsOfInvolved} = require('./index.js');
 let {deleted: sendDeletedMail} = require('../mail.js');
 
 module.exports = {
@@ -53,6 +53,6 @@ module.exports = {
     },
 
     response: async function(bltId){
-        await executeQuery("DELETE FROM response WHERE blt_id=" + bltId);
+        return await executeQuery("DELETE FROM response WHERE blt_id=" + bltId + ";"); 
     }
 }

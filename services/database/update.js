@@ -1,6 +1,7 @@
-const {executeQuery, getConfig, findServiceType, tryLevelUp} = require('./index.js');
+const {executeQuery, findServiceType, tryLevelUp} = require('./index.js');
 const {User, getClass} = require('../controller.js');
 const {approval: sendApprovalMail, rejection: sendRejectionMail, requestApproval: sendRequestApprovalMail} = require('../mail.js');
+const {response: addResponse} = require('./insert.js');
 
 module.exports = {
     user: function(input, done){
@@ -30,9 +31,11 @@ module.exports = {
 
 	bookingStatus: async function(input, bookingId, user, done){
 		try{
-			let info = await tryLevelUp(bookingId, user.personId, input);
+			let info = await tryLevelUp(bookingId, user.personId);
 			let emailIds = {mailTo: info.nextApprovers.map(person=>person.email)};
 			emailIds.mailCc = info.involved.map(person=>person.email);
+
+			await addResponse(user.personId, bookingId, input.encourages, input.response);
 
 			if(info.level==0){
 				await executeQuery("UPDATE blt SET status='"

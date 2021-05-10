@@ -113,7 +113,7 @@ module.exports = {
             FOREIGN KEY(creator_id) REFERENCES user(_id),
             FOREIGN KEY(ou_id) REFERENCES ou(_id)
         );`,
-        `CREATE TABLE IF NOT EXISTS REPLIES(
+        `CREATE TABLE IF NOT EXISTS replies(
             _id INT PRIMARY KEY AUTO_INCREMENT,
             blt_id INT,
             person_id INT,
@@ -132,7 +132,6 @@ module.exports = {
             encourages BOOLEAN,
             response VARCHAR(100),
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            final BOOLEAN DEFAULT false NOT NULL,
             FOREIGN KEY(person_id) REFERENCES person(_id),
             FOREIGN KEY(blt_id) REFERENCES blt(_id) 
         );`

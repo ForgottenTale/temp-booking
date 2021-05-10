@@ -90,8 +90,7 @@ module.exports = {
 			let bltBooking = await executeQuery("INSERT INTO blt(" + newBooking.type + "_id, creator_id, ou_id,status) VALUES("
 				+ addedBooking.insertId + "," + newBooking.creatorId + "," + newBooking.ouId + ",'" + newBooking.status + "');");
 
-
-			let info = await tryLevelUp(null, bltBooking.insertId, user.personId);
+			let info = await tryLevelUp(bltBooking.insertId, user.personId);
 
 			await executeQuery("UPDATE blt SET level=" + info.level + " WHERE _id=" + bltBooking.insertId);
 			let emailIds = {mailTo: info.nextApprovers.map(person=>person.email)};
@@ -113,7 +112,13 @@ module.exports = {
 		}
 	},
 
-	response: async function(){
-		await executeQuery("INSERT INTO response() VALUES (" + ")");
+	response: async function(personId, bltId, encourages, response){
+		await executeQuery("INSERT INTO response(person_id, bltId, encourages, response) VALUES ("
+		 	+ personId + "," + bltId + "," + encourages + ",'" + response
+			+ "')");
+	},
+
+	nextApprover: async function(personId, bltId){
+		await executeQuery("INSERT INTO next_to_approve(" + personId + "," + bltId + ");");
 	}
 };
