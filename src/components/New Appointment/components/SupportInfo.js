@@ -114,9 +114,9 @@ function SupportInfo({ path, type, data, setData }) {
                     readOnly
                   />
                 </div>
-                {data.serviceName === "Design" ||
-                data.serviceName === "Content" ? (
-                  data.serviceName === "Design" ? (
+                {data.serviceName === "Poster Design" ||
+                data.serviceName === "Content Writing" ? (
+                  data.serviceName === "Poster Design" ? (
                     <div className="mb-4">
                       <input
                         placeholder="Poster dimensions (if any)"
