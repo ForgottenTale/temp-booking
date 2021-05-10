@@ -1,6 +1,7 @@
 const auth = require('../auth.js');
 const {getClass} = require('../controller.js');
 const {allUsers: getAllUsers, userApprovals: getUserApprovals, historyOfApprovals: getHistoryOfApprovals} = require('../database/get.js');
+const {appointmentStatus: updateAppointmentStatus} = require('../database/update.js');
 const {respondError} = require('../utils.js');
 
 module.exports = function(app){
@@ -31,7 +32,7 @@ module.exports = function(app){
         if(!req.body.id || !req.body.response || !req.body.action){
             return respondError("Requried Fields missing", res);
         }
-        database.changeAppointmentStatus({
+        updateAppointmentStatus({
             user: req.user,
             appointmentId: req.body.id,
             response: req.body.response,

@@ -41,7 +41,7 @@ function initiateUser(person){
 module.exports = function(app){
     app.route('/api/register')
     .put(auth.ensureAuthenticated, auth.ensureSuperAdmin, (req, res)=>{
-        upload.fields([{name: 'users'}, {name: 'groupAdmins'}])(req, res, (err)=>{
+        upload.fields([{name: 'users'}, {name: 'ouRelations'}])(req, res, (err)=>{
             if(err) return respondError(err, res);
             try{
                 if(req.files.users){
@@ -52,8 +52,8 @@ module.exports = function(app){
                         .catch(err=>respondError(err, res));
                     })
                     .catch(err=>respondError(err, res));
-                }else if(req.files.groupAdmins){
-                    parseCsv(req.files.groupAdmins[0].path)
+                }else if(req.files.ouRelations){
+                    parseCsv(req.files.ouRelations[0].path)
                     .then(results=>{
                         Promise.all(results.map(result=>{
                             return createPerson(result);

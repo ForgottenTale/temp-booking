@@ -2,7 +2,6 @@ module.exports = {
     schema: [
         `CREATE TABLE IF NOT EXISTS person(
             _id INT PRIMARY KEY AUTO_INCREMENT,
-            role VARCHAR(100),
             name VARCHAR(100) NOT NULL,
             email VARCHAR(100) UNIQUE NOT NULL,
             phone VARCHAR(15)
@@ -95,7 +94,7 @@ module.exports = {
             comments VARCHAR(30),
             publish_time DATETIME NOT NULL
         );`,
-        `CREATE TABLE IF NOT EXISTS alt(
+        `CREATE TABLE IF NOT EXISTS blt(
             _id INT PRIMARY KEY AUTO_INCREMENT,
             online_meeting_id INT,
             intern_support_id INT,
@@ -113,21 +112,28 @@ module.exports = {
             FOREIGN KEY(creator_id) REFERENCES user(_id),
             FOREIGN KEY(ou_id) REFERENCES ou(_id)
         );`,
+        `CREATE TABLE IF NOT EXISTS REPLIES(
+            _id INT PRIMARY KEY AUTO_INCREMENT,
+            blt_id INT,
+            person_id INT,
+            FOREIGN KEY(blt_id) REFERENCES blt(_id),
+            FOREIGN KEY(person_id) REFERENCES person(_id)
+        );`,
         `CREATE TABLE IF NOT EXISTS next_to_approve(
             person_id INT NOT NULL,
-            alt_id INT NOT NULL,
+            blt_id INT NOT NULL,
             FOREIGN KEY (person_id) REFERENCES person(_id),
-            FOREIGN KEY (alt_id) REFERENCES alt(_id)
+            FOREIGN KEY (blt_id) REFERENCES blt(_id)
         );`,
         `CREATE TABLE IF NOT EXISTS response(
             person_id INT NOT NULL,
-            alt_id INT NOT NULL,
+            blt_id INT NOT NULL,
             encourages BOOLEAN,
             response VARCHAR(100),
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             final BOOLEAN DEFAULT false NOT NULL,
             FOREIGN KEY(person_id) REFERENCES person(_id),
-            FOREIGN KEY(alt_id) REFERENCES alt(_id) 
+            FOREIGN KEY(blt_id) REFERENCES blt(_id) 
         );`
     ]
 }

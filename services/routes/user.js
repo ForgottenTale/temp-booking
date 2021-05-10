@@ -1,10 +1,10 @@
 const auth = require('../auth.js');
 const {getClass, User} = require('../controller.js');
 const { checkAvailability } = require('../database/index.js');
-const {appointment: addAppointment} = require('../database/insert.js');
-const {ou: getOu, userAppointments: getUserAppointments, activity: getActivity} = require('../database/get.js');
-const {user: updateUser, appointment: updateAppointment} = require('../database/update.js')
-const {appointment: delAppointment} = require('../database/del.js');
+const {booking: addBooking} = require('../database/insert.js');
+const {ou: getOu, bookings: getBookings, activity: getActivity} = require('../database/get.js');
+const {user: updateUser, booking: updateBooking} = require('../database/update.js')
+const {booking: delBooking} = require('../database/del.js');
 const upload = require('../upload.js');
 const {respondError, removeImg} = require('../utils.js');
 
@@ -12,16 +12,16 @@ module.exports = function(app){
 
     app.route('/api/my-appointments')
     .get(auth.ensureAuthenticated, (req, res)=>{
-        getUserAppointments({userId: req.user.id, ouId: req.query.ouId}, (err, appointments)=>{
+        getBookings({userId: req.user.id, ouId: req.query.ouId}, (err, appointments)=>{
             if(err) return respondError(err, res);
             res.status(200).json(appointments);
         });
     })
     .delete(auth.ensureAuthenticated, (req, res)=>{
         if(req.body.id){
-            delAppointment({
+            delBooking({
                 user: req.user,
-                appointmentId: req.body.id
+                serviceId: req.body.id
             })
             .then(msg=>{
                 res.status(200).json({message: msg});
@@ -33,7 +33,7 @@ module.exports = function(app){
     })
     .patch(auth.ensureAuthenticated, (req, res)=>{
         try{
-            updateAppointment(req.body, req.query)
+            updateBooking(req.body, req.query)
             .then(data=>res.status(200).json(data))
             .catch(err=>respondError(err, res));
         }catch(err){
@@ -65,7 +65,7 @@ module.exports = function(app){
                 AppointmentClass= getClass(req.body.type);
                 newAppointment = new AppointmentClass(req.body);
                 newAppointment.checkRequired(newAppointment);
-                addAppointment(newAppointment, (err, doc)=>{
+                addBooking(newAppointment, (err, doc)=>{
                     if(err){
                         return respondError(err, res);
                     }

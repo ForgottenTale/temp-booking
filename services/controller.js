@@ -7,16 +7,13 @@ class Person{
             this.id = person.id;
             this.role = person.role?person.role.toUpperCase():null;
             this.name = person.name?person.name.trim():null;
-            this.email = person.email.trim();
+            this.email = person.email?person.email.trim():null;
             this.phone = person.phone?(person.phone+"").trim():null;
             this.groupAdmin = person.groupAdmin=='1'?true:false;
-            this.role = person.role?person.role:null;
             if(person.ouIds)
                 this.ouIds = person.ouIds.split(",").map(ouId=>parseInt(ouId));
             if(person.ous)
                 this.ous = person.ous;
-            else
-                this.ouIds = null;
         }catch(err){
             throw err;
         }
@@ -36,7 +33,6 @@ class Person{
     getPublicInfo(){
         return{
             name: this.name,
-            role: this.role,
             email: this.email,
             phone: this.phone,
             ous: this.ous
@@ -45,10 +41,9 @@ class Person{
 
     getAllNamesAndValues(){
         return({
-            names: ['name', 'role', 'email', 'phone'],
+            names: ['name', 'email', 'phone'],
             values: [
                 this.name?("'" + this.name + "'"):"null",
-                this.role?("'" + this.role + "'"):"null",
                 "'" + this.email + "'",
                 "'" + this.phone + "'"
             ]

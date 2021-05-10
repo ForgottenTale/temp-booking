@@ -1,5 +1,5 @@
 let {executeQuery, getConfig, checkAvailability} = require('./index.js');
-let {newAppointment: sendNewAppointmentMail} = require('../mail.js')
+let {newBooking: sendNewBookingMail} = require('../mail.js')
 
 async function addOuIds(person, ouIds){
 	await executeQuery(ouIds.reduce((query, ouId)=>{
@@ -7,39 +7,39 @@ async function addOuIds(person, ouIds){
 	}, ""));	
 }
 
-async function findNextOfKin(newAppointment){
+async function findNextOfKin(newBooking){
 	return new Promise(async (resolve, reject)=>{
 		try{
 			let mailCc = [];
 			let mailTo = [];
 
-			//insert appointment
-			let {names, values} = newAppointment.getAllNamesAndValues();
-			let addedAppointment = await executeQuery("INSERT INTO " + newAppointment.type 
+			//insert booking
+			let {names, values} = newBooking.getAllNamesAndValues();
+			let addedBooking = await executeQuery("INSERT INTO " + newBooking.type 
 				+ "(" + names.join(',') + ") VALUES(" + values.join(',') + ");");
-			let altAppointment = await executeQuery("INSERT INTO alt(" + newAppointment.type + "_id, creator_id, ou_id,status) VALUES("
-				+ addedAppointment.insertId + "," + newAppointment.creatorId + "," + newAppointment.ouId + ",'" + newAppointment.status + "');");
+			let bltBooking = await executeQuery("INSERT INTO slt(" + newBooking.type + "_id, creator_id, ou_id,status) VALUES("
+				+ addedBooking.insertId + "," + newBooking.creatorId + "," + newBooking.ouId + ",'" + newBooking.status + "');");
 
-			let config = await getConfig(newAppointment.type, newAppointment.serviceName);
+			let config = await getConfig(newBooking.type, newBooking.serviceName);
 
 			//find group admins
 			let groupAdmins = await executeQuery("SELECT person_id, email from ou_map INNER JOIN person ON person_id=person._id WHERE ou_map.ou_id=" 
-				+ newAppointment.ouId + " AND ou_map.admin=1;");
+				+ newBooking.ouId + " AND ou_map.admin=1;");
 			if(config.group_restraint){
 				if(groupAdmins.length<1)
 					throw new Error("This ou has no admin");
 				let query = "";
 				groupAdmins.forEach(admin=>{
-					query += "INSERT INTO next_to_approve(person_id, alt_id) VALUES("
-					+ admin.person_id + "," + altAppointment.insertId
+					query += "INSERT INTO next_to_approve(person_id, slt_id) VALUES("
+					+ admin.person_id + "," + bltBooking.insertId
 					+ ");";
 					mailTo.push(admin.email);
 				});
 				await executeQuery(query);
-				return resolve({altAppointment, mailTo, mailCc});
+				return resolve({bltBooking, mailTo, mailCc});
 			}else{
 				for(let i in groupAdmins){
-					await executeQuery("INSERT INTO response (person_id, alt_id) VALUES(" + groupAdmins[i].person_id + "," + altAppointment.insertId);
+					await executeQuery("INSERT INTO response (person_id, slt_id) VALUES(" + groupAdmins[i].person_id + "," + bltBooking.insertId);
 					mailCc.push(groupAdmins[i].email);
 				}
 			}
@@ -54,37 +54,37 @@ async function findNextOfKin(newAppointment){
 					throw new Error("This ou has no reviewers");
 				let query = "";
 				reviewers.forEach(reviewer=>{
-					query += "INSERT INTO next_to_approve(person_id, alt_id) VALUES("
-					+ reviewer.person_id + "," + altAppointment.insertId
+					query += "INSERT INTO next_to_approve(person_id, slt_id) VALUES("
+					+ reviewer.person_id + "," + bltBooking.insertId
 					+ ");";
 					mailTo.push(reviewer.email);
 				});
 				await executeQuery(query);
-				return resolve({altAppointment, mailTo, mailCc});
+				return resolve({bltBooking, mailTo, mailCc});
 			}else{
 				for(let i in reviewers){
-					await executeQuery("INSERT INTO response (person_id, alt_id) VALUES(" + reviewers[i].person_id + "," + altAppointment.insertId);
+					await executeQuery("INSERT INTO response (person_id, slt_id) VALUES(" + reviewers[i].person_id + "," + bltBooking.insertId);
 					mailCc.push(reviewers[i].email);
 				}
 			}
 
 			//find global admins
-			let globalAdmins = await executeQuery("SELECT _id, email FROM person WHERE role='GLOBAL_ADMIN';");
+			let globalAdmins = await executeQuery("SELECT person_id, email FROM person INNER JOIN ou_map ON ou_map.person_id=person._id WHERE ou_map.ou_id=1 AND ou_map.admin=1");
 			if(config.global_restraint){
 				if(globalAdmins.length<1)
 					throw new Error("There are no Global Admins");
 				let query = "";
 				globalAdmins.forEach(globalAdmin=>{
-					query += "INSERT INTO next_to_approve(person_id, alt_id) VALUES("
-					+ globalAdmin.person_id + "," + altAppointment.insertId
+					query += "INSERT INTO next_to_approve(person_id, slt_id) VALUES("
+					+ globalAdmin.person_id + "," + bltBooking.insertId
 					+ ");";
 					mailTo.push(globalAdmin.email);
 				});
 				await executeQuery(query);
-				return resolve({altAppointment, mailTo, mailCc});
+				return resolve({bltBooking, mailTo, mailCc});
 			}else{
 				for(let i in globalAdmins){
-					await executeQuery("INSERT INTO response (person_id, alt_id) VALUES(" + globalAdmins[i].person_id + "," + altAppointment.insertId);
+					await executeQuery("INSERT INTO response (person_id, slt_id) VALUES(" + globalAdmins[i].person_id + "," + bltBooking.insertId);
 					mailCc.push(globalAdmins[i].email);
 				}
 			}
@@ -153,37 +153,40 @@ module.exports = {
         })
     },
 
-    appointment: async function(newAppointment, done){
+    booking: async function(newBooking, done){
 		try{
 			//confirm if user is associated with the ou
-            let checkOu = await executeQuery("SELECT * FROM ou_map INNER JOIN user ON user.person_id=ou_map.person_id WHERE ou_id=" + newAppointment.ouId + " AND user._id="+ newAppointment.creatorId);
+            let checkOu = await executeQuery("SELECT * FROM ou_map INNER JOIN user ON user.person_id=ou_map.person_id WHERE ou_id=" + newBooking.ouId + " AND user._id="+ newBooking.creatorId);
             if(checkOu.length<1){
                 return done(new Error("User not associated with Ou"));
             }
 
-			await checkAvailability(newAppointment);
+			await checkAvailability(newBooking);
 
 			//if super creator change status to approved and next approvers and notifiers as empty
-			let creator = await executeQuery("SELECT user._id, user.person_id, person.email, user.super_admin, user.super_creator FROM user INNER JOIN person ON person_id= person._id WHERE user._id=" + newAppointment.creatorId);
+			let creator = await executeQuery("SELECT user._id, user.person_id, person.email, user.super_admin, user.super_creator FROM user INNER JOIN person ON person_id= person._id WHERE user._id=" + newBooking.creatorId);
 			creator = creator[0];
-			newAppointment.status = "PENDING";
+			newBooking.status = "PENDING";
 			if(creator.super_creator)
-				newAppointment.status = "APPROVED";
+				newBooking.status = "APPROVED";
 
-			let mails = await findNextOfKin(newAppointment);
+			let mails = await findNextOfKin(newBooking);
 			if(mails.mailTo.length<1){
 				//UPDATE: change status to approve add responses
 				mails.mailTo.push(creator.email);
 			}else{
 				mails.mailCc.push(creator.email);
 			}
-			newAppointment.id = mails.altAppointment.insertId;
-			await sendNewAppointmentMail(newAppointment, mails);
-			return done(null, newAppointment);
+			newBooking.id = mails.bltBooking.insertId;
+			await sendNewBookingMail(newBooking, mails);
+			return done(null, newBooking);
 		}
 		catch(err){
 			return done(err);
 		}
 	},
 
+	response: async function(){
+		await executeQuery("INSERT INTO response() VALUES (" + ")");
+	}
 };
