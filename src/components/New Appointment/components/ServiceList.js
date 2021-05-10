@@ -39,7 +39,7 @@ function ServiceList({ path, setType, setData, data }) {
           </div>
           <div className="service-name">
             <img src={meetIcon} alt="" />
-            <p>Online Meetings/ Webinar</p>
+            <p>Online Meetings</p>
           </div>
         </div>
         <div className="service-box">
