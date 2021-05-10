@@ -57,18 +57,72 @@ module.exports= {
         })
     },
 
-    newBooking: function(input, emailIds){
+    approval: function(input, emailIds){
         return new Promise(async(resolve, reject)=>{
             try{
                 let transporter = nodemailer.createTransport(transporterData);
-                let type = input.type.split("_").join(" ");
-                type[0] = type[0].toUpperCase();
                 let info = await transporter.sendMail({
                     from: '<' + transporterData.auth.user + '>',
                     to: emailIds.mailTo,
                     cc: emailIds.mailCc,
                     subject: "New appointment(#" + input.id + ") created and needs your approval",
-                    html: "<span>An " + type + " needs your approval </span>"
+                    html: "<span>An " + "something" + " needs your approval </span>"
+                })
+                logMailInfo(emailIds, info.messageId, nodemailer.getTestMessageUrl(info));
+                resolve("Message send");
+            }catch(err){
+                reject(err);
+            }
+        })
+    },
+    rejection: function(input, emailIds){
+        return new Promise(async(resolve, reject)=>{
+            try{
+                let transporter = nodemailer.createTransport(transporterData);
+                let info = await transporter.sendMail({
+                    from: '<' + transporterData.auth.user + '>',
+                    to: emailIds.mailTo,
+                    cc: emailIds.mailCc,
+                    subject: "New appointment(#" + input.id + ") created and needs your approval",
+                    html: "<span>An " + "something" + " needs your approval </span>"
+                })
+                logMailInfo(emailIds, info.messageId, nodemailer.getTestMessageUrl(info));
+                resolve("Message send");
+            }catch(err){
+                reject(err);
+            }
+        })
+    },
+
+    newBooking: function(input, emailIds){
+        return new Promise(async(resolve, reject)=>{
+            try{
+                let transporter = nodemailer.createTransport(transporterData);
+                let info = await transporter.sendMail({
+                    from: '<' + transporterData.auth.user + '>',
+                    to: emailIds.mailTo,
+                    cc: emailIds.mailCc,
+                    subject: "New appointment(#" + input.id + ") created and needs your approval",
+                    html: "<span>An " + "something" + " needs your approval </span>"
+                })
+                logMailInfo(emailIds, info.messageId, nodemailer.getTestMessageUrl(info));
+                resolve("Message send");
+            }catch(err){
+                reject(err);
+            }
+        })
+    },
+
+    requestApproval: function(input, emailIds){
+        return new Promise(async(resolve, reject)=>{
+            try{
+                let transporter = nodemailer.createTransport(transporterData);
+                let info = await transporter.sendMail({
+                    from: '<' + transporterData.auth.user + '>',
+                    to: emailIds.mailTo,
+                    cc: emailIds.mailCc,
+                    subject: "New appointment(#" + input.id + ") created and needs your approval",
+                    html: "<span>An " + "something" + " needs your approval </span>"
                 })
                 logMailInfo(emailIds, info.messageId, nodemailer.getTestMessageUrl(info));
                 resolve("Message send");

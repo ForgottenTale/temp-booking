@@ -32,7 +32,7 @@ module.exports = function(app){
     })
     .post(auth.ensureAuthenticated, auth.ensureOuAdmin, (req, res)=>{
         if(!req.body.response || !req.body.action){
-            return respondError("Requried Fields missing", res);
+            return respondError("Required Fields missing", res);
         }
         updateBookingStatus({
             response: req.body.response,

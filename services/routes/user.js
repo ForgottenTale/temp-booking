@@ -10,12 +10,29 @@ const {respondError, removeImg} = require('../utils.js');
 
 module.exports = function(app){
 
-    app.route('/api/bookings')
-    .get(auth.ensureAuthenticated, auth.ensureOu, (req, res)=>{
-        getBookings({userId: req.user.id, ouId: req.user.activeOu.id}, (err, bookings)=>{
-            if(err) return respondError(err, res);
-            res.status(200).json(bookings);
-        });
+    app.route('/api/book')
+    .post(auth.ensureAuthenticated, (req, res)=>{
+        upload.single('img')(req, res, (err)=>{
+            try{
+                if(err) throw err;
+                let newbooking;
+                req.body.img = req.file?req.file.filename:null;
+                req.body.creatorId = req.user.id;
+                ServiceClass= getClass(req.body.type);
+                newbooking = new ServiceClass(req.body);
+                newbooking.checkRequired(newbooking);
+                addBooking(newbooking, {email: req.user.email, personId: req.user.personId}, (err, doc)=>{
+                    if(err){
+                        return respondError(err, res);
+                    }
+                    return res.status(200).json(doc.getPublicInfo());
+                })
+            }
+            catch(err){
+                removeImg(req.body.img);
+                respondError(err, res);
+            }
+        })
     })
 
     app.route('/api/bookings/:id')
@@ -49,42 +66,12 @@ module.exports = function(app){
         }
     })
 
-    app.route('/image/:fileName')
-    .get(auth.ensureAuthenticated, (req, res)=>{
-        res.sendFile(process.cwd() + '/uploads/' + req.params.fileName)
-    })
-
-    app.route('/api/ou')
-    .get(auth.ensureAuthenticated, (req, res)=>{
-        getOu(req.user.personId, (err, results)=>{
-            if(err) respondError(err, res);
-            res.status(200).json(results);
-        })
-    })
-
-    app.route('/api/book')
-    .post(auth.ensureAuthenticated, (req, res)=>{
-        upload.single('img')(req, res, (err)=>{
-            try{
-                if(err) throw err;
-                let newbooking;
-                req.body.img = req.file?req.file.filename:null;
-                req.body.creatorId = req.user.id;
-                ServiceClass= getClass(req.body.type);
-                newbooking = new ServiceClass(req.body);
-                newbooking.checkRequired(newbooking);
-                addBooking(newbooking, (err, doc)=>{
-                    if(err){
-                        return respondError(err, res);
-                    }
-                    return res.status(200).json(doc.getPublicInfo());
-                })
-            }
-            catch(err){
-                removeImg(req.body.img);
-                respondError(err, res);
-            }
-        })
+    app.route('/api/bookings')
+    .get(auth.ensureAuthenticated, auth.ensureOu, (req, res)=>{
+        getBookings({userId: req.user.id, ouId: req.user.activeOu.id}, (err, bookings)=>{
+            if(err) return respondError(err, res);
+            res.status(200).json(bookings);
+        });
     })
 
     app.route('/api/check-availability')
@@ -96,6 +83,19 @@ module.exports = function(app){
         checkAvailability(req.body)
         .then(msg=>res.status(200).json({message: msg}))
         .catch(err=>respondError(err, res));
+    })
+
+    app.route('/image/:fileName')
+    .get(auth.ensureAuthenticated, (req, res)=>{
+        res.sendFile(process.cwd() + '/uploads/' + req.params.fileName);
+    })
+
+    app.route('/api/ou')
+    .get(auth.ensureAuthenticated, (req, res)=>{
+        getOu(req.user.personId, (err, results)=>{
+            if(err) respondError(err, res);
+            res.status(200).json(results);
+        })
     })
 
     app.route('/api/user')
@@ -114,7 +114,6 @@ module.exports = function(app){
 
     app.route('/api/activity')
     .get(auth.ensureAuthenticated, (req, res)=>{
-        
         getActivity(req.query.ouId, (err, results)=>{
             if(err) return respondError(err, res);
             res.status(200).json(results);

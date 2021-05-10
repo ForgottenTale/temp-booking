@@ -1,5 +1,5 @@
 let {executeQuery, checkAvailability, tryLevelUp} = require('./index.js');
-const {newBooking: sendNewBookingMail} = require('../mail.js');
+const {newBooking: sendNewBookingMail, requestApproval: sendRequestApprovalMail, approval: sendApprovalMail} = require('../mail.js');
 
 async function addOuIds(person, ouIds){
 	await executeQuery(ouIds.reduce((query, ouId)=>{
@@ -66,12 +66,12 @@ module.exports = {
         })
     },
 
-    booking: async function(newBooking, done){
+    booking: async function(newBooking, user, done){
 		try{
 			//confirm if user is associated with the ou
             let checkOu = await executeQuery("SELECT * FROM ou_map INNER JOIN user ON user.person_id=ou_map.person_id WHERE ou_id=" + newBooking.ouId + " AND user._id="+ newBooking.creatorId);
             if(checkOu.length<1){
-                return done(new Error("User not associated with Ou"));
+                throw new Error("User not associated with Ou");
             }
 
 			await checkAvailability(newBooking);
@@ -90,21 +90,22 @@ module.exports = {
 			let bltBooking = await executeQuery("INSERT INTO blt(" + newBooking.type + "_id, creator_id, ou_id,status) VALUES("
 				+ addedBooking.insertId + "," + newBooking.creatorId + "," + newBooking.ouId + ",'" + newBooking.status + "');");
 
-			let person = await executeQuery("SELECT person_id FROM user INNER JOIN person ON person_id=person._id WHERE user._id=" + creatorId);
-			person=person[0];
 
-			let info = await tryLevelUp(bltBooking.insertId, person.person_id);
+			let info = await tryLevelUp(null, bltBooking.insertId, user.personId);
 
-			await executeQuery("UPDATE blt SET level=level+" + levelsToJump + " WHERE _id=" + info.bltBooking.insertId);
-				
-			if(info.mailTo.length<1){
-				//UPDATE: change status to approve add responses
-				info.mailTo.push(creator.email);
-			}else{
-				info.mailCc.push(creator.email);
-			}
+			await executeQuery("UPDATE blt SET level=" + info.level + " WHERE _id=" + bltBooking.insertId);
+			let emailIds = {mailTo: info.nextApprovers.map(person=>person.email)};
+			emailIds.mailCc = info.involved.map(person=>person.email);
 			newBooking.id = info.bltBooking.insertId;
-			await sendNewBookingMail(newBooking, info);
+			if(info.level==0){
+				await executeQuery("UPDATE blt SET status='APPROVED' WHERE _id=" + bltBooking.insertId);
+				emailIds.mailTo.push(creator.email);
+				await sendApprovalMail(newBooking.id, emailIds);
+				return done(null, newBooking);
+			}
+			emailIds.mailCc.push(creator.email);
+			await sendNewBookingMail(newBooking, creator.email);
+			await sendRequestApprovalMail(newBooking, emailIds);
 			return done(null, newBooking);
 		}
 		catch(err){

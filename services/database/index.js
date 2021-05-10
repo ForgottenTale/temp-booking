@@ -105,16 +105,23 @@ module.exports = {
 		})
 	},
 
-	tryLevelUp: async function (bltId, personId){
+	tryLevelUp: async function (input, bltId, personId){
 		return new Promise(async (resolve, reject)=>{
 			try{
 				let involved = [];
 				let nextApprovers = [];
 	
 				let bltBooking = await this.executeQuery("SELECT * FROM blt WHERE _id=" + bltId);
+				if(bltBooking.length!=1)
+					if(bltBooking.length==0)
+						throw new Error("Booking doesn't exist");
+					else
+						throw new Error("Invalid number of bookings");
+				bltBooking = bltBooking[0];
 				let {type, typeId} = this.findServiceType(bltBooking);
 				let booking = await this.executeQuery("SELECT service_name FROM blt INNER JOIN " + type + " ON"
-					+ type + "_id=" + type + "._id")
+					+ type + "_id=" + type + "._id");
+				booking = booking[0];
 				let config = await getConfig(type, booking.service_name);
 	
 				let person = await executeQuery("SELECT * FROM person WHERE _id=" + personId);
