@@ -220,23 +220,24 @@ function findMailsOfInvolved(bltId){
 	return new Promise(async(resolve, reject)=>{
 		try{
 			let blt = await executeQuery("SELECT * FROM blt WHERE _id="+bltId);
+			blt = blt[0];
 			let {type, typeId} = findServiceType(blt);
 			emailIds = [];
-			if(level>2){
+			if(blt.level<4){
 				let groupAdmins = await findGroupAdmins(blt.ou_id);
 				groupAdmins.forEach(admin=>{
 					emailIds.push(admin.email);
 				})
 			}
-			if(level>1){
+			if(blt.level<3){
 				let booking = await executeQuery("SELECT service_name FROM blt INNER JOIN " + type + " ON "+ type + "_id="+type+"._id")
 				let config = await getConfig(type, booking[0].service_name);
-				let reviewers = await findReviewers(config[0]._id);
+				let reviewers = await findReviewers(config._id);
 				reviewers.forEach(reviewer=>{
 					emailIds.push(reviewer.email);
 				})
 			}
-			if(level>0){
+			if(blt.level<2){
 				let globalAdmins = await findGlobalAdmins();
 				globalAdmins.forEach(admin=>{
 					emailIds.push(admin.email);

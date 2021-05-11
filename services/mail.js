@@ -31,6 +31,11 @@ if(process.env.NODE_ENV=="testing" || process.env.NODE_ENV=="development"){
 console.log("Mail: ", transporterData.auth.user || "INACTIVE");
 
 function removeRepeated(emailIds){
+    emailIds.mailCc = emailIds.mailCc.reduce((total, email)=>{
+        if(total.indexOf(email)==-1 && emailIds.mailTo.indexOf(email)==-1)
+            total.push(email);
+        return total;
+    }, []);
     return emailIds;
 }
 
