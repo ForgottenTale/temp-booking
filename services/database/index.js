@@ -2,10 +2,84 @@ const mysql = require('mysql');
 const { schema } = require('./ddl.js');
 const { User, convertDateToSqlDateTime, convertSqlDateTimeToDate, getClass } = require('../controller.js');
 const { transmuteSnakeToCamel } = require('../utils.js');
-const {response: delResponse} = require('./del.js') ;
-const {nextApprover: addNextApprover} = require('./insert');
+// const {response: delResponse} = require('./del.js') ;
+// const {nextApprover: addNextApprover} = require('./insert');
 
 let connection;
+
+function executeQuery(query){
+	return new Promise((resolve, reject)=>{
+		connection.query(query, (err, results)=>{
+			if(err) return reject(err);
+			return resolve(results);
+		})
+	})
+}
+
+function getConfig(type, serviceName){
+	return new Promise((resolve, reject)=>{
+		let query = "SELECT * FROM service_config WHERE type='" + type 
+			+ "' AND (service_name='" + serviceName + "' OR service_name is null);" ;
+		connection.query(query, (err, results)=>{
+			if(err) return done(err);
+			if(results.length<1){
+				err = new Error("Config not found");
+				err.sql = query;
+				return reject(err);
+			}
+			if(results.length>1)
+				results.forEach(result=>{
+					if(result.service_name != null)
+						return resolve(result);
+				})
+			return resolve(results[0]);
+		})
+	})
+}
+
+function findServiceType(booking){
+	let type, typeId;
+	for(let key in booking){
+		if(key=="user_id" || key=="_id" || key=="blt_id" || key=="creator_id" || key=="ou_id" || key=="person_id")
+			continue;
+		if((/_id$/g).test(key) && booking[key]){
+			type = key.replace("_id", "");
+			typeId = booking[key];
+		}
+	}
+	if(!type)
+		throw new Error("Service type not found");
+	return {type, typeId};
+}
+
+async function findGroupAdmins(ouId){
+	return await executeQuery("SELECT person_id, email FROM ou_map INNER JOIN person ON person._id=ou_map.person_id "
+			+ " WHERE ou_map.ou_id=" + ouId + " AND ou_map.admin=1;"
+	);
+}
+
+async function findReviewers(serviceId){
+	return await executeQuery("SELECT person._id, person.email FROM reviewer_map AS r"
+		+ " INNER JOIN user AS u ON r.user_id=u._id"
+		+ " INNER JOIN person ON u.person_id=person._id"
+		+ " WHERE service_id=" + serviceId
+	);
+}
+
+async function findGlobalAdmins(){
+	return await executeQuery("SELECT person._id, person.email FROM ou_map"
+		+ " INNER JOIN person ON person_id=person._id"
+		+ " WHERE ou_map.ou_id=1 AND ou_map.admin=1;"
+	)
+}
+
+async function delResponse(bltId){
+	return await executeQuery("DELETE FROM response WHERE blt_id=" + bltId + ";"); 
+}
+
+async function addNextApprover(personId, bltId){
+	await executeQuery("INSERT INTO next_to_approve(" + personId + "," + bltId + ");");
+}
 
 module.exports = {
 	connection: connection,
@@ -53,35 +127,9 @@ module.exports = {
 		});
 	},
 
-	executeQuery: function(query){
-		return new Promise((resolve, reject)=>{
-			connection.query(query, (err, results)=>{
-				if(err) return reject(err);
-				return resolve(results);
-			})
-		})
-	},
+	executeQuery: executeQuery,
 
-	getConfig: function(type, serviceName){
-		return new Promise((resolve, reject)=>{
-			let query = "SELECT * FROM service_config WHERE type='" + type 
-				+ "' AND (service_name='" + serviceName + "' OR service_name is null);" ;
-			connection.query(query, (err, results)=>{
-				if(err) return done(err);
-				if(results.length<1){
-					err = new Error("Config not found");
-					err.sql = query;
-					return reject(err);
-				}
-				if(results.length>1)
-					results.forEach(result=>{
-						if(result.service_name != null)
-							return resolve(result);
-					})
-				return resolve(results[0]);
-			})
-		})
-	},
+	getConfig: getConfig,
 
 	findMailsOfInvolved: function (input){
 		return new Promise((resolve, reject)=>{
@@ -208,7 +256,7 @@ module.exports = {
 				}
 				if(level<1)
 					involved.push(...globalAdmins);
-				await Promise.all(nextApprovers.map(person=>addNextApprover(person.person_id, bltId)));
+				await Promise.all(nextApprovers.map(person=>addNextApprover(person._id, bltId)));
 				return resolve({nextApprovers, involved, level});
 			}catch(err){
 				return reject(err);
@@ -225,41 +273,13 @@ module.exports = {
 		})
 	},
 
-	findServiceType: function (booking){
-		let type, typeId;
-		for(let key in booking){
-			if(key=="user_id" || key=="_id" || key=="blt_id" || key=="creator_id" || key=="ou_id" || key=="person_id")
-				continue;
-			if((/_id$/g).test(key) && booking[key]){
-				type = key.replace("_id", "");
-				typeId = booking[key];
-			}
-		}
-		if(!type)
-			throw new Error("Service type not found");
-		return {type, typeId};
-	},
+	findServiceType: findServiceType,
 
-	findGroupAdmins: async function(ouId){
-		return await executeQuery("SELECT person_id, email FROM ou_map INNER JOIN person ON person._id=ou_map.person_id "
-				+ " WHERE ou_map.ou_id=" + ouId + " AND ou_map.admin=1;"
-		);
-	},
+	findGroupAdmins: findGroupAdmins,
 	
-	findReviewers: async function(serviceId){
-		return await executeQuery("SELECT person._id, person.email FROM reviewer_map AS r"
-			+ " INNER JOIN user AS u ON r.user_id=u._id"
-			+ " INNER JOIN person ON u.person_id=person._id"
-			+ " WHERE service_id=" + serviceId
-		);
-	},
+	findReviewers: findReviewers,
 
-	findGlobalAdmins: async function(){
-		return await executeQuery("SELECT person._id, person.email FROM ou_map"
-			+ " INNER JOIN person ON person_id=person._id"
-			+ " WHERE ou_map.ou_id=1 AND ou_map.admin=1;"
-		)
-	},
+	findGlobalAdmins: findGlobalAdmins,
 
 	checkAvailability: function(input){
 		return new Promise(async (resolve, reject)=>{

@@ -112,13 +112,25 @@ module.exports = {
 		}
 	},
 
-	response: async function(personId, bltId, encourages, response){
-		await executeQuery("INSERT INTO response(person_id, bltId, encourages, response) VALUES ("
+	response: function(personId, bltId, encourages, response){
+		return new Promise(async (resolve, reject)=>{
+			try {
+				let result = await executeQuery("INSERT INTO response(person_id, blt_id, encourages, response) VALUES ("
 		 	+ personId + "," + bltId + "," + encourages + ",'" + response
 			+ "')");
+			return resolve(result);
+			}catch(err)
+				reject(err);
+		})
 	},
 
-	nextApprover: async function(personId, bltId){
-		await executeQuery("INSERT INTO next_to_approve(" + personId + "," + bltId + ");");
+	nextApprover: function(personId, bltId){
+		return new Promise(async(resolve, reject)=>{
+			try{
+				let result = await executeQuery("INSERT INTO next_to_approve(" + personId + "," + bltId + ");");
+				return resolve(result);
+			}catch(err)
+				reject(err);
+		})
 	}
 };
