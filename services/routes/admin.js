@@ -13,18 +13,10 @@ module.exports = function(app){
         });
     })
     
-    app.route('/api/approvals')
-    .get(auth.ensureAuthenticated, auth.ensureOuAdmin, (req, res)=>{
-        req.query.user = req.user;
-        database.getUserApprovals(req.query, null, (err, results)=>{
-            if(err) return respondError(err, res);
-            res.status(200).json(results);
-        })
-    })
     app.route('/api/approvals/:id')
     .get(auth.ensureAuthenticated, auth.ensureOuAdmin, (req, res)=>{
         req.query.user = req.user;
-        database.getUserApprovals(req.query, req.params.id, (err, results)=>{
+        database.getApprovals(req.query, req.params.id, (err, results)=>{
             if(err) return respondError(err, res);
             res.status(200).json(results);
         })
@@ -42,10 +34,10 @@ module.exports = function(app){
         })
     })
 
-    app.route('/api/history/approvals')
+    app.route('/api/approvals')
     .get(auth.ensureAuthenticated, auth.ensureOuAdmin, (req, res)=>{
         req.query.user = req.user;
-        database.getHistoryOfApprovals(req.query, (err, results)=>{
+        database.getApprovals(req.query, null, (err, results)=>{
             if(err) return respondError(err, res);
             res.status(200).json(results);
         })

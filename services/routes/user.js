@@ -86,7 +86,7 @@ module.exports = function(app){
         res.sendFile(process.cwd() + '/uploads/' + req.params.fileName);
     })
 
-    app.route('/api/ou')
+    app.route('/api/ous')
     .get(auth.ensureAuthenticated, (req, res)=>{
         database.getOu(req.user.personId, (err, results)=>{
             if(err) respondError(err, res);

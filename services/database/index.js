@@ -607,8 +607,8 @@ module.exports = {
 		let returnData = {};
 		try{
 			let query = "SELECT status, count(*) FROM blt";
-            if(ouId)
-                query += " WHERE ou_id=" + ouId ;
+            // if(ouId != 1)
+            //     query += " WHERE ou_id=" + ouId ;
             query+= " GROUP BY status;";
             let data = await executeQuery(query);
 			data.forEach(statusType=>{
@@ -620,18 +620,32 @@ module.exports = {
 		}
 	},
 
-	getUserApprovals: async function(constraint, bltId, done){
+	getApprovals: async function(constraint, bltId, done){
 		try{
 			let types = await getServiceTypes();
 			let query = "";
 			types.forEach(type=>{
 				query += "SELECT *, blt._id as _id FROM blt"
 					+ " INNER JOIN " + type.type + " ON " + type.type + "_id=" + type.type + "._id"
-					+ " INNER JOIN next_to_approve as n ON n.blt_id=blt._id"
 					+ " INNER JOIN user ON creator_id=user._id"
 					+ " INNER JOIN person ON user.person_id=person._id"
-					+ " WHERE n.person_id=" + constraint.user.personId
-					+ " AND blt.ou_id=" + constraint.ouId;
+				if(constraint.filter == "pending"){
+					query+= " INNER JOIN next_to_approve AS n ON n.blt_id=blt._id"
+						+ " WHERE n.person_id=" + constraint.user.personId + " AND"
+				}
+				else if(constraint.filter == "history"){
+					query+= " INNER JOIN response AS n ON n.blt_id=blt._id"
+						+ " WHERE n.person_id=" + constraint.user.personId + " AND"
+				}
+				else 
+					query+= " WHERE"
+				
+				if(constraint.user.activeOu.groupAdmin)
+					query+= " level<2";
+				else if(constraint.user.activeOu.reviewer)
+					query+= " level<3";
+				else
+					query+= " ou_id=" + constraint.user.activeOu.id
 				if(bltId)
 					query += " AND blt._id=" + bltId + ";"
 				else
@@ -655,40 +669,6 @@ module.exports = {
 			if(dataArray.length<1 && bltId)
 				return done(new Error("Booking not found"));
 			return done(null, dataArray);
-		}catch(err){
-			return done(err);
-		}
-	},
-
-	getHistoryOfApprovals: async function(constraint, done){
-		try{
-			let types = await getServiceTypes();
-			let query = "";
-			types.forEach(type=>{
-				query += "SELECT *, blt._id as _id FROM blt"
-					+ " INNER JOIN " + type.type + " ON " + type.type + "_id=" + type.type + "._id"
-					+ " INNER JOIN response as r ON r.blt_id=blt._id"
-					+ " INNER JOIN user ON creator_id=user._id"
-					+ " INNER JOIN person ON user.person_id=person._id"
-					+ " WHERE r.person_id=" + constraint.user.personId;
-					if(constraint.id)
-						query += " AND blt._id=" + constraint.id + ";"
-					else
-						query += ";";
-			})
-			let bookingsOfAllTypes = await executeQuery(query);
-			let dataArray = [];
-			for (let mainIdx in bookingsOfAllTypes){
-				for (let idx in bookingsOfAllTypes[mainIdx]){
-					ServiceClass = getClass(types[mainIdx].type);
-					bookingsOfAllTypes[mainIdx][idx] = ServiceClass.convertSqlTimesToDate(bookingsOfAllTypes[mainIdx][idx]);
-					bookingsOfAllTypes[mainIdx][idx] = transmuteSnakeToCamel(bookingsOfAllTypes[mainIdx][idx]);
-					bookingsOfAllTypes[mainIdx][idx].otherResponses = await executeQuery("SELECT name, email, encourages, response FROM response INNER JOIN person on person._id=response.person_id WHERE blt_id=" + bookingsOfAllTypes[mainIdx][idx].id + " AND user_id!=" + constraint.user_id + ";");
-					bookingsOfAllTypes[mainIdx][idx].type = types[mainIdx].type;
-					dataArray.push(bookingsOfAllTypes[mainIdx][idx]);
-				}
-			}		
-			return done(null, dataArray);	
 		}catch(err){
 			return done(err);
 		}
@@ -729,9 +709,13 @@ module.exports = {
 			await addResponse(user.personId, bookingId, input.encourages, input.response);
 
 			if(info.level==0){
-				await executeQuery("UPDATE blt SET status='"
-					+ input.encourages?"APPROVED":"DECLINED" 
-				 	+ "' WHERE _id=" + bookingId);
+				let query = "UPDATE blt SET status="
+				if(input.encourages)
+					query+="'APPROVED'";
+				else
+					query+="'DECLINED'" 
+				query+= " WHERE _id=" + bookingId;
+				await executeQuery();
 				emailIds.mailTo.push(user.email);
 				if(input.encourages)
 					await mail.approval({id: bookingId}, emailIds);
