@@ -193,7 +193,7 @@ function SupportInfo({ path, type, data, setData }) {
           /* ............................................................................................... */
           <form onSubmit={nextButton}>
             <div className="row">
-              <div className="col">
+              <div className="col-sm-6 col-12">
                 <div className="mb-4">
                   <textarea
                     placeholder="Content/ description"
@@ -237,7 +237,7 @@ function SupportInfo({ path, type, data, setData }) {
                     <option>Normal</option>
                   </select>
                 </div>
-                <div className="mb-5">
+                <div className="mb-4">
                   <label className="form-label">Poster (if any)</label>
                   <input
                     type="file"
@@ -250,7 +250,7 @@ function SupportInfo({ path, type, data, setData }) {
                 </div>
               </div>
 
-              <div className="col">
+              <div className="col-sm-6 col-12">
                 <div className="mb-4">
                   <input
                     type="text"

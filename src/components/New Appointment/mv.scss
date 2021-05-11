@@ -41,6 +41,12 @@
     position: static;
     float: right;
   }
+
+  .verify .back-btn {
+    position: absolute;
+    bottom: 60px;
+    left: 23px;
+  }
 }
 
 @media (max-width: 576px) {
@@ -48,8 +54,8 @@
     display: none;
   }
 
-  .next-btn,
-  .back-btn {
+  .info-container .next-btn,
+  .info-container .back-btn {
     margin-bottom: 1rem !important;
   }
 }
