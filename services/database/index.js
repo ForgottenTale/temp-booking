@@ -201,9 +201,6 @@ function tryLevelUp(bltId, personId){
 						await delFromNextToApprove(bltId);
 						level=0;
 					}
-					else{
-						nextApprovers = globalAdmins;
-					}
 				}else
 					level = 0;
 			}
@@ -219,25 +216,36 @@ function tryLevelUp(bltId, personId){
 	})
 }
 
-function findMailsOfInvolved(input){
-	return new Promise((resolve, reject)=>{
-		Promise.all([
-			executeQuery("SELECT * FROM next_to_approve INNER JOIN person ON person._id=person_id WHERE blt_id=" + input.id),
-			executeQuery("SELECT * FROM response INNER JOIN person ON person._id=person_id WHERE blt_id=" + input.id)
-		])
-		.then(data=>{
-			let emailIds = [];
-			data[0].forEach(person=>{
-				if(emailIds.indexOf(person.email)==-1)
-					emailIds.push(person.email);
-			})
-			data[1].forEach(person=>{
-				if(emailIds.indexOf(person.email)==-1)
-					emailIds.push(person.email);
-			})
-			resolve(emailIds);
-		})
-		.catch(err=>reject(err));
+function findMailsOfInvolved(bltId){
+	return new Promise(async(resolve, reject)=>{
+		try{
+			let blt = await executeQuery("SELECT * FROM blt WHERE _id="+bltId);
+			let {type, typeId} = findServiceType(blt);
+			emailIds = [];
+			if(level>2){
+				let groupAdmins = await findGroupAdmins(blt.ou_id);
+				groupAdmins.forEach(admin=>{
+					emailIds.push(admin.email);
+				})
+			}
+			if(level>1){
+				let booking = await executeQuery("SELECT service_name FROM blt INNER JOIN " + type + " ON "+ type + "_id="+type+"._id")
+				let config = await getConfig(type, booking[0].service_name);
+				let reviewers = await findReviewers(config[0]._id);
+				reviewers.forEach(reviewer=>{
+					emailIds.push(reviewer.email);
+				})
+			}
+			if(level>0){
+				let globalAdmins = await findGlobalAdmins();
+				globalAdmins.forEach(admin=>{
+					emailIds.push(admin.email);
+				})
+			}
+			return resolve(emailIds);
+		}catch(err){
+			reject(err);
+		}
 	})
 }
 
@@ -476,12 +484,12 @@ module.exports = {
 			if(info.level==0){
 				await executeQuery("UPDATE blt SET status='APPROVED' WHERE _id=" + bltBooking.insertId);
 				emailIds.mailTo.push(user.email);
-				await mail.approval(newBooking.id, emailIds);
+				await mail.finalApproval(newBooking.id, emailIds);
 				return done(null, newBooking);
 			}
 			emailIds.mailCc.push(user.email);
 			await mail.newBooking(newBooking, {mailTo: user.email});
-			await mail.requestApproval(newBooking, emailIds);
+			await mail.approvalRequest(newBooking, emailIds);
 			return done(null, newBooking);
 		}
 		catch(err){
@@ -701,32 +709,35 @@ module.exports = {
 
 	updateBookingStatus: async function(input, bookingId, user, done){
 		try{
-			let info = await tryLevelUp(bookingId, user.personId);
-			await executeQuery("UPDATE blt SET level="+ info.level + " WHERE _id=" + bookingId);
-			let emailIds = {mailTo: info.nextApprovers.map(person=>person.email)};
-			emailIds.mailCc = info.involved.map(person=>person.email);
-
 			await addResponse(user.personId, bookingId, input.encourages, input.response);
+			if(input.encourages){
+				let info = await tryLevelUp(bookingId, user.personId);
+				await executeQuery("UPDATE blt SET level="+ info.level + " WHERE _id=" + bookingId);
+				let emailIds = {mailTo: info.nextApprovers.map(person=>person.email)};
+				emailIds.mailCc = info.involved.map(person=>person.email);
 
-			if(info.level==0){
-				let query = "UPDATE blt SET status="
-				if(input.encourages)
-					query+="'APPROVED'";
-				else
-					query+="'DECLINED'" 
-				query+= " WHERE _id=" + bookingId;
-				await executeQuery();
-				emailIds.mailTo.push(user.email);
-				if(input.encourages)
-					await mail.approval({id: bookingId}, emailIds);
-				else
-					await mail.rejection({id: bookingId}, emailIds);
+				if(info.level==0){
+					await executeQuery("UPDATE blt SET status='APPROVED' WHERE _id=" + bookingId);
+					emailIds.mailTo.push(user.email);
+					await mail.finalApproval({id: bookingId}, emailIds);
+					return done(null, "Updated");
+				}
+	
+				emailIds.mailCc.push(user.email);
+				await mail.approvalRequest({id: bookingId}, emailIds);
+			}else{
+				let result = await executeQuery("SELECT * FROM next_to_approve WHERE person_id="
+					+ user.personId + " AND blt_id=" + bookingId
+				);
+				if(result.length>0){
+					await delFromNextToApprove(bookingId);
+					await executeQuery("UPDATE blt SET status='DECLINED' WHERE _id=" + bookingId);
+					let involved = await findMailsOfInvolved(bookingId);
+					emailIds = {mailTo: user.email, mailCc: involved};
+					await mail.finalDeclined({id: bookingId}, emailIds);
+				}
 				return done(null, "Updated");
 			}
-
-			emailIds.mailCc.push(user.email);
-			await mail.requestApproval({id: bookingId}, emailIds);
-			return done(null, "Updated");
 		}catch(err){
 			return done(err);
 		}
@@ -763,7 +774,7 @@ module.exports = {
                     }
                     if(!type)
                         return reject(new Error("Booking type not found"));
-                    let involved = await findMailsOfInvolved({id: input.bookingId})
+                    let involved = await findMailsOfInvolved(input.bookingId)
                     let emailIds = {mailCc: involved};
                     emailIds.mailTo = [input.user.email];
                     let query = "DELETE FROM next_to_approve WHERE blt_id=" + input.bookingId + ";"
