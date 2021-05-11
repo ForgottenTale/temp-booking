@@ -53,7 +53,7 @@ function findServiceType(booking){
 }
 
 async function findGroupAdmins(ouId){
-	return await executeQuery("SELECT person_id, email FROM ou_map INNER JOIN person ON person._id=ou_map.person_id "
+	return await executeQuery("SELECT person._id, email FROM ou_map INNER JOIN person ON person._id=ou_map.person_id "
 			+ " WHERE ou_map.ou_id=" + ouId + " AND ou_map.admin=1;"
 	);
 }
@@ -78,7 +78,7 @@ async function delResponse(bltId){
 }
 
 async function addNextApprover(personId, bltId){
-	await executeQuery("INSERT INTO next_to_approve(" + personId + "," + bltId + ");");
+	await executeQuery("INSERT INTO next_to_approve (person_id, blt_id) VALUES (" + personId + "," + bltId + ");");
 }
 
 module.exports = {
@@ -153,7 +153,7 @@ module.exports = {
 		})
 	},
 
-	tryLevelUp: async function (bltId, personId){
+	tryLevelUp: function (bltId, personId){
 		return new Promise(async (resolve, reject)=>{
 			try{
 				let involved = [];
@@ -256,7 +256,9 @@ module.exports = {
 				}
 				if(level<1)
 					involved.push(...globalAdmins);
-				await Promise.all(nextApprovers.map(person=>addNextApprover(person._id, bltId)));
+				await Promise.all(nextApprovers.map(person=>{
+					addNextApprover(person._id, bltId)
+				}));
 				return resolve({nextApprovers, involved, level});
 			}catch(err){
 				return reject(err);

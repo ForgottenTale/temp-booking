@@ -53,7 +53,6 @@ module.exports = {
     },
 
     response: async function(bltId){
-        console.log(typeof(executeQuery));
         return await executeQuery("DELETE FROM response WHERE blt_id=" + bltId + ";"); 
     }
 }

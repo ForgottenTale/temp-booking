@@ -1,4 +1,4 @@
-const {executeQuery, getServiceTypes, getConfig} = require('./index.js');
+let {executeQuery, getServiceTypes, getConfig} = require('./index.js');
 const {Person, User, getClass} = require('../controller.js');
 const {transmuteSnakeToCamel} = require('../utils.js');
 
@@ -93,7 +93,7 @@ module.exports = {
 					ServiceClass = getClass(types[mainIdx].type);
 					bookingsOfAllTypes[mainIdx][idx] = ServiceClass.convertSqlTimesToDate(bookingsOfAllTypes[mainIdx][idx]);
 					bookingsOfAllTypes[mainIdx][idx] = transmuteSnakeToCamel(bookingsOfAllTypes[mainIdx][idx]);
-					bookingsOfAllTypes[mainIdx][idx].otherResponses = await executeQuery("SELECT name, email, encourages, response FROM response INNER JOIN person on person._id=response.person_id WHERE final=1 AND blt_id=" + bookingsOfAllTypes[mainIdx][idx].id + ";");
+					bookingsOfAllTypes[mainIdx][idx].otherResponses = await executeQuery("SELECT name, email, encourages, response FROM response INNER JOIN person on person._id=response.person_id WHERE blt_id=" + bookingsOfAllTypes[mainIdx][idx].id + ";");
 					bookingsOfAllTypes[mainIdx][idx].type = types[mainIdx].type;
 					dataArray.push(bookingsOfAllTypes[mainIdx][idx])
 				}

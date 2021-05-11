@@ -95,15 +95,15 @@ module.exports = {
 			await executeQuery("UPDATE blt SET level=" + info.level + " WHERE _id=" + bltBooking.insertId);
 			let emailIds = {mailTo: info.nextApprovers.map(person=>person.email)};
 			emailIds.mailCc = info.involved.map(person=>person.email);
-			newBooking.id = info.bltBooking.insertId;
+			newBooking.id = bltBooking.insertId;
 			if(info.level==0){
 				await executeQuery("UPDATE blt SET status='APPROVED' WHERE _id=" + bltBooking.insertId);
-				emailIds.mailTo.push(creator.email);
+				emailIds.mailTo.push(user.email);
 				await sendApprovalMail(newBooking.id, emailIds);
 				return done(null, newBooking);
 			}
-			emailIds.mailCc.push(creator.email);
-			await sendNewBookingMail(newBooking, creator.email);
+			emailIds.mailCc.push(user.email);
+			await sendNewBookingMail(newBooking, {mailTo: user.email});
 			await sendRequestApprovalMail(newBooking, emailIds);
 			return done(null, newBooking);
 		}
@@ -119,18 +119,20 @@ module.exports = {
 		 	+ personId + "," + bltId + "," + encourages + ",'" + response
 			+ "')");
 			return resolve(result);
-			}catch(err)
+			}catch(err){
 				reject(err);
+			}
 		})
 	},
 
 	nextApprover: function(personId, bltId){
 		return new Promise(async(resolve, reject)=>{
 			try{
-				let result = await executeQuery("INSERT INTO next_to_approve(" + personId + "," + bltId + ");");
+				let result = await executeQuery("INSERT INTO next_to_approve (person_id, blt_id) VALUES (" + personId + "," + bltId + ");");
 				return resolve(result);
-			}catch(err)
+			}catch(err){
 				reject(err);
+			}
 		})
 	}
 };

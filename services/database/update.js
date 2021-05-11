@@ -1,4 +1,4 @@
-const {executeQuery, findServiceType, tryLevelUp} = require('./index.js');
+let {executeQuery, findServiceType, tryLevelUp} = require('./index.js');
 const {User, getClass} = require('../controller.js');
 const {approval: sendApprovalMail, rejection: sendRejectionMail, requestApproval: sendRequestApprovalMail} = require('../mail.js');
 const {response: addResponse} = require('./insert.js');
@@ -32,6 +32,7 @@ module.exports = {
 	bookingStatus: async function(input, bookingId, user, done){
 		try{
 			let info = await tryLevelUp(bookingId, user.personId);
+			await executeQuery("UPDATE blt SET level="+ info.level + " WHERE _id=" + bookingId);
 			let emailIds = {mailTo: info.nextApprovers.map(person=>person.email)};
 			emailIds.mailCc = info.involved.map(person=>person.email);
 
@@ -50,7 +51,8 @@ module.exports = {
 			}
 
 			emailIds.mailCc.push(user.email);
-			await sendRequestApprovalMail({id: bookignId}, emailIds);
+			await sendRequestApprovalMail({id: bookingId}, emailIds);
+			return done(null, "Updated");
 		}catch(err){
 			return done(err);
 		}
