@@ -1,7 +1,7 @@
 const passport = require("passport");
-const {user: getUser} = require('./database/get.js');
 const bcrypt = require('bcrypt');
 const LocalStrategy = require('passport-local');
+const database = require('./database/index.js');
 
 function findAndSetOuInfo(userOus, ouId){
     if(!ouId)
@@ -56,14 +56,14 @@ module.exports = {
         });
 
         passport.deserializeUser((id, done) => {
-            getUser({ email: id }, (err, doc) => {
+            database.getUser({ email: id }, (err, doc) => {
                 done(null, doc);
             })
         });
 
         passport.use(new LocalStrategy(
             function (email, password, done) {
-                getUser({ email: email}, function (err, user) {
+                database.getUser({ email: email}, function (err, user) {
                     console.log('User ' + email + ' attempted to log in.');
                     if (err) { return done(err); }
                     if (!user) { return done(null, false, {message: 'User does not exist'}); }

@@ -1,8 +1,6 @@
 const bcrypt = require('bcrypt');
 const passport = require('passport');
-const {userWithHash: getUserWithHash} = require('../database/get.js');
-const del = require('../database/del.js');
-const {userAccount: insertUserAccount} = require('../database/insert.js');
+const database = require('../database/index.js');
 const {respondError} = require('../utils.js');
 
 module.exports = function(app){
@@ -19,12 +17,12 @@ module.exports = function(app){
 
     app.route('/api/create-account/:hash')
     .post((req, res)=>{
-        getUserWithHash(req.params.hash)
+        database.getUserWithHash(req.params.hash)
         .then(person=>{
             bcrypt.hash(req.body.password, 12, (err, hash)=>{
                 if(err) return respondError(err, res);
                 person.password = process.env.NODE_ENV=="development"?req.body.password:hash;
-                insertUserAccount(person)
+                database.insertUserAccount(person)
                 .then(person=>{
                     del.UserWithHash(req.params.hash);
                     res.status(200).send(person.getPublicInfo());

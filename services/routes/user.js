@@ -1,12 +1,8 @@
 const auth = require('../auth.js');
 const {getClass, User} = require('../controller.js');
-const { checkAvailability } = require('../database/index.js');
-const {booking: addBooking} = require('../database/insert.js');
-const {ou: getOu, bookings: getBookings, activity: getActivity} = require('../database/get.js');
-const {user: updateUser, booking: updateBooking} = require('../database/update.js')
-const {booking: delBooking} = require('../database/del.js');
 const upload = require('../upload.js');
 const {respondError, removeImg} = require('../utils.js');
+const database = require('../database/index.js');
 
 module.exports = function(app){
 
@@ -21,7 +17,7 @@ module.exports = function(app){
                 ServiceClass= getClass(req.body.type);
                 newbooking = new ServiceClass(req.body);
                 newbooking.checkRequired(newbooking);
-                addBooking(newbooking, {email: req.user.email, personId: req.user.personId}, (err, doc)=>{
+                database.addBooking(newbooking, {email: req.user.email, personId: req.user.personId}, (err, doc)=>{
                     if(err){
                         return respondError(err, res);
                     }
@@ -37,14 +33,14 @@ module.exports = function(app){
 
     app.route('/api/bookings/:id')
     .get(auth.ensureAuthenticated, auth.ensureOu, (req, res)=>{
-        getBookings({userId: req.user.id, ouId: req.user.activeOu.id, bookingId: req.params.id}, (err, bookings)=>{
+        database.getBookings({userId: req.user.id, ouId: req.user.activeOu.id, bookingId: req.params.id}, (err, bookings)=>{
             if(err) return respondError(err, res);
             res.status(200).json(bookings);
         });
     })
     .delete(auth.ensureAuthenticated, auth.ensureOu, (req, res)=>{
         if(req.params.id){
-            delBooking({
+            database.delBooking({
                 user: req.user,
                 bookingId: req.params.id
             })
@@ -58,7 +54,7 @@ module.exports = function(app){
     })
     .patch(auth.ensureAuthenticated, auth.ensureOu, (req, res)=>{
         try{
-            updateBooking(req.body, req.params.id, req.user.activeOu.id)
+            database.updateBooking(req.body, req.params.id, req.user.activeOu.id)
             .then(data=>res.status(200).json(data))
             .catch(err=>respondError(err, res));
         }catch(err){
@@ -68,7 +64,7 @@ module.exports = function(app){
 
     app.route('/api/bookings')
     .get(auth.ensureAuthenticated, auth.ensureOu, (req, res)=>{
-        getBookings({userId: req.user.id, ouId: req.user.activeOu.id}, (err, bookings)=>{
+        database.getBookings({userId: req.user.id, ouId: req.user.activeOu.id}, (err, bookings)=>{
             if(err) return respondError(err, res);
             res.status(200).json(bookings);
         });
@@ -80,7 +76,7 @@ module.exports = function(app){
             return respondError(new Error("Required fields missing"), res)
         req.body.startTime = new Date(req.body.startTime)   ;
         req.body.endTime = new Date(req.body.endTime);
-        checkAvailability(req.body)
+        database.checkAvailability(req.body)
         .then(msg=>res.status(200).json({message: msg}))
         .catch(err=>respondError(err, res));
     })
@@ -92,7 +88,7 @@ module.exports = function(app){
 
     app.route('/api/ou')
     .get(auth.ensureAuthenticated, (req, res)=>{
-        getOu(req.user.personId, (err, results)=>{
+        database.getOu(req.user.personId, (err, results)=>{
             if(err) respondError(err, res);
             res.status(200).json(results);
         })
@@ -101,7 +97,7 @@ module.exports = function(app){
     app.route('/api/user')
     .patch(auth.ensureAuthenticated, (req, res)=>{
         req.body.id = req.user.id;
-        updateUser(req.body, (err, result)=>{
+        database.updateUser(req.body, (err, result)=>{
             if(err) return respondError(err, res);
             res.status(200).json({message: result});
         });
@@ -114,7 +110,7 @@ module.exports = function(app){
 
     app.route('/api/activity')
     .get(auth.ensureAuthenticated, (req, res)=>{
-        getActivity(req.query.ouId, (err, results)=>{
+        database.getActivity(req.query.ouId, (err, results)=>{
             if(err) return respondError(err, res);
             res.status(200).json(results);
         })
