@@ -64,7 +64,7 @@ export default function Menu({ toggle, state, setActiveComponent, role, user, ou
                     <path d="M8 2L8 6"></path>
                     <path d="M3 10L21 10"></path>
                 </svg>
-                <p className={open ? "menu_item_name open" : "menu_item_name"}>Calender</p>
+                <p className={open ? "menu_item_name open" : "menu_item_name"}>Calendar</p>
             </NavLink>
             {role === "Admin" ? [<NavLink key="1" to="/requests" className="menu_item" activeClassName="active" onClick={() => setActiveComponent("Requests")}>
                 <div className="menu_item_deo"></div>

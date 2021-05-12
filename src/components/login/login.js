@@ -4,6 +4,7 @@ import { useState } from 'react';
 import axios from 'axios';
 
 export default function Login(props) {
+
     const [user, setUser] = useState(props);
     const [details, setDetails] = useState({
         username: null,
@@ -16,24 +17,28 @@ export default function Login(props) {
         const formData = new URLSearchParams();
         formData.append('username', details.username);
         formData.append('password', details.password);
-            const headers = {
-                'Content-Type': 'application/x-www-form-urlencoded',
-              }
-          
-            const url = "/api/login/"
-            axios.post(url,formData,{headers:headers})
-            .then((res)=>{
-                if(res.status===200){
+        const headers = {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        }
+
+        const url = "/api/login/"
+        axios.post(url, formData, { headers: headers })
+            .then((res) => {
+                if (res.status === 200) {
                     setUser({
                         id: res.data.id,
                         name: res.data.name,
-                        role: res.data.role,
+                        ou: [
+                            { name: "College of Engineering, Kidangoor", role: "Admin" },
+                            { name: "College of Engineering, Permon", role: "user" }
+                        ],
                         email: res.data.email
-                      })
-                    window.location.replace("/dashboard");
+                    })
+                    props.setAuth(true)
+                  
                 }
             })
-            .catch(err=>{
+            .catch(err => {
                 console.error(err.response || err);
                 props.setErr(err.response.data.error);
             })
@@ -46,6 +51,7 @@ export default function Login(props) {
         setDetails(values);
 
     }
+
     return (
         <div className="login">
 
@@ -68,7 +74,7 @@ export default function Login(props) {
                         </div>
                         <p>Forgot password ?</p>
                     </div>
-                    <button className="login_container_box_button" onClick={()=>handleLogin()}>Login</button>
+                    <button className="login_container_box_button" onClick={() => handleLogin()}>Login</button>
                 </div>
 
             </div>

@@ -5,51 +5,79 @@ import axios from 'axios';
 import './App.scss';
 import { useState } from 'react';
 import Error from './components/error/error';
-
+import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
+import Login from './components/login/login';
+import HomePage from './components/Homepage/homepage';
+import Register from './components/register/register';
+import ProtectedRoute from './components/protectedRoute/protectedRoute';
+import ProtectedLogin from './components/protectedLogin/protectedLogin';
 
 function App() {
   const [user, setUser] = useState({ id: null, name: null, ou: null, email: null });
+  const [isAuth, setAuth] = useState(null);
   const [err, setErr] = useState(null);
-  const [role,setRole] = useState(null);
-  const [ou,setOU] = useState({})
+  const [role, setRole] = useState(null);
+  const [ou, setOU] = useState({})
+
 
   useEffect(() => {
     const headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
     }
-    const url = "/api/credentials/"
-    axios.get(url, { headers: headers, withCredentials: true }).then((data) => {
-      console.log(data)
-      if (data.status === 200)
-        return data.data
-    })
+    const url = "http://localhost:5000/api/credentials/"
+    axios.get(url, { headers: headers, withCredentials: true })
       .then(userInfo => {
-        setUser({
-          id: userInfo.id,
-          name: userInfo.name,
-          ou:  [
-            { name: "College of Engineering, Kidangoor", role: "Admin" },
-            { name: "College of Engineering, Permon", role: "user" }
-          ],
-          email: userInfo.email
-        })
-        setOU({ name: "College of Engineering, Kidangoor", role: "Admin" })
- 
+        console.log(userInfo)
+
+        if(userInfo.status===200){
+          setAuth(true)
+          setUser({
+            id: userInfo.data.id,
+            name: userInfo.data.name,
+            ou:  [
+              { name: "College of Engineering, Kidangoor", role: "Admin" },
+              { name: "College of Engineering, Permon", role: "user" }
+            ],
+            email: userInfo.data.email
+          })
+          setOU({ name: "College of Engineering, Kidangoor", role: "Admin" });
+  
+        }
+        else{
+          setAuth(false)
+        }
+        
       })
       .catch(err => {
-        if (!(/\/login$/).test(window.location))
-          window.location.replace('/login')
+        console.log(err)
       });
   }, [])
 
-  useEffect(()=>{
+  useEffect(() => {
     setRole(ou.role)
-  },[ou])
+  }, [ou])
 
   return (
     <div className="App">
       {err && <Error msg={err} setErr={setErr} />}
-      <Content setErr={setErr} setUser={setUser} user={user} role={role} setOU={setOU}/>
+      <Router>
+        <Switch>
+          {/* <Route path='/login'>
+                    <Login setErr={setErr} setAuth={setAuth} isAuth={isAuth} />
+                </Route> */}
+          <Route path="/" exact>
+            <HomePage setErr={setErr} />
+          </Route>
+          <Route path="/register" exact>
+            <Register />
+          </Route>
+          <ProtectedLogin path="/login"  setErr={setErr} setAuth={setAuth} isAuth={isAuth} component={Login} />
+          <ProtectedRoute path="/*"  setAuth={setAuth} user={user} role={role} setOU={setOU} isAuth={isAuth} setUser={setUser} component={Content} />
+
+        </Switch>
+      </Router>
+      {/* 
+      <Content setErr={setErr} setUser={setUser} user={user} role={role} setOU={setOU} isAuth={isAuth} setAuth={setAuth}/> */}
     </div>
   );
 }
