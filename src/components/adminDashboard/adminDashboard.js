@@ -22,8 +22,6 @@ export default function AdminDashboard({ role, setErr,user }) {
         total: 0
     })
 
-    console.log(user);
-
     useEffect(() => {
         var url = ""
         if (role === "ALPHA_ADMIN" || role === "BETA_ADMIN") {

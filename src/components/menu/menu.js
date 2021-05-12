@@ -23,10 +23,8 @@ export default function Menu({ toggle, state, setActiveComponent, role, user, ou
             <div className="menu_item">
                 <img src={logo} alt="logo" />
             </div>
+    
 
-            <select className="menu_select" defaultValue={ou} onChange={(e) => handleOUChange(e)}>
-                {user.ou !== undefined && user.ou !== null && user.ou.length > 1 ? user.ou.map((ou, i) => <option key={i} id={i}>{ou.name}</option>) : null}
-            </select>
             <NavLink to="/dashboard" className="menu_item" activeClassName="active" onClick={() => setActiveComponent("Dashboard")} exact >
                 <div className="menu_item_deo"></div>
                 <svg

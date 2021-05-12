@@ -1,6 +1,7 @@
 
 import './myReactLib.scss';
 
+
 export function Input({ label }) {
 
     return (<div className="inputTag">
@@ -32,9 +33,44 @@ export function Input2({ onChange, placeholder }) {
                     <path d="M21 21L16.65 16.65"></path>
                 </svg>
             </label>
-            <input className="inputTag2_input" type="text" placeholder ={placeholder} onChange={onChange}/>
+            <input className="inputTag2_input" type="text" placeholder={placeholder} onChange={onChange} />
 
         </div>
     )
 }
 
+// export function SelectTag({ onChange, placeholder }) {
+//     const useStyles = makeStyles((theme) => ({
+//         formControl: {
+//             margin: theme.spacing(1),
+//             maxWidth:"100%"
+//         },
+//         selectEmpty: {
+//             marginTop: theme.spacing(2)
+//         },
+       
+//     }));
+//     const classes = useStyles();
+//     return (
+
+//         <div className="selectTag">
+//             <FormControl variant="filled" className={classes.formControl} fullWidth={true} >
+//                 <InputLabel id="demo-simple-select-filled-label">Age</InputLabel>
+//                 <Select
+//                     labelId="demo-simple-select-filled-label"
+//                     id="demo-simple-select-filled"
+//                     // value={age}
+//                     // onChange={handleChange}
+    
+//                 >
+//                     <MenuItem value="">
+//                         <em>None</em>
+//                     </MenuItem>
+//                     <MenuItem value={10}>Ten</MenuItem>
+//                     <MenuItem value={20}>Twenty</MenuItem>
+//                     <MenuItem value={30}>Thirty</MenuItem>
+//                 </Select>
+//             </FormControl>
+//         </div>
+//     )
+// }

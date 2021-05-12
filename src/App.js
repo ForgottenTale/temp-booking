@@ -24,7 +24,7 @@ function App() {
     const headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
     }
-    const url = "http://localhost:5000/api/credentials/"
+    const url = "/api/credentials/"
     axios.get(url, { headers: headers, withCredentials: true })
       .then(userInfo => {
         console.log(userInfo)
@@ -36,7 +36,8 @@ function App() {
             name: userInfo.data.name,
             ou:  [
               { name: "College of Engineering, Kidangoor", role: "Admin" },
-              { name: "College of Engineering, Permon", role: "user" }
+              { name: "College of Engineering, Permon", role: "user" },
+              { name: "Young", role: "user" }
             ],
             email: userInfo.data.email
           })
@@ -54,7 +55,10 @@ function App() {
   }, [])
 
   useEffect(() => {
-    setRole(ou.role)
+    if(ou!==undefined){
+      setRole(ou.role)
+    }
+    
   }, [ou])
 
   return (
@@ -72,7 +76,7 @@ function App() {
             <Register />
           </Route>
           <ProtectedLogin path="/login"  setErr={setErr} setAuth={setAuth} isAuth={isAuth} component={Login} />
-          <ProtectedRoute path="/*"  setAuth={setAuth} user={user} role={role} setOU={setOU} isAuth={isAuth} setUser={setUser} component={Content} />
+          <ProtectedRoute path="/*" ou={ou}  setAuth={setAuth} user={user} role={role} setOU={setOU} isAuth={isAuth} setUser={setUser} component={Content} />
 
         </Switch>
       </Router>

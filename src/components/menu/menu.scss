@@ -1,5 +1,4 @@
 .menu {
-    
     width: 100%;
     height: 100%;
     position: fixed;
@@ -11,21 +10,12 @@
     overflow-x: hidden;
     z-index: 6;
 
-
-
-
     &.open {
         width: 250px;
     }
-    
-    &_select{
-        padding:10px 0px 10px 20px;
-        outline: none;
-        border: none;
-        background-color: rgb(245, 245, 245);
-        margin-bottom: 10px;
-     
-    }
+
+   
+
     &_item {
         display: flex;
         align-items: center;
@@ -36,7 +26,6 @@
 
         &_deo {
             display: none;
-
         }
 
         &.active {
