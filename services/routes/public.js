@@ -5,11 +5,6 @@ const {respondError} = require('../utils.js');
 
 module.exports = function(app){
     
-    app.route('/login')
-    .get((req, res)=>{
-        res.status(400).sendFile(process.cwd() + '/build/index.html');
-    })
-    
     app.route('/api/login')
     .post(passport.authenticate('local', {failureRedirect: '/failure', failureFlash: true}), (req, res)=>{
         res.status(200).send(req.user.getPublicInfo());

@@ -462,6 +462,8 @@ module.exports = {
 
 			await checkAvailability(newBooking);
 
+			//UPDATE: GLOBAL ADMIN
+
 			//if super creator change status to approved and next approvers and notifiers as empty
 			// let creator = await executeQuery("SELECT user._id, user.person_id, person.email, user.super_admin, user.super_creator FROM user INNER JOIN person ON person_id= person._id WHERE user._id=" + newBooking.creatorId);
 			// creator = creator[0];
