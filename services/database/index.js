@@ -1,7 +1,7 @@
 const mysql = require('mysql');
 const { schema } = require('./ddl.js');
 const { User, Person, convertDateToSqlDateTime, convertSqlDateTimeToDate, getClass } = require('../controller.js');
-const { transmuteSnakeToCamel } = require('../utils.js');
+const { transmuteSnakeToCamel, createMeeting} = require('../utils.js');
 const mail = require('../mail.js');
 
 let connection;
@@ -484,6 +484,9 @@ module.exports = {
 			newBooking.id = bltBooking.insertId;
 			if(info.level==0){
 				await executeQuery("UPDATE blt SET status='APPROVED' WHERE _id=" + bltBooking.insertId);
+				if(newBooking.type=="online_meeting"){
+					await createMeeting(newBooking, newBooking.serviceName);
+				}
 				emailIds.mailTo.push(user.email);
 				await mail.finalApproval(newBooking.id, emailIds);
 				return done(null, newBooking);
@@ -719,6 +722,13 @@ module.exports = {
 
 				if(info.level==0){
 					await executeQuery("UPDATE blt SET status='APPROVED' WHERE _id=" + bookingId);
+					let booking = await executeQuery("SELECT * FROM blt INNER JOIN online_meeting ON online_meeting_id=online_meeting._id");
+					if(booking.length>0){
+						booking = booking[0];
+						if(booking.type=="online_meeting"){
+							await createMeeting(booking, booking.serviceName);
+						}
+					}
 					emailIds.mailTo.push(user.email);
 					await mail.finalApproval({id: bookingId}, emailIds);
 					return done(null, "Updated");

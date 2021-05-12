@@ -78,6 +78,12 @@ module.exports = {
             )] = input[temp];
         }
         return output;
+    },
+
+    createMeeting: function(input, serviceName){
+        return new Promise((resolve, reject)=>{
+            return resolve("link");
+        })
     }
 
 };
