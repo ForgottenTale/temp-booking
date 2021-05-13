@@ -17,7 +17,7 @@ module.exports = function(app){
             bcrypt.hash(req.body.password, 12, (err, hash)=>{
                 if(err) return respondError(err, res);
                 person.password = process.env.NODE_ENV=="development"?req.body.password:hash;
-                database.insertUserAccount(person)
+                database.addUserAccount(person)
                 .then(person=>{
                     del.UserWithHash(req.params.hash);
                     res.status(200).send(person.getPublicInfo());
