@@ -1,5 +1,6 @@
 import './topNav2.scss';
 import { useHistory } from 'react-router-dom'
+
 export default function TopNav2({ isAuth }) {
     const history = useHistory()
 
@@ -17,7 +18,7 @@ export default function TopNav2({ isAuth }) {
                         onClick={() => history.push("/login")}
                     >Login</button>}
 
-
+        
             </div>
         </div>
     );

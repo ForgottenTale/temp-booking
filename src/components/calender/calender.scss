@@ -35,9 +35,10 @@
         justify-content: space-between;
         align-items: center;
         &_buttons {
-            width: 230px;
+            
             display: flex;
             justify-content: space-between;
+            gap: 5px;
             &_button {
                 outline: none;
                 background-color: rgb(245, 245, 245);

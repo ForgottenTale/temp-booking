@@ -3,9 +3,8 @@ import pic from '../../images/login.jpg';
 import { useState } from 'react';
 import axios from 'axios';
 
-export default function Login(props) {
+export default function Login({setUser,setAuth,setErr}) {
 
-    const [user, setUser] = useState(props);
     const [details, setDetails] = useState({
         username: null,
         password: null
@@ -34,13 +33,13 @@ export default function Login(props) {
                         ],
                         email: res.data.email
                     })
-                    props.setAuth(true)
+                    setAuth(true)
                   
                 }
             })
             .catch(err => {
                 console.error(err.response || err);
-                props.setErr(err.response.data.error);
+                setErr(err.response.data.error|| err);
             })
     }
 

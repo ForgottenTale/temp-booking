@@ -12,14 +12,15 @@ import axios from 'axios';
 
 function Calender({ setErr }) {
 
-    const [monthView, setMonthView] = useState(true);
+    const [monthView, setMonthView] = useState(window.outerWidth <= 786 ? false : true);
     const [weekView, setWeekView] = useState(false);
-    const [dayView, setDayView] = useState(false);
+    const [dayView, setDayView] = useState(window.outerWidth <= 786 ? true : false);
     const [calender, setCalendar] = useState([]);
     const [week, setWeek] = useState([]);
     const [day, setDay] = useState({});
     const [value, setValue] = useState(moment());
-    const [dayList, setDayList] = useState([]);
+    const [mobileView, setMobileView] = useState(window.outerWidth <= 786 ? true : false)
+    // const [dayList, setDayList] = useState([]);
     const [data, setData] = useState([
         {
             "date": "2021-05-06T18:30:00.000Z",
@@ -69,7 +70,7 @@ function Calender({ setErr }) {
             })
             .catch(err => {
                 console.error(err);
-                setErr(err.response.data.error);
+                setErr(err.response.data.error||err);
             });
         // eslint-disable-next-line
     }, [value])
@@ -84,11 +85,11 @@ function Calender({ setErr }) {
         const day = startDay.clone().subtract(1, "day");
         const a = [];
         const weekDays = [];
-        var temp = [];
-        for (let i = 1; i <= value.clone().daysInMonth(); i++) {
-            temp.push(i.toString());
-        }
-        setDayList(temp)
+        // var temp = [];
+        // for (let i = 1; i <= value.clone().daysInMonth(); i++) {
+        //     temp.push(i.toString());
+        // }
+        // setDayList(temp)
 
         if (monthView) {
 
@@ -142,6 +143,30 @@ function Calender({ setErr }) {
 
 
     }, [value, weekView, monthView, dayView, data])
+
+
+    useEffect(() => {
+
+
+        const handleResize = () => {
+            if (window.outerWidth <= 786) {
+                setDayView(true);
+                setMonthView(false);
+                setWeekView(false);
+                setMobileView(true);
+            } else if (window.outerWidth >= 786) {
+                setDayView(false);
+                setMonthView(true);
+                setWeekView(false);
+                setMobileView(false);
+            }
+        }
+
+        window.addEventListener('resize', handleResize)
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        }
+    }, [])
 
 
     const nextMonth = () => {
@@ -202,10 +227,10 @@ function Calender({ setErr }) {
 
     return (
         <div className="calender">
-    
+
             <div className="calender_menu">
                 <h2 className="calender_menu_today">
-{/* 
+                    {/* 
                     <select value={value.clone().format('D')} onChange={(e) => setValue(value.clone().day(e.target.value))}>
                         {dayList.map((val, key) =>
                             <option value={val} key={key}>{val}</option>
@@ -226,9 +251,12 @@ function Calender({ setErr }) {
                 <div className="calender_menu_buttons">
                     <button className="calender_menu_buttons_button" onClick={() => setValue(prevMonth())}>&#60;</button>
                     <button className="calender_menu_buttons_button" onClick={() => setValue(nextMonth())}>&#62;</button>
-                    <button className="calender_menu_buttons_button" onClick={toggleDayView}>Day</button>
-                    <button className="calender_menu_buttons_button" onClick={toggleWeekView}>Week</button>
-                    <button className="calender_menu_buttons_button" onClick={toggleMonthView}>Month</button>
+                    {mobileView ? null :
+                        <>
+                            <button className="calender_menu_buttons_button" onClick={toggleDayView}>Day</button>
+                            <button className="calender_menu_buttons_button" onClick={toggleWeekView}>Week</button>
+                            <button className="calender_menu_buttons_button" onClick={toggleMonthView}>Month</button>
+                        </>}
                 </div>
             </div>
 

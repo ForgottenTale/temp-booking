@@ -2,8 +2,39 @@
 import './settings.scss';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
+import pic from '../../images/pic3.jpg';
 
-export default function Setting({setErr}) {
+
+function Item({ name, userDetails, setUserDetails,type,handleSave }) {
+    const [disabled, setDisabled] = useState(false)
+    return (<div className="settings_con_itemCon">
+        <div className="settings_con_itemCon_item">
+            <p>{name}</p>
+            <input
+                value={userDetails[type]}
+                onChange={(e) =>
+                    setUserDetails({ ...userDetails,[type]: e.target.value })
+                } 
+                disabled={!disabled}
+                
+                />
+        </div>
+        {disabled ?
+            <button onClick={() => {
+                handleSave()
+                setDisabled(false)}}>
+                Save
+             </button>
+            : <button onClick={() => setDisabled(true)}>
+                Edit
+               </button>
+        }
+
+
+    </div>)
+}
+
+export default function Setting({ setErr }) {
 
     const [refresh, setRefresh] = useState(true);
     const [userDetails, setUserDetails] = useState({
@@ -34,7 +65,7 @@ export default function Setting({setErr}) {
                 setErr(err.response.data.error);
             });
 
-    // eslint-disable-next-line
+        // eslint-disable-next-line
     }, [refresh]);
 
     const handleSave = () => {
@@ -51,7 +82,7 @@ export default function Setting({setErr}) {
                 console.log(data);
                 setRefresh(!refresh);
             })
-            .catch(err =>{
+            .catch(err => {
                 console.error(err);
                 setErr(err.response.data.error);
             });
@@ -69,56 +100,48 @@ export default function Setting({setErr}) {
                 console.log(data);
                 setRefresh(!refresh);
             })
-            .catch(err =>{
+            .catch(err => {
                 console.error(err);
                 setErr(err.response.data.error);
             });
 
     }
 
+
+
     return (
         <div className="settings">
-            <h5>User Profile</h5>
-            <div className="settings_con">
-                <div className="settings_con_item">
-                    <p>Name</p>
-                    <input placeholder={userDetails.name} onChange={(e) =>
-                        setUserDetails({ ...userDetails, name: e.target.value })
-                    } />
-                </div>
-                {/* <div className="settings_con_item">
-                    <p>Email Id</p>
-                    <input placeholder={userDetails.email} onChange={(e) =>
-                        setUserDetails({ ...userDetails, email: e.target.value })
-                    } />
-                </div> */}
-
-
-            </div>
-            <div className="settings_con">
-                <div className="settings_con_item">
-                    <p>Phone No</p>
-                    <input placeholder={userDetails.phone} onChange={(e) =>
-                        setUserDetails({ ...userDetails, phone: e.target.value })
-                    } />
-                </div>
-
-            </div>
-            <button onClick={() => handleSave()}>Save</button>
-            <h5>Set a new Password</h5>
             <div className="settings_con">
 
-                <div className="settings_con_item">
-                    <p>New Password</p>
-                    <input />
-                </div>
-                <div className="settings_con_item">
-                    <p>Re-enter Password</p>
-                    <input onChange={(e) => setPassword(e.target.value)} />
+
+                <h5>User Profile</h5>
+                <div className="settings_con_img">
+                    <img src={pic} alt="user" />
+                    <button>
+                        Change
+                   </button>
                 </div>
 
+
+                <Item name="Name" userDetails={userDetails} setUserDetails={setUserDetails} type="name" handleSave={handleSave()}/>
+                <Item name="Email" userDetails={userDetails} setUserDetails={setUserDetails} type="email"  handleSave={handleSave()}/>
+                <Item name="Phone No" userDetails={userDetails} setUserDetails={setUserDetails} type="phone"  handleSave={handleSave()}/>
+
+                <button onClick={() => handleSave()}>Save</button>
+                <h5>Set a new Password</h5>
+                <div className="settings_con_itemCon">
+                    <div className="settings_con_itemCon_item">
+                        <p>New Password</p>
+                        <input />
+                    </div>
+                    <div className="settings_con_itemCon_item">
+                        <p>Re-enter Password</p>
+                        <input onChange={(e) => setPassword(e.target.value)} />
+                    </div>
+
+                </div>
+                <button onClick={() => handlePasswordSave()} >Save</button>
             </div>
-            <button onClick={() => handlePasswordSave()} >Save</button>
         </div>
     );
 }
