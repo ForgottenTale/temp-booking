@@ -19,6 +19,22 @@ class Person{
         }
     }
 
+    static getValuesForEdit(params){
+        let values = [];
+        for(let key in params){
+            switch(key){
+                case 'name':    values.push("name='" + params.name + "'");
+                                delete params.name;
+                                break;
+                case 'phone':   values.push("phone='" + params.phone + "'");
+                                delete params.phone;
+                                break;
+                default     :   throw(new Error(key + " is not editable"));
+            }
+        }
+        return values;
+    }
+
     validate(person){
         // if(person.role)
         //     switch(person.role){
@@ -86,6 +102,16 @@ class User extends Person{
                                 break;
                 case 'id'   :   break;
                 default     :   console.error(new Error("Undefined parameter provided " + key));
+            }
+        }
+        return values;
+    }
+
+    static getValuesForEdit(params){
+        let values = super.getValuesForEdit(params);
+        for(let key in params){
+            switch(key){
+                default     :   throw(new Error(key + " is not editable"));
             }
         }
         return values;

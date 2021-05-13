@@ -96,8 +96,7 @@ module.exports = function(app){
 
     app.route('/api/user')
     .patch(auth.ensureAuthenticated, (req, res)=>{
-        req.body.id = req.user.id;
-        database.updateUser(req.body, (err, result)=>{
+        database.updateUser(req.body, req.user.id, (err, result)=>{
             if(err) return respondError(err, res);
             res.status(200).json({message: result});
         });

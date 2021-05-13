@@ -715,12 +715,19 @@ module.exports = {
 		}
 	},
 
-	updateUser: function(input, done){
-		executeQuery("UPDATE person INNER JOIN user ON person_id=person._id SET " + User.getValues(input).join(",") + " WHERE user._id=" + input.id + ";")
-		.then(data=>{
-			return done(null, "Updated Successfully");
-		})
-		.catch(err=>done(err));
+	updateUser: function(input, userId, done){
+		try{
+			let valuesForEdit = User.getValuesForEdit(input);
+			if(valuesForEdit.length<1)
+				throw new Error("No editable values were received");
+			executeQuery("UPDATE person INNER JOIN user ON person_id=person._id SET " + valuesForEdit.join(",") + " WHERE user._id=" + userId + ";")
+			.then(data=>{
+				return done(null, "Updated Successfully");
+			})
+			.catch(err=>done(err));
+		}catch(err){
+			done(err);
+		}
 	},
 
 	updateBooking: function(newValues, bltId, userActiveOuId){
