@@ -19,7 +19,7 @@ module.exports = function(app){
                 person.password = process.env.NODE_ENV=="development"?req.body.password:hash;
                 database.addUserAccount(person)
                 .then(person=>{
-                    delUserWithHash(req.params.hash);
+                    database.delUserWithHash(req.params.hash);
                     res.status(200).send(person.getPublicInfo());
                 })
                 .catch(err=>respondError(err, res));
