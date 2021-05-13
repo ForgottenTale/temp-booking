@@ -12,20 +12,28 @@ module.exports = function(app){
 
     app.route('/api/create-account/:hash')
     .post((req, res)=>{
-        database.getUserWithHash(req.params.hash)
-        .then(person=>{
-            bcrypt.hash(req.body.password, 12, (err, hash)=>{
-                if(err) return respondError(err, res);
-                person.password = process.env.NODE_ENV=="development"?req.body.password:hash;
-                database.addUserAccount(person)
-                .then(person=>{
-                    database.delUserWithHash(req.params.hash);
-                    res.status(200).send(person.getPublicInfo());
+        try{
+            if(!req.body.password)
+                throw new Error("Required field(s) is missing");
+            if(req.body.password.trim().length<1)
+                throw new Error("Password cannot be empty");
+            database.getUserWithHash(req.params.hash)
+            .then(person=>{
+                bcrypt.hash(req.body.password, 12, (err, hash)=>{
+                    if(err) return respondError(err, res);
+                    person.password = process.env.NODE_ENV=="development"?req.body.password:hash;
+                    database.addUserAccount(person)
+                    .then(person=>{
+                        database.delUserWithHash(req.params.hash);
+                        res.status(200).send(person.getPublicInfo());
+                    })
+                    .catch(err=>respondError(err, res));
                 })
-                .catch(err=>respondError(err, res));
             })
-        })
-        .catch(err=>respondError(err, res));
+            .catch(err=>respondError(err, res));
+        }catch(err){
+            respondError(err, res);
+        }
     })
 
     app.route('/api/calendar')
