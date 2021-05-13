@@ -21,9 +21,8 @@ function Item({ name, userDetails, setUserDetails,type,handleSave }) {
         </div>
         {disabled ?
             <button onClick={() => {
-                handleSave()
                 setDisabled(false)}}>
-                Save
+               Cancel
              </button>
             : <button onClick={() => setDisabled(true)}>
                 Edit
@@ -43,6 +42,7 @@ export default function Setting({ setErr }) {
         phone: null,
     });
     const [password, setPassword] = useState(null)
+    const [confirmPassword, setConfirmPassword] = useState(null)
 
     useEffect(() => {
 
@@ -71,7 +71,7 @@ export default function Setting({ setErr }) {
     const handleSave = () => {
         const formData = new URLSearchParams();
         formData.append('name', userDetails.name);
-        // formData.append('email', userDetails.email);
+        formData.append('email', userDetails.email);
         formData.append('phone', userDetails.phone);
         const headers = {
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -89,22 +89,28 @@ export default function Setting({ setErr }) {
 
     }
     const handlePasswordSave = () => {
-        const formData = new URLSearchParams();
-        formData.append('password', password);
-        const headers = {
-            'Content-Type': 'application/x-www-form-urlencoded',
+        if(confirmPassword===password){
+            const formData = new URLSearchParams();
+            formData.append('password', password);
+            const headers = {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            }
+            const url = "/api/user ";
+            axios.patch(url, formData, { headers: headers, withCredentials: true })
+                .then((data) => {
+                    console.log(data);
+                    setRefresh(!refresh);
+                })
+                .catch(err => {
+                    console.error(err);
+                    setErr(err.response.data.error);
+                });
+    
         }
-        const url = "/api/user ";
-        axios.patch(url, formData, { headers: headers, withCredentials: true })
-            .then((data) => {
-                console.log(data);
-                setRefresh(!refresh);
-            })
-            .catch(err => {
-                console.error(err);
-                setErr(err.response.data.error);
-            });
-
+      
+        else{
+            setErr("Password doesn't match")
+        }
     }
 
 
@@ -123,20 +129,25 @@ export default function Setting({ setErr }) {
                 </div>
 
 
-                <Item name="Name" userDetails={userDetails} setUserDetails={setUserDetails} type="name" handleSave={handleSave()}/>
-                <Item name="Email" userDetails={userDetails} setUserDetails={setUserDetails} type="email"  handleSave={handleSave()}/>
-                <Item name="Phone No" userDetails={userDetails} setUserDetails={setUserDetails} type="phone"  handleSave={handleSave()}/>
+                <Item name="Name" userDetails={userDetails} setUserDetails={setUserDetails} type="name" />
+                <Item name="Email" userDetails={userDetails} setUserDetails={setUserDetails} type="email"  />
+                <Item name="Phone No" userDetails={userDetails} setUserDetails={setUserDetails} type="phone" />
 
                 <button onClick={() => handleSave()}>Save</button>
                 <h5>Set a new Password</h5>
                 <div className="settings_con_itemCon">
                     <div className="settings_con_itemCon_item">
                         <p>New Password</p>
-                        <input />
+                        <input onChange={(e) => setPassword(e.target.value)}/>
                     </div>
+                    
+
+                </div>
+                <div className="settings_con_itemCon">
+                 
                     <div className="settings_con_itemCon_item">
                         <p>Re-enter Password</p>
-                        <input onChange={(e) => setPassword(e.target.value)} />
+                        <input onChange={(e) => setConfirmPassword(e.target.value)} />
                     </div>
 
                 </div>

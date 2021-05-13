@@ -76,7 +76,7 @@ function App() {
             <Register />
           </Route>
           <ProtectedLogin path="/login"  setErr={setErr} setAuth={setAuth} isAuth={isAuth} component={Login} />
-          <ProtectedRoute path="/*" ou={ou}  setAuth={setAuth} user={user} role={role} setOU={setOU} isAuth={isAuth} setUser={setUser} component={Content} />
+          <ProtectedRoute path="/*" ou={ou}  setAuth={setAuth} user={user} role={role} setOU={setOU} setErr={setErr} isAuth={isAuth} setUser={setUser} component={Content} />
 
         </Switch>
       </Router>
