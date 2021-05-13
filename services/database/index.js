@@ -2,7 +2,7 @@ const mysql = require('mysql');
 const { schema } = require('./ddl.js');
 const { User, Person, convertDateToSqlDateTime, convertSqlDateTimeToDate, getClass } = require('../controller.js');
 const { transmuteSnakeToCamel, createMeeting} = require('../utils.js');
-const mail = require('../mail.js');
+const mail = require('../mail/index.js');
 
 let connection;
 
@@ -347,8 +347,8 @@ module.exports = {
 			startTime = convertDateToSqlDateTime(constraint.startTime);
 			endTime = convertDateToSqlDateTime(constraint.endTime);
 			let query = "SELECT * FROM blt INNER JOIN online_meeting ON online_meeting_id=online_meeting._id WHERE"
-				+ " status !='DECLINED'"
-				+ " AND   (start_time>'" + startTime + "' AND start_time<'" + endTime + "') OR "
+				+ " status='APPROVED' OR status='PENDING'"
+				+ " AND (start_time>'" + startTime + "' AND start_time<'" + endTime + "') OR "
 				+ " (end_time>'" + startTime +"' AND end_time<'" + endTime + "') OR "
 				+ " (start_time='" + startTime +"' AND end_time='" + endTime + "');"
 			query += query.replace(/online_meeting/g, "intern_support");
@@ -359,7 +359,7 @@ module.exports = {
 			})
 
 			query = "SELECT * FROM blt INNER JOIN e_notice ON e_notice_id=e_notice._id WHERE"
-				+ " status != 'DECLINED'"
+				+ " status='APPROVED' OR status='PENDING'"
 				+ " AND (publish_time>='" + startTime + "' AND publish_time<='" + endTime + "');";
 			query += query.replace(/e_notice/g, "publicity");
 			eventsOfAllTypes = await executeQuery(query);
@@ -522,7 +522,7 @@ module.exports = {
 			}
 			emailIds.mailCc.push(user.email);
 			await mail.newBooking(newBooking, {mailTo: user.email});
-			await mail.approvalRequest(newBooking, emailIds);
+			await mail.reviewRequest(newBooking, emailIds);
 			return done(null, newBooking);
 		}
 		catch(err){
@@ -764,7 +764,7 @@ module.exports = {
 				}
 	
 				emailIds.mailCc.push(user.email);
-				await mail.approvalRequest({id: bookingId}, emailIds);
+				await mail.reviewRequest({id: bookingId}, emailIds);
 			}else{
 				let result = await executeQuery("SELECT * FROM next_to_approve WHERE person_id="
 					+ user.personId + " AND blt_id=" + bookingId

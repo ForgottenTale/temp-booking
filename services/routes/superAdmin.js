@@ -3,7 +3,7 @@ const upload = require('../upload.js');
 const database = require('../database/index.js');
 const { parseCsv, respondError, generateAccRegLink, generateHash} = require('../utils.js');
 const {Person} = require('../controller.js');
-const {accountInitiated: mailAccInitiated} = require('../mail.js');
+const {accountInitiated: mailAccInitiated} = require('../mail/index.js');
 
 function createPerson(person){
     return new Promise((resolve, reject)=>{
