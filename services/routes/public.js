@@ -1,48 +1,54 @@
 const bcrypt = require('bcrypt');
 const passport = require('passport');
-const database = require('../database/database.js');
-const {NewUser} = require('../controller.js');
-
-function respondError(err, res){
-    console.error(err);
-    let message;
-    if(err.code == 'ER_BAD_NULL_ERROR')
-        message = err.sqlMessage;
-    else if(err.code=='ER_DUP_ENTRY' && (/for key 'user.email'/).test(err.message))
-        message = "User already exists";
-    else
-        message = err.message || err;
-    res.status(400).json({error: message});
-}
+const database = require('../database/index.js');
+const {respondError} = require('../utils.js');
 
 module.exports = function(app){
-    app.route('/register')
-    .get((req, res)=>{
-        res.sendFile(process.cwd() + '/coverage/register.html')
-    })
-    
-    app.route('/login')
-    .get((req, res)=>{
-        res.status(400).sendFile(process.cwd() + '/build/index.html');
-    })
     
     app.route('/api/login')
     .post(passport.authenticate('local', {failureRedirect: '/failure', failureFlash: true}), (req, res)=>{
         res.status(200).send(req.user.getPublicInfo());
     })
 
+    app.route('/api/create-account/:hash')
+    .post((req, res)=>{
+        try{
+            if(!req.body.password)
+                throw new Error("Required field(s) is missing");
+            if(req.body.password.trim().length<1)
+                throw new Error("Password cannot be empty");
+            database.getUserWithHash(req.params.hash)
+            .then(person=>{
+                bcrypt.hash(req.body.password, 12, (err, hash)=>{
+                    if(err) return respondError(err, res);
+                    person.password = process.env.NODE_ENV=="development"?req.body.password:hash;
+                    database.addUserAccount(person)
+                    .then(person=>{
+                        database.delUserWithHash(req.params.hash);
+                        res.status(200).send(person.getPublicInfo());
+                    })
+                    .catch(err=>respondError(err, res));
+                })
+            })
+            .catch(err=>respondError(err, res));
+        }catch(err){
+            respondError(err, res);
+        }
+    })
+
     app.route('/api/calendar')
     .get((req, res)=>{
-        if(!req.query.month || !req.query.year)
-            return respondError(new Error('query parameters missing'), res);
-        req.query.year = Number(req.query.year);
-        req.query.month = Number(req.query.month);
-        let startTime = new Date(req.query.year, req.query.month, 1);
-        let endTime = new Date(req.query.year, req.query.month + 1, 1);
-        database.getCalendarData({startTime, endTime, type: 'online_meeting'}, (err, result)=>{
-            if(err) return respondError(err, res);
-            res.status(200).json(result);
-        });
+        try{
+            if(!req.query.month || !req.query.year)
+                return respondError(new Error('query parameters missing'), res);
+            let startTime = new Date(('0' + req.query.year).slice(-4) + "-" + ('0' + req.query.month).slice(-2) + "-01T00:00:00Z");
+            let endTime = new Date(('0' + req.query.year).slice(-4) + "-" + ('0' +(req.query.month+1)%12).slice(-2) + "-01T00:00:00Z");
+            database.getCalendarData({startTime, endTime})
+            .then(result=>res.status(200).json(result))
+            .catch(err=>respondError(err, res));
+        }catch(err){
+            respondError(err, res);
+        }
     })
 
     app.route('/failure')

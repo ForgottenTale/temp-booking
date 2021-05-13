@@ -14,7 +14,7 @@ module.exports = function(app){
     superAdmin(app);
     admin(app);    
     app.route('*')
-    .get(auth.ensureAuthenticated, (req, res)=>{
+    .get((req, res)=>{
         res.sendFile(process.cwd() + '/build/index.html');
     })
     
