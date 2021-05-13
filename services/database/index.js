@@ -780,14 +780,7 @@ module.exports = {
                     return reject(new Error("Booking not found"))
                 if(booking[0].creator_id==input.user.id){
                     //find type
-                    for(let key in booking[0]){
-                        if(key=="creator_id" || key=="_id" || key=="ou_id")
-                            continue;
-                        if((/_id$/g).test(key) && booking[0][key]){
-                            type = key.replace("_id", "");
-                            typeId = booking[0][key];
-                        }
-                    }
+                    let {type, typeId} = findServiceType(booking[0]);
                     if(!type)
                         return reject(new Error("Booking type not found"));
                     let involved = await findMailsOfInvolved(input.bookingId)
