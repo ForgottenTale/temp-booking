@@ -136,7 +136,7 @@ function tryLevelUp(bltId, personId){
 			if(level==3){
 				if(config.group_restraint){				
 					if(groupAdmins.length<1)
-						throw new Error("This ou has no admin");
+						level = 2;
 					for(let i in groupAdmins){
 						if(groupAdmins[i]._id == person._id){
 							found = true;
@@ -163,7 +163,7 @@ function tryLevelUp(bltId, personId){
 				if(config.reviewer_restraint){
 					if(level==2){
 						if(reviewers.length<1)
-							throw new Error("This ou has no reviewers");
+							level = 1;
 						for(let i in reviewers){
 							if(reviewers[i]._id == person._id){
 								found = true;
@@ -190,7 +190,10 @@ function tryLevelUp(bltId, personId){
 			if(level==1){
 				if(config.global_restraint){
 					if(globalAdmins.length<1)
-						throw new Error("There are no Global Admins");
+						{
+							await delFromNextToApprove(bltId);
+							nextApprovers=[{_id: 1, email: process.env.SUPER_EMAIL}]
+						}
 					for(let i in globalAdmins){
 						if(globalAdmins[i]._id == person._id){
 							found = true;
