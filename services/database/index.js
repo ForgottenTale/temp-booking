@@ -342,59 +342,83 @@ module.exports = {
 
 	checkAvailability: checkAvailability,
 
-	getCalendarData: function(constraint, done){
-		startTime = convertDateToSqlDateTime(constraint.startTime);
-		endTime = convertDateToSqlDateTime(constraint.endTime);
-		let query = "SELECT distinct DATE(start_time) FROM " + constraint.type + " WHERE"
-			+ " (start_time<='" + startTime + "' AND end_time>'" + endTime + "')"
-			+ " OR (end_time<'" + endTime + "' AND end_time>='" + startTime + "')"
-			+ " OR (start_time<'" + endTime + "' AND start_time>='" + startTime + "');" ;
-		executeQuery(query)
-		.then(distinctDates=>{
+	getCalendarData: async function(constraint){
+		try{
+			startTime = convertDateToSqlDateTime(constraint.startTime);
+			endTime = convertDateToSqlDateTime(constraint.endTime);
+			let query = "SELECT * FROM blt INNER JOIN online_meeting ON online_meeting_id=online_meeting._id WHERE"
+				+ " status !='DECLINED'"
+				+ " AND   (start_time>'" + startTime + "' AND start_time<'" + endTime + "') OR "
+				+ " (end_time>'" + startTime +"' AND end_time<'" + endTime + "') OR "
+				+ " (start_time='" + startTime +"' AND end_time='" + endTime + "');"
+			query += query.replace(/online_meeting/g, "intern_support");
 			let dataArray = [];
-			let query = "";
-			distinctDates.forEach(distinctDate=>{
-				query += "SELECT * FROM " + constraint.type + " WHERE DATE(start_time)=DATE('" + distinctDate["DATE(start_time)"] + "');";
+			let eventsOfAllTypes = await executeQuery(query);
+			eventsOfAllTypes.forEach(eventsOfType=>{
+				eventsOfType.forEach(event=>dataArray.push(transmuteSnakeToCamel(event)));
 			})
-			if(query.length>0)
-				executeQuery(query)
-				.then(datesAndEvents=>{
-					if(datesAndEvents[0][0])
-						datesAndEvents.forEach(distinctDateEvents=>{
-							distinctDate = distinctDateEvents[0].start_time.split(" ");
-							distinctDate.pop();
-							distinctDate.push("18:30:00");
-							distinctDate = distinctDate.join(" ");
-							distinctDate = new Date(convertSqlDateTimeToDate(distinctDate));
-							distinctDateEvents = distinctDateEvents.map(event=>{
-								event.type = constraint.type;
-								ServiceClass = getClass(constraint.type);
-								ServiceClass.convertSqlTimesToDate(event);
-								event = transmuteSnakeToCamel(event);
-								return event;
-							});
-							dataArray.push({date: distinctDate, events: distinctDateEvents});	
-						})
-					else
-						datesAndEvents.forEach(distinctDateEvents=>{
-							distinctDate = distinctDateEvents.start_time.split(" ");
-							distinctDate.pop();
-							distinctDate.push("18:30:00");
-							distinctDate = distinctDate.join(" ");
-							distinctDate = new Date(convertSqlDateTimeToDate(distinctDate));
-							distinctDateEvents.type = constraint.type;
-							ServiceClass = getClass(constraint.type);
-							ServiceClass.convertSqlTimesToDate(distinctDateEvents);
-							distinctDateEvents = transmuteSnakeToCamel(distinctDateEvents);
-							dataArray.push({date: distinctDate, events: [distinctDateEvents]})
-						})
-					return done(null, dataArray);
-				})
-				.catch(err=>done(err))
-			else
-				return done(null, []);
-		})
-		.catch(err=>done(err));
+
+			query = "SELECT * FROM blt INNER JOIN e_notice ON e_notice_id=e_notice._id WHERE"
+				+ " status != 'DECLINED'"
+				+ " AND (publish_time>='" + startTime + "' AND publish_time<='" + endTime + "');";
+			query += query.replace(/e_notice/g, "publicity");
+			eventsOfAllTypes = await executeQuery(query);
+			eventsOfAllTypes.forEach(eventsOfType=>{
+				eventsOfType.forEach(event=>{
+					event.startTime = event.publish_time;
+					event.endTime = event.publish_time;
+					dataArray.push(transmuteSnakeToCamel(event));
+				});
+			})
+			return dataArray;
+		}catch(err){
+			throw err;
+		}
+		
+		// then(distinctDates=>{
+		// 	let query = "";
+		// 	distinctDates.forEach(distinctDate=>{
+		// 		query += "SELECT * FROM " + constraint.type + " WHERE DATE(start_time)=DATE('" + distinctDate["DATE(start_time)"] + "');";
+		// 	})
+		// 	if(query.length>0)
+		// 		executeQuery(query)
+		// 		.then(datesAndEvents=>{
+		// 			if(datesAndEvents[0][0])
+		// 				datesAndEvents.forEach(distinctDateEvents=>{
+		// 					distinctDate = distinctDateEvents[0].start_time.split(" ");
+		// 					distinctDate.pop();
+		// 					distinctDate.push("18:30:00");
+		// 					distinctDate = distinctDate.join(" ");
+		// 					distinctDate = new Date(convertSqlDateTimeToDate(distinctDate));
+		// 					distinctDateEvents = distinctDateEvents.map(event=>{
+		// 						event.type = constraint.type;
+		// 						ServiceClass = getClass(constraint.type);
+		// 						ServiceClass.convertSqlTimesToDate(event);
+		// 						event = transmuteSnakeToCamel(event);
+		// 						return event;
+		// 					});
+		// 					dataArray.push({date: distinctDate, events: distinctDateEvents});	
+		// 				})
+		// 			else
+		// 				datesAndEvents.forEach(distinctDateEvents=>{
+		// 					distinctDate = distinctDateEvents.start_time.split(" ");
+		// 					distinctDate.pop();
+		// 					distinctDate.push("18:30:00");
+		// 					distinctDate = distinctDate.join(" ");
+		// 					distinctDate = new Date(convertSqlDateTimeToDate(distinctDate));
+		// 					distinctDateEvents.type = constraint.type;
+		// 					ServiceClass = getClass(constraint.type);
+		// 					ServiceClass.convertSqlTimesToDate(distinctDateEvents);
+		// 					distinctDateEvents = transmuteSnakeToCamel(distinctDateEvents);
+		// 					dataArray.push({date: distinctDate, events: [distinctDateEvents]})
+		// 				})
+		// 			return done(null, dataArray);
+		// 		})
+		// 		.catch(err=>done(err))
+		// 	else
+		// 		return done(null, []);
+		// })
+		// .catch(err=>done(err));
 	},
 
 	addPerson: async function (person, done) {

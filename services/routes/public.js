@@ -30,16 +30,17 @@ module.exports = function(app){
 
     app.route('/api/calendar')
     .get((req, res)=>{
-        if(!req.query.month || !req.query.year)
-            return respondError(new Error('query parameters missing'), res);
-        req.query.year = Number(req.query.year);
-        req.query.month = Number(req.query.month);
-        let startTime = new Date(req.query.year, req.query.month, 1);
-        let endTime = new Date(req.query.year, req.query.month + 1, 1);
-        database.getCalendarData({startTime, endTime, type: 'online_meeting'}, (err, result)=>{
-            if(err) return respondError(err, res);
-            res.status(200).json(result);
-        });
+        try{
+            if(!req.query.month || !req.query.year)
+                return respondError(new Error('query parameters missing'), res);
+            let startTime = new Date(('0' + req.query.year).slice(-4) + "-" + ('0' + req.query.month).slice(-2) + "-01T00:00:00Z");
+            let endTime = new Date(('0' + req.query.year).slice(-4) + "-" + ('0' +(req.query.month+1)%12).slice(-2) + "-01T00:00:00Z");
+            database.getCalendarData({startTime, endTime})
+            .then(result=>res.status(200).json(result))
+            .catch(err=>respondError(err, res));
+        }catch(err){
+            respondError(err, res);
+        }
     })
 
     app.route('/failure')
