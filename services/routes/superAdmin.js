@@ -27,7 +27,7 @@ function initiateUser(person){
             person = await createPerson(person);
             if(!(/.* ALREADY EXISTS$/).test(person) && !(/.* ADDED OUS:.*/).test(person)){
                 let hash = await generateHash(person.email);
-                await database.insertHash(person.id, hash);
+                await database.addHash(person.id, hash);
                 await mailAccInitiated(person, generateAccRegLink(hash));
                 return resolve(person.getPublicInfo());   
             }
