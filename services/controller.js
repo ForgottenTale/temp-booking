@@ -1,23 +1,133 @@
-function convertDateToSqlDateTime(dateTime){
-    return dateTime.toISOString().replace("T", " ").replace("Z", "");
-}
+const {convertSqlDateTimeToDate, convertDateToSqlDateTime} = require('./utils.js');
 
-function convertSqlDateTimeToDate(mysqlTime){
-    return new Date(mysqlTime.replace(" ", "T") + "Z");
-}
-
-class User {
-    constructor(user){
-        this.required = ["name", "email", "phone", "password"];
+class Person{
+    constructor(person){
         try{
-            this.checkRequired(user);
-            this._id = user._id;
-            this.role = user.role?user.role.toUpperCase():null;
-            this.name = user.name.trim();
-            this.email = user.email.trim();
-            this.phone = (user.phone+"").trim();
+            this.validate(person);
+            this.id = person.id;
+            this.role = person.role?person.role.toUpperCase():null;
+            this.name = person.name?person.name.trim():null;
+            this.email = person.email?person.email.trim():null;
+            this.phone = person.phone?(person.phone+"").trim():null;
+            this.groupAdmin = person.groupAdmin=='1'?true:false;
+            if(person.ouIds)
+                this.ouIds = person.ouIds.split(",").map(ouId=>parseInt(ouId));
+            if(person.ous)
+                this.ous = person.ous;
+        }catch(err){
+            throw err;
+        }
+    }
+
+    static getValuesForEdit(params){
+        let values = [];
+        for(let key in params){
+            switch(key){
+                case 'name':    values.push("name='" + params.name + "'");
+                                delete params.name;
+                                break;
+                case 'phone':   values.push("phone='" + params.phone + "'");
+                                delete params.phone;
+                                break;
+                default     :   throw(new Error(key + " is not editable"));
+            }
+        }
+        return values;
+    }
+
+    validate(person){
+        // if(person.role)
+        //     switch(person.role){
+        //         case "GLOBAL_ADMIN": break;
+        //         case "GROUP_ADMIN": break;
+        //         case "USER": break;
+        //         case "REVIEWER": break;
+        //         default: throw new Error("Invalid role");
+        //     }
+    }
+
+    getPublicInfo(){
+        return{
+            name: this.name,
+            email: this.email,
+            phone: this.phone,
+            ous: this.ous
+        }
+    }
+
+    getAllNamesAndValues(){
+        return({
+            names: ['name', 'email', 'phone'],
+            values: [
+                this.name?("'" + this.name + "'"):"null",
+                "'" + this.email + "'",
+                "'" + this.phone + "'"
+            ]
+        })
+    }
+}
+
+
+class User extends Person{
+    constructor(user){
+        try{
+            super(user);
+            this.id = user.id;
+            this.personId = user.personId;
             this.password = user.password.trim();
+            this.superAdmin = user.superAdmin;
+        }catch(err){
+            throw err;
+        }
+    }
+
+    getAllNamesAndValues(){
+        let {names, values} = super.getAllNamesAndValues();
+        names.push("password");
+        values.push("'" + this.password + "'");
+        return {names, values};
+    }
+
+    static getValues(params){
+        let values = [];
+        for(let key in params){
+            switch(key){
+                case 'name':    values.push("name='" + params.name + "'");
+                                break;
+                case 'email':   values.push("email='" + params.email + "'");
+                                break;
+                case 'password':values.push("password='" + params.password + "'");
+                                break;
+                case 'phone':   values.push("phone='" + params.phone + "'");
+                                break;
+                case 'id'   :   break;
+                default     :   console.error(new Error("Undefined parameter provided " + key));
+            }
+        }
+        return values;
+    }
+
+    static getValuesForEdit(params){
+        let values = super.getValuesForEdit(params);
+        for(let key in params){
+            switch(key){
+                default     :   throw(new Error(key + " is not editable"));
+            }
+        }
+        return values;
+    }
+}
+
+class NewUser extends User{
+    constructor(input){
+        try{
+            super(input);
+            this.required = ["name", "email", "phone", "password", "confirmPassword"];
+            this.checkRequired(input);
+            this.confirmPassword = input.confirmPassword.trim();
             this.validate();
+            if(this.confirmPassword != this.password)
+                throw new Error("Passwords mismatch");
         }catch(err){
             throw err;
         }
@@ -42,84 +152,41 @@ class User {
             throw new Error("Invalid phone number");
     }
 
-    getPublicInfo(){
-        return{
-            name: this.name,
-            role: this.role,
-            email: this.email,
-            phone: this.phone
-        }
-    }
-
-    getAllNamesAndValues(){
-        return({
-            names: ['name', 'role', 'email', 'password', 'phone'],
-            values: [
-                this.name?("'" + this.name + "'"):"null",
-                this.role?("'" + this.role + "'"):"null",
-                "'" + this.email + "'",
-                "'" + this.password + "'",
-                "'" + this.phone + "'"
-            ]
-        })
-    }
-
-    static getValues(params){
-        let values = [];
-        for(let key in params){
-            switch(key){
-                case 'name':    values.push("name='" + params.name + "'");
-                                break;
-                case 'email':   values.push("email='" + params.email + "'");
-                                break;
-                case 'password':values.push("password='" + params.password + "'");
-                                break;
-                case 'phone':   values.push("phone='" + params.phone + "'");
-                                break;
-                case 'id'   :   break;
-                default     :   console.error(new Error("Undefined parameter provided " + key));
-            }
-        }
-        return values;
-    }
-}
-
-class NewUser extends User{
-    constructor(input){
-        try{
-            super(input);
-            this.required = ["confirmPassword"];
-            this.checkRequired(input);
-            this.confirmPassword = input.confirmPassword.trim();
-            if(this.confirmPassword != this.password)
-                throw new Error("Passwords mismatch");
-        }catch(err){
-            throw err;
-        }
-    }
-
 }
 
 class Service{
     constructor(input){
         try{
-            this.required = ["type", "serviceName", "creatorId", "title"];
-            this.checkRequired(input);
+            this.required = ["type", "serviceName", "creatorId", "title", "ouId"];
+            this.editable = ["description"];
             this._id = input._id;
             this.type = input.type.trim();
             this.serviceName = input.serviceName.trim().toLowerCase();
+            this.creatorId = input.creatorId;
             this.title = input.title?input.title.trim():"null";
+            this.ouId = input.ouId;
             this.description = input.description?input.description.trim():null;
             this.status = input.status?input.status:"PENDING";
             this.comments = input.comments?input.comments.trim():null;
             this.img = input.img?input.img.trim():null;
-            this.creatorId = input.creatorId;
-            this.convertISOToSql = convertDateToSqlDateTime;
         }catch(err){
             throw err;
         }
     }
-    
+
+    static getValuesForEdit(params){
+        let values = [];
+        for(let key in params){
+            switch(key){
+                case 'description'  : values.push("description='" + params.description + "'");
+                                    delete params[key];
+                                    break;
+                default             :   throw(new Error(key + " is not editable"));
+            }
+        }
+        return values;
+    }
+
     checkRequired(input){
         this.required.forEach(param=>{
             if(!input[param])
@@ -167,17 +234,15 @@ class OnlineMeeting extends Service {
     constructor(input){
         super(input);
         this.required = ["speakerName", "speakerEmail", "startTime", "endTime"];
-        super.checkRequired(input);
         this.speakerName = input.speakerName.trim();
         this.speakerEmail = input.speakerEmail.trim();
-        input.startTime = input.startTime[input.startTime.length-1]=="Z"?input.startTime:convertSqlDateTimeToDate(input.startTime);
-        input.endTime = input.endTime[input.endTime.length-1]=="Z"?input.endTime:convertSqlDateTimeToDate(input.endTime);
         this.startTime = new Date(input.startTime);
         this.endTime = new Date(input.endTime);
-        if(typeof(input.coHosts)=="string")
-            input.coHosts = JSON.parse(input.coHosts);
+        if(typeof(input.coHosts)=="string"){
+            input.coHosts = input.coHosts.trim()?JSON.parse(input.coHosts):null;
+        }
         this.coHosts = input.coHosts?input.coHosts.map(coHost=>{
-            return [coHost[0].trim(), coHost[1].trim()]
+            return [coHost[0].trim(), coHost[1].trim()];
         }):null;
     }
 
@@ -192,6 +257,20 @@ class OnlineMeeting extends Service {
         if(startOfAdvanceTime<=(new Date())){
             throw new Error('Booking has to be done ' + config.advance_days + ' days in advance');
         }
+    }
+
+    static getValuesForEdit(params){
+        let values = super.getValuesForEdit(params);
+        for(let key in params){
+            switch(key){
+                case 'speakerName':    values.push("speaker_name='" + params.speakerName + "'");
+                                break;
+                case 'speakerEmail':    values.push("speaker_email='" + params.speakerName + "'");
+                                break;
+                default     :   throw(new Error(key + " is not editable"));
+            }
+        }
+        return values;
     }
 
     static getTimeAvailQuery(input, config){
@@ -218,8 +297,8 @@ class OnlineMeeting extends Service {
         namesAndValues.values.push(this.speakerName?("'" + this.speakerName + "'"):"null");
         namesAndValues.values.push(this.speakerEmail?("'" + this.speakerEmail + "'"):"null");
         namesAndValues.values.push(this.coHosts?("'" + JSON.stringify(this.coHosts) + "'"):"null");
-        namesAndValues.values.push(this.startTime?("'" + this.convertISOToSql(this.startTime) + "'"):"null");
-        namesAndValues.values.push(this.endTime?("'" + this.convertISOToSql(this.endTime) + "'"):"null");
+        namesAndValues.values.push(this.startTime?("'" + convertDateToSqlDateTime(this.startTime) + "'"):"null");
+        namesAndValues.values.push(this.endTime?("'" + convertDateToSqlDateTime(this.endTime) + "'"):"null");
         return(namesAndValues);
     }
 
@@ -238,7 +317,6 @@ class InternSupport extends Service{
     constructor(input){
         super(input);
         this.required = ["startTime", "endTime"];
-        super.checkRequired(input);
         this.startTime = new Date(input.startTime);
         this.endTime = new Date(input.endTime);
         this.wordsCount = input.wordsCount;
@@ -303,7 +381,7 @@ class ENotice extends Service{
     constructor(input){
         super(input);
         this.required = ["express", "reminder", "publishTime"];
-        super.checkRequired(input);
+        this.editable = ["express"];
         this.express = input.express=="express"||(input.express+"")=="1"?true:false;
         this.reminder = input.reminder=="yes"||(input.reminder+"")=="1"?true:false;
         this.publishTime = new Date(input.publishTime);
@@ -354,7 +432,6 @@ class Publicity extends Service{
     constructor(input){
         super(input);
         this.required = ["publishTime"];
-        super.checkRequired(input);
         this.publishTime = new Date(input.publishTime);
     }
 
@@ -409,6 +486,7 @@ function getClass(type){
 }
 
 module.exports = {
+    Person: Person,
     User: User,
     NewUser: NewUser,
     OnlineMeeting: OnlineMeeting,
