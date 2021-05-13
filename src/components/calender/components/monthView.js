@@ -8,7 +8,7 @@ function MonthView({ days }) {
 
 
     return (
-        <div >
+        <div style={{height:"100%"}}>
             <WeekNames />
             <div className="monthView">
                 {(days === []) ? {} : days.map((date) =>

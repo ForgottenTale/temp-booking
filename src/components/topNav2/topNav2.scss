@@ -1,0 +1,16 @@
+.topNav2{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: whitesmoke;
+    padding: 20px 30px;
+
+
+    &_right{
+        & button{
+            padding: 5px;
+            border: none;
+            
+        }
+    }
+}

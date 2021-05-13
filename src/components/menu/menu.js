@@ -9,15 +9,7 @@ export default function Menu({ toggle, state, setActiveComponent, role, user, ou
     const ref = useRef();
     const [open, setOpen] = useState(true);
 
-    const handleOUChange = (e) => {
-
-        var selectedOU = user.ou.filter((ou) =>
-            ou.name === e.target.value ? ou : null
-
-        )
-        setOU(selectedOU[0])
-    }
-
+   
     return (
         <div className={open ? "menu open" : "menu"} ref={ref}>
             <div className="menu_item">

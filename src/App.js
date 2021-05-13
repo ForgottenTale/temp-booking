@@ -70,7 +70,7 @@ function App() {
                     <Login setErr={setErr} setAuth={setAuth} isAuth={isAuth} />
                 </Route> */}
           <Route path="/" exact>
-            <HomePage setErr={setErr} />
+            <HomePage setErr={setErr} isAuth={isAuth}/>
           </Route>
           <Route path="/register" exact>
             <Register />

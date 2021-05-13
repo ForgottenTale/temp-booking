@@ -9,6 +9,7 @@ import { pushEvents } from '../utils/date';
 import axios from 'axios';
 
 
+
 function Calender({ setErr }) {
 
     const [monthView, setMonthView] = useState(true);
@@ -198,16 +199,18 @@ function Calender({ setErr }) {
 
 
 
+
     return (
         <div className="calender">
+    
             <div className="calender_menu">
                 <h2 className="calender_menu_today">
-
+{/* 
                     <select value={value.clone().format('D')} onChange={(e) => setValue(value.clone().day(e.target.value))}>
                         {dayList.map((val, key) =>
                             <option value={val} key={key}>{val}</option>
                         )}
-                    </select>
+                    </select> */}
                     <select value={value.clone().format('MMMM')} onChange={(e) => setValue(value.clone().month(e.target.value))}>
                         {monthList.map((val, key) =>
                             <option value={val} key={key} >{val}</option>
