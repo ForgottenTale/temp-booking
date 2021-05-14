@@ -789,7 +789,7 @@ module.exports = {
 					query += " AND status='PENDING'";
 					let sameSlotBookings = await executeQuery(query);
 					sameSlotBookings.forEach(booking=>{
-						await executeQuery(``)
+					 executeQuery(`INSERT INTO response(person_id, blt_id, encourages, response)`)
 					})
 					if(booking.length>0){
 						booking = booking[0];
