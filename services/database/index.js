@@ -352,25 +352,25 @@ module.exports = {
 				+ " AND (start_time>'" + startTime + "' AND start_time<'" + endTime + "') OR "
 				+ " (end_time>'" + startTime +"' AND end_time<'" + endTime + "') OR "
 				+ " (start_time='" + startTime +"' AND end_time='" + endTime + "');"
-			query += query.replace(/online_meeting/g, "intern_support");
+			// query += query.replace(/online_meeting/g, "intern_support");
 			let dataArray = [];
 			let eventsOfAllTypes = await executeQuery(query);
 			eventsOfAllTypes.forEach(eventsOfType=>{
 				eventsOfType.forEach(event=>dataArray.push(transmuteSnakeToCamel(event)));
 			})
 
-			query = "SELECT * FROM blt INNER JOIN e_notice ON e_notice_id=e_notice._id WHERE"
-				+ " status='APPROVED' OR status='PENDING'"
-				+ " AND (publish_time>='" + startTime + "' AND publish_time<='" + endTime + "');";
-			query += query.replace(/e_notice/g, "publicity");
-			eventsOfAllTypes = await executeQuery(query);
-			eventsOfAllTypes.forEach(eventsOfType=>{
-				eventsOfType.forEach(event=>{
-					event.startTime = event.publish_time;
-					event.endTime = event.publish_time;
-					dataArray.push(transmuteSnakeToCamel(event));
-				});
-			})
+			// query = "SELECT * FROM blt INNER JOIN e_notice ON e_notice_id=e_notice._id WHERE"
+			// 	+ " status='APPROVED' OR status='PENDING'"
+			// 	+ " AND (publish_time>='" + startTime + "' AND publish_time<='" + endTime + "');";
+			// query += query.replace(/e_notice/g, "publicity");
+			// eventsOfAllTypes = await executeQuery(query);
+			// eventsOfAllTypes.forEach(eventsOfType=>{
+			// 	eventsOfType.forEach(event=>{
+			// 		event.startTime = event.publish_time;
+			// 		event.endTime = event.publish_time;
+			// 		dataArray.push(transmuteSnakeToCamel(event));
+			// 	});
+			// })
 			return dataArray;
 		}catch(err){
 			throw err;
