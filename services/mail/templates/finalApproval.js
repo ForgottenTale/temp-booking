@@ -1,6 +1,6 @@
   module.exports = function(input){
     return ({
-      subject: "ACTION REQUIRED: ACTIVATE YOUR ACCOUNT",
+      subject: "SERVICE REQUEST: APPROVED",
       html: `<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
               <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
               <head>
@@ -161,13 +161,13 @@
               <table style="font-family:'Lato',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
                 <tbody>
                   <tr>
-                    <td style="overflow-wrap:break-word;word-break:break-word;padding:25px 10px;font-family:'Lato',sans-serif;" align="left">
+                    <td style="overflow-wrap:break-word;word-break:break-word;padding:10px 10px;font-family:'Lato',sans-serif;" align="left">
                       
               <table width="100%" cellpadding="0" cellspacing="0" border="0">
                 <tr>
                   <td style="padding-right: 0px;padding-left: 0px;" align="center">
                     
-                    <img align="center" border="0" src="https://lh3.googleusercontent.com/fp97rJjKLhh-q2vB10rAHc6KJ9YnyhTc0NiJr4f9h98Zrpysu4uoTaiF87WsHWimAvkP6wYJ8En-vf7V2wp84CS6qhWT0zOyFy-HmM7hMM8Sfd1LfLF_bFzo934yVhOALNLE8KKXUg=w2400" alt="Image" title="Image" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 29%;max-width: 168.2px;" width="168.2"/>
+                    <img align="center" border="0" src="https://lh3.googleusercontent.com/ZWlVTmL4rhxByZpfP24VpLiki8b7mjKp04dLo8bdljscYK4gS972fcg3Nfhy6ClTOCAWCJQ4YeABn7KKM6-zWQgCctjDQWUOOwNTZ5JPiy3W1M8N3_AfJgb7dTkV9sJ6GMJCAndGdQ=w2400" alt="Image" title="Image" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 29%;max-width: 168.2px;" width="168.2"/>
                     
                   </td>
                 </tr>
