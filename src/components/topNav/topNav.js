@@ -73,7 +73,7 @@ export default function TopNav({ activeComponent, setUser, setOU, ou, user,setAu
         var temp = user.ou.filter((item) => {
             console.log()
             
-                return item.name === e.value?item:null
+                return item.ouName === e.value?item:null
         })
 
 

@@ -3,7 +3,7 @@ import pic from '../../images/login.jpg';
 import { useState } from 'react';
 import axios from 'axios';
 
-export default function Login({setUser,setAuth,setErr}) {
+export default function Login({setUser,setAuth,setErr,setOU}) {
 
     const [details, setDetails] = useState({
         username: null,
@@ -31,7 +31,7 @@ export default function Login({setUser,setAuth,setErr}) {
                         email: res.data.email
                     })
                     setAuth(true)
-                  
+                    setOU(res.data.ous[0]);
                 }
             })
             .catch(err => {
