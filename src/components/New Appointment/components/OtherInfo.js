@@ -4,8 +4,8 @@ import infoIcon from "../../../images/info.png";
 
 function CohostData(props) {
   return (
-    <div className="row mb-3">
-      <div className="col">
+    <div className="row">
+      <div className="col-sm-6 col-12 mb-3">
         <label className="form-label">Co-host name</label>
         <input
           className="form-control"
@@ -14,7 +14,7 @@ function CohostData(props) {
           onChange={(e) => props.handleChange(props.id, e)}
         />
       </div>
-      <div className="col">
+      <div className="col-sm-6 col-12 mb-3">
         <label className="form-label">Co-host email</label>
         <input
           className="form-control"
@@ -31,10 +31,10 @@ function OtherInfo({ path, type, data, setData }) {
   const history = useHistory();
   let [count, setCount] = useState(1);
   const [cohost, setCohost] = useState(JSON.parse(data.coHosts));
-  const [content,setContent] = useState({
-    schedule:data.schedule,
-    comments:data.comments,
-  })
+  const [content, setContent] = useState({
+    schedule: data.schedule,
+    comments: data.comments,
+  });
 
   function nextButton(event) {
     event.preventDefault();
@@ -42,9 +42,8 @@ function OtherInfo({ path, type, data, setData }) {
     setData({
       ...data,
       coHosts: JSON.stringify(cohost),
-      schedule:content.schedule,
-      comments:content.comments,
-     
+      schedule: content.schedule,
+      comments: content.comments,
     });
 
     history.push(path + "/verify");
@@ -93,22 +92,21 @@ function OtherInfo({ path, type, data, setData }) {
         {type === "publicity" ? (
           <form onSubmit={nextButton}>
             <div className="row mb-3">
-              <div className="col-8">
-                <label className="form-label">
-                  Program schedule (if any)
-                  </label>
-                <input type="text" 
-                className="form-control" 
-                name="schedule"
-                defaultValue={data.schedule}
-                onChange={(e) => {
-                  setContent({ ...content, schedule: e.target.value });
-                }}
-                 />
+              <div className="col-sm-8 col-12">
+                <label className="form-label">Program schedule (if any)</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="schedule"
+                  defaultValue={data.schedule}
+                  onChange={(e) => {
+                    setContent({ ...content, schedule: e.target.value });
+                  }}
+                />
               </div>
             </div>
             <div className="row mb-5">
-              <div className="col-8">
+              <div className="col-sm-8 col-12">
                 <label className="form-label">Comments</label>
                 <textarea
                   defaultValue={data.comments}
@@ -127,12 +125,12 @@ function OtherInfo({ path, type, data, setData }) {
               onClick={() => history.push(path + "/event-info")}
             >
               Prev
-              </button>
+            </button>
             <button className="btn btn-primary next-btn">Next</button>
           </form>
         ) : (
           /* ............................................................................................... */
-          <form onSubmit={nextButton}>
+          <form className="cohost-form" onSubmit={nextButton}>
             {cohost.map((e, i) => (
               <CohostData
                 key={i}
@@ -165,7 +163,7 @@ function OtherInfo({ path, type, data, setData }) {
               onClick={() => history.push(path + "/event-info")}
             >
               Prev
-              </button>
+            </button>
             <button className="btn btn-primary mt-5 next-btn">Next</button>
           </form>
         )}
