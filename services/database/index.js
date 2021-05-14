@@ -789,7 +789,8 @@ module.exports = {
 					query += " AND status='PENDING'";
 					let sameSlotBookings = await executeQuery(query);
 					sameSlotBookings.forEach(booking=>{
-					 executeQuery(`INSERT INTO response(person_id, blt_id, encourages, response)`)
+						executeQuery(`INSERT INTO response(person_id, blt_id, encourages, response) VALUES (1, ${booking._id}, 0, 'ANOTHER REQUEST GOT APPROVED FOR THE SELECTED TIME SLOT)`);
+						executeQuery(`UPDATE blt SET status = 'DECLINED' WHERE _id=${booking._id}`);
 					})
 					if(booking.length>0){
 						booking = booking[0];
