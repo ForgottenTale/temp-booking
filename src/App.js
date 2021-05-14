@@ -13,8 +13,8 @@ import ProtectedRoute from './components/protectedRoute/protectedRoute';
 import ProtectedLogin from './components/protectedLogin/protectedLogin';
 
 function App() {
-  const [user, setUser] = useState({ id: null, name: null, ou: null, email: null });
-  const [isAuth, setAuth] = useState(null);
+  const [user, setUser] = useState({ name: null, ou: null, email: null });
+  const [isAuth, setAuth] = useState(false);
   const [err, setErr] = useState(null);
   const [role, setRole] = useState(null);
   const [ou, setOU] = useState({})
@@ -24,30 +24,30 @@ function App() {
     const headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
     }
-    const url = "http://localhost:5000/api/credentials/"
+    const url = "/api/credentials/"
     axios.get(url, { headers: headers, withCredentials: true })
       .then(userInfo => {
         console.log(userInfo)
 
-        if(userInfo.status===200){
-          setAuth(true)
+        if (userInfo.status === 200) {
+          // setAuth(true)
           setUser({
-            id: userInfo.data.id,
             name: userInfo.data.name,
-            ou:  [
+            ou: [
               { name: "College of Engineering, Kidangoor", role: "Admin" },
               { name: "College of Engineering, Permon", role: "user" },
               { name: "Young", role: "user" }
             ],
-            email: userInfo.data.email
+            email: userInfo.data.email,
+            phone:userInfo.phone
           })
           setOU({ name: "College of Engineering, Kidangoor", role: "Admin" });
-  
+
         }
-        else{
+        else {
           setAuth(false)
         }
-        
+
       })
       .catch(err => {
         console.log(err)
@@ -56,10 +56,10 @@ function App() {
   }, [])
 
   useEffect(() => {
-    if(ou!==undefined){
+    if (ou !== undefined) {
       setRole(ou.role)
     }
-    
+
   }, [ou])
 
   return (
@@ -71,13 +71,14 @@ function App() {
                     <Login setErr={setErr} setAuth={setAuth} isAuth={isAuth} />
                 </Route> */}
           <Route path="/" exact>
-            <HomePage setErr={setErr} isAuth={isAuth}/>
+            <HomePage setErr={setErr} isAuth={isAuth} />
           </Route>
           <Route path="/register" exact>
             <Register />
           </Route>
-          <ProtectedLogin path="/login"  setErr={setErr} setAuth={setAuth} isAuth={isAuth} component={Login} />
-          <ProtectedRoute path="/*" ou={ou}  setAuth={setAuth} user={user} role={role} setOU={setOU} setErr={setErr} isAuth={isAuth} setUser={setUser} component={Content} />
+          <ProtectedLogin path="/login" setErr={setErr} setAuth={setAuth} isAuth={isAuth} component={Login} setUser={setUser} />
+          <ProtectedRoute path="/*" ou={ou} setAuth={setAuth} user={user} role={role} setOU={setOU} setErr={setErr} isAuth={isAuth} setUser={setUser} component={Content} />
+         
 
         </Switch>
       </Router>

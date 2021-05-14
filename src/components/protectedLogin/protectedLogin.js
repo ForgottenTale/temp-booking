@@ -9,10 +9,10 @@ export default function ProtectedRoute({isAuth,component:Component,path, ...rest
         
         {...rest}
           render={(props)=>{
-              if(isAuth===true){
+              if(isAuth!==true){
                   return <Component {...rest}/>
               }
-              else if(isAuth===false){
+              else if(isAuth!==false){
                 return <Redirect to ={state?.from||'/dashboard'}/>
               }
               else{

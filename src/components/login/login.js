@@ -27,10 +27,7 @@ export default function Login({setUser,setAuth,setErr}) {
                     setUser({
                         id: res.data.id,
                         name: res.data.name,
-                        ou: [
-                            { name: "College of Engineering, Kidangoor", role: "Admin" },
-                            { name: "College of Engineering, Permon", role: "user" }
-                        ],
+                        ou: res.data.ous,
                         email: res.data.email
                     })
                     setAuth(true)
