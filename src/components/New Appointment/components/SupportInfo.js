@@ -52,7 +52,7 @@ function SupportInfo({ path, type, data, setData }) {
         {type === "intern_support" ? (
           <form onSubmit={nextButton}>
             <div className="row">
-              <div className="col">
+              <div className="col-sm-6 col-12">
                 <div className="mb-4">
                   <textarea
                     rows="3"
@@ -89,7 +89,7 @@ function SupportInfo({ path, type, data, setData }) {
                     }}
                   />
                 </div>
-                <div className="mb-5">
+                <div className="mb-4">
                   <label className="form-label">
                     Upload relevant files (if any)
                   </label>
@@ -104,7 +104,7 @@ function SupportInfo({ path, type, data, setData }) {
                   />
                 </div>
               </div>
-              <div className="col">
+              <div className="col-sm-6 col-12">
                 <div className="mb-4">
                   <input
                     type="text"

@@ -14,8 +14,8 @@ import OtherInfo from "./components/OtherInfo";
 import SupportInfo from "./components/SupportInfo";
 import Verify from "./components/Verify";
 import Confirmation from "./components/Confirmation";
-import "./ub.scss";
-import "./style.scss";
+import "./ubs.css";
+import "./newappo.css";
 import "./mv.scss";
 
 function App(props) {
