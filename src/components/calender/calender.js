@@ -23,7 +23,7 @@ function Calender({ setErr }) {
     // const [dayList, setDayList] = useState([]);
     const [data, setData] = useState([
         {
-            "date": "2021-05-06T18:30:00.000Z",
+            "date": "2021-05-13T18:30:00.000Z",
             "events": [
                 {
                     "id": 1,
@@ -32,8 +32,8 @@ function Calender({ setErr }) {
                     "description": "This is a test",
                     "img": "1619278428240ms-homepage-desktop.jpg",
                     "comments": null,
-                    "startTime": "2021-05-06T18:30:00.000Z",
-                    "endTime": "2021-05-06T20:30:00.000Z",
+                    "startTime": "2021-05-14T03:30:00.000Z",
+                    "endTime": "2021-05-14T04:30:00.000Z",
                     "speakerName": "Elon musk",
                     "speakerEmail": "elonmusck@ieee.org",
                     "coHosts": "[[\"dsf\", \"sdfsd\"]]",
@@ -47,7 +47,7 @@ function Calender({ setErr }) {
                 {
                     "id": 2,
                     "serviceName": "zoom",
-                    "title": "A very important job",
+                    "title": "A very important job sadasdasdasdasdasdasdasda",
                     "description": "This is asking for intern support",
                     "img": "1619292671235ms-homepage-desktop.jpg",
                     "comments": "nothing to say",
@@ -63,15 +63,15 @@ function Calender({ setErr }) {
     ]);
 
     useEffect(() => {
-        const url = "/api/calendar?month=" + (value.clone().format('M') - 1) + "&year=" + value.clone().format('Y');
-        axios.get(url, { withCredentials: true })
-            .then((d) => {
-                setData(d.data);
-            })
-            .catch(err => {
-                console.error(err);
-                setErr(err.response.data.error||err);
-            });
+        // const url = "/api/calendar?month=" + (value.clone().format('M') - 1) + "&year=" + value.clone().format('Y');
+        // axios.get(url, { withCredentials: true })
+        //     .then((d) => {
+        //         setData(d.data);
+        //     })
+        //     .catch(err => {
+        //         console.error(err);
+        //         setErr(err.response.data.error||err);
+        //     });
         // eslint-disable-next-line
     }, [value])
 
