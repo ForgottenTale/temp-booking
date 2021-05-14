@@ -31,7 +31,7 @@ module.exports = {
     },
 
     generateAccRegLink: function(code){
-        return (process.env.DOMAIN_NAME || "http://localhost:") + process.env.PORT + "/create-account/" + code;        
+        return (process.env.DOMAIN_NAME || "http://localhost:"+ process.env.PORT) + "/create-account/" + code;        
     },
 
     generatePasswordHash: function(password){
