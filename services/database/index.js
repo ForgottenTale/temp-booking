@@ -729,7 +729,7 @@ module.exports = {
 		}
 	},
 
-	updateUser: function(input, userId, done){
+	updateUser: async function(input, userId, done){
 		try{
 			let valuesForEdit = User.getValuesForEdit(input);
 			if(valuesForEdit.length<1)

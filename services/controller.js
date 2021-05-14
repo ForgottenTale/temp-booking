@@ -1,3 +1,4 @@
+const utils = require('./utils.js');
 const {convertSqlDateTimeToDate, convertDateToSqlDateTime} = require('./utils.js');
 
 class Person{
@@ -23,10 +24,15 @@ class Person{
         let values = [];
         for(let key in params){
             switch(key){
-                case 'name':    values.push("name='" + params.name + "'");
+                case 'name':    if(params.name.trim().length<1)
+                                    throw new Error(key + " cannot be empty");
+                                values.push("name='" + params.name.trim() + "'");
                                 delete params.name;
                                 break;
-                case 'phone':   values.push("phone='" + params.phone + "'");
+                case 'phone':   
+                                if(!(params.phone.trim().match(/\d/g).length == 10))
+                                    throw new Error("Invalid phone number");
+                                values.push("phone='" + params.phone.trim() + "'");
                                 delete params.phone;
                                 break;
                 default     :   throw(new Error(key + " is not editable"));
