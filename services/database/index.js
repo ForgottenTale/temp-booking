@@ -481,6 +481,7 @@ module.exports = {
 
     addBooking: async function(newBooking, user, done){
 		try{
+			var addedBooking, bltBooking;
 			//confirm if user is associated with the ou
             let checkOu = await executeQuery("SELECT * FROM ou_map INNER JOIN user ON user.person_id=ou_map.person_id WHERE ou_id=" + newBooking.ouId + " AND user._id="+ newBooking.creatorId);
             if(checkOu.length<1){
@@ -500,9 +501,9 @@ module.exports = {
 
 			//insert booking
 			let {names, values} = newBooking.getAllNamesAndValues();
-			let addedBooking = await executeQuery("INSERT INTO " + newBooking.type 
+			addedBooking = await executeQuery("INSERT INTO " + newBooking.type 
 				+ "(" + names.join(',') + ") VALUES(" + values.join(',') + ");");
-			let bltBooking = await executeQuery("INSERT INTO blt(" + newBooking.type + "_id, creator_id, ou_id,status) VALUES("
+			bltBooking = await executeQuery("INSERT INTO blt(" + newBooking.type + "_id, creator_id, ou_id,status) VALUES("
 				+ addedBooking.insertId + "," + newBooking.creatorId + "," + newBooking.ouId + ",'" + newBooking.status + "');");
 
 			let info = await tryLevelUp(bltBooking.insertId, user.personId);
@@ -521,11 +522,24 @@ module.exports = {
 				return done(null, newBooking);
 			}
 			emailIds.mailCc.push(user.email);
-			await mail.newBooking(newBooking, {mailTo: user.email});
-			await mail.reviewRequest(newBooking, emailIds);
+			newBooking.ouName = await executeQuery(`SELECT name FROM ou INNER JOIN blt ON blt.ou_id=ou._id WHERE ou_id=${newBooking.ouId}`)
+			newBooking.ouName = newBooking.ouName[0].name;
+			mail.newBooking(newBooking, {mailTo: user.email});
+			mail.reviewRequest(newBooking, emailIds);
 			return done(null, newBooking);
-		}
+		}	
 		catch(err){
+			if(bltBooking)
+				if(bltBooking.insertId)
+					await executeQuery(`
+						DELETE FROM response WHERE blt_id=${bltBooking.insertId};
+						DELETE FROM next_to_approve WHERE blt_id=${bltBooking.insertId};
+						DELETE FROM blt WHERE _id=${bltBooking.insertId};
+					`);
+			if(addedBooking)
+				if(addedBooking.insertId)
+					await executeQuery(`DELETE FROM ${newBooking.type} WHERE _id=${addedBooking.insertId}`);
+			
 			return done(err);
 		}
 	},
@@ -771,7 +785,12 @@ module.exports = {
 				}
 	
 				emailIds.mailCc.push(user.email);
-				await mail.reviewRequest({id: bookingId}, emailIds);
+				let booking = await executeQuery(`SELECT *, ou.name as ou_name FROM blt INNER JOIN ou ON ou_id=ou._id WHERE _id=${bookingId}`);
+				booking=booking[0];
+				let {type, typeId} = findServiceType(booking);
+				booking.type = type;
+				booking.ouName = booking.ou_name;
+				await mail.reviewRequest(booking, emailIds);
 			}else{
 				let result = await executeQuery("SELECT * FROM next_to_approve WHERE person_id="
 					+ user.personId + " AND blt_id=" + bookingId
@@ -781,7 +800,7 @@ module.exports = {
 					await executeQuery("UPDATE blt SET status='DECLINED' WHERE _id=" + bookingId);
 					let involved = await findMailsOfInvolved(bookingId);
 					emailIds = {mailTo: user.email, mailCc: involved};
-					await mail.finalDeclined({id: bookingId}, emailIds);
+					await mail.finalDeclined({id: bookingId, response: input.response}, emailIds);
 				}
 				return done(null, "Updated");
 			}

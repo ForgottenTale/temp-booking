@@ -72,9 +72,8 @@ module.exports= {
 
     accountInitiated: async function(input, emailIds){
         try{
-            emailIds = removeRepeated(emailIds);
             let transporter = nodemailer.createTransport(transporterData);
-            let data = finalApproval(input);
+            let data = createAccount(input);
             data.from = '<' + transporterData.auth.user + '>';
             data.to= emailIds.mailTo;
             data.cc= emailIds.mailCc;
