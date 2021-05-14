@@ -40,14 +40,15 @@ module.exports = function(app){
     })
     .delete(auth.ensureAuthenticated, auth.ensureOu, (req, res)=>{
         if(req.params.id){
-            database.delBooking({
-                user: req.user,
-                bookingId: req.params.id
-            })
-            .then(msg=>{
-                res.status(200).json({message: msg});
-            })
-            .catch(err=>respondError(err, res));
+            if(req.query.cancel == "true"){
+                database.cancelBooking({user: req.user, bookingId: req.params.id})
+                .then(msg=>res.status(200).json({message: msg}))
+                .catch(err=>respondError(err, res));
+            }else{
+                database.delBooking({user: req.user, bookingId: req.params.id})
+                .then(msg=>res.status(200).json({message: msg}))
+                .catch(err=>respondError(err, res));
+            }
         }else{
             respondError(new Error("Id is required as param"), res);
         }
