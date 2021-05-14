@@ -81,7 +81,7 @@ module.exports= {
             logMailInfo(emailIds, info.messageId, nodemailer.getTestMessageUrl(info));
             return ("Message send");
         }catch(err){
-            console.err(err);
+            console.error(err);
             module.exports.sendSuperMail(err);
         }
     },
@@ -98,7 +98,7 @@ module.exports= {
             logMailInfo(emailIds, info.messageId, nodemailer.getTestMessageUrl(info));
             return ("Message send");
         }catch(err){
-            console.err(err);
+            console.error(err);
             module.exports.sendSuperMail(err);
         }
     },

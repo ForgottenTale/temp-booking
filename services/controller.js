@@ -287,7 +287,7 @@ class OnlineMeeting extends Service {
             + " WHERE"
             + " (start_time>'" + paddedStart + "' AND start_time<'" + paddedEnd + "') OR "
             + " (end_time>'" + paddedStart +"' AND end_time<'" + paddedEnd + "') OR "
-            + " (start_time='" + paddedStart +"' AND end_time='" + paddedEnd + "');"
+            + " (start_time='" + paddedStart +"' AND end_time='" + paddedEnd + "')"
         )
     }
 
@@ -354,7 +354,7 @@ class InternSupport extends Service{
             + " WHERE"
             + " (start_time>'" + paddedStart + "' AND start_time<'" + paddedEnd + "') OR "
             + " (end_time>'" + paddedStart +"' AND end_time<'" + paddedEnd + "') OR "
-            + " (start_time='" + paddedStart +"' AND end_time='" + paddedEnd + "');"
+            + " (start_time='" + paddedStart +"' AND end_time='" + paddedEnd + "')"
         )
     }
 
@@ -408,7 +408,7 @@ class ENotice extends Service{
         let paddedEnd = convertDateToSqlDateTime(new Date(input.publishTime.getTime() + (padding*60000)));
         return ("SELECT * FROM " + input.type 
             + " WHERE"
-            + " (publish_time>='" + paddedStart +"' AND publish_time<='" + paddedEnd + "');"
+            + " (publish_time>='" + paddedStart +"' AND publish_time<='" + paddedEnd + "')"
         )
     }
 
@@ -456,7 +456,7 @@ class Publicity extends Service{
         let paddedEnd = convertDateToSqlDateTime(new Date(input.publishTime.getTime() + (padding*60000)));
         return ("SELECT * FROM " + input.type 
             + " WHERE"
-            + " (publish_time>='" + paddedStart +"' AND publish_time<='" + paddedEnd + "');"
+            + " (publish_time>='" + paddedStart +"' AND publish_time<='" + paddedEnd + "')"
         )
     }
 

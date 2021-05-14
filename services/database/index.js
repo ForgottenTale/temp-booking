@@ -93,6 +93,7 @@ function checkAvailability(input){
 			let config = await getConfig(input.type,input.serviceName);
 			ServiceClass.validateTime(input, config);
 			let query = ServiceClass.getTimeAvailQuery(input, config);
+			query += " AND status='APPROVED'";
 			connection.query(query, (err, results, fields)=>{
 				if(err) return reject(err);
 				if(results.length < 1){
@@ -767,6 +768,12 @@ module.exports = {
 
 	updateBookingStatus: async function(input, bookingId, user, done){
 		try{
+			let bltBooking = await executeQuery(`SELECT * FROM blt WHERE _id=${bookingId}`);
+			let {type, typeId} = findServiceType(bltBooking[0]);
+			let booking = await executeQuery(`SELECT * FROM ${type} WHERE _id=${typeId}`);
+			booking = transmuteSnakeToCamel(booking[0]);
+			booking.type = type;
+			await checkAvailability(booking);
 			await addResponse(user.personId, bookingId, input.encourages, input.response);
 			if(input.encourages){
 				let info = await tryLevelUp(bookingId, user.personId);
@@ -777,6 +784,13 @@ module.exports = {
 				if(info.level==0){
 					await executeQuery("UPDATE blt SET status='APPROVED', approved_at=CURRENT_TIMESTAMP WHERE _id=" + bookingId);
 					let booking = await executeQuery("SELECT * FROM blt INNER JOIN online_meeting ON online_meeting_id=online_meeting._id");
+					ServiceClass = getClass(type);
+					let query = ServiceClass.getTimeAvailQuery(booking);
+					query += " AND status='PENDING'";
+					let sameSlotBookings = await executeQuery(query);
+					sameSlotBookings.forEach(booking=>{
+						await executeQuery(``)
+					})
 					if(booking.length>0){
 						booking = booking[0];
 						if(booking.type=="online_meeting"){
