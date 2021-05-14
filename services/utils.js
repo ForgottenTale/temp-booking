@@ -1,6 +1,7 @@
 const csv = require('csv-parse');
 const fs = require('fs');
 const path = require('path');
+const bcrypt = require('bcrypt');
 
 module.exports = {
     convertSqlDateTimeToDate: function (mysqlTime){
@@ -31,6 +32,16 @@ module.exports = {
 
     generateAccRegLink: function(code){
         return (process.env.DOMAIN_NAME || ("http://localhost:" + process.env.PORT) + "/create-account/" + code);
+    },
+
+    generatePasswordHash: function(password){
+        return new Promise((resolve, reject)=>{
+            bcrypt.hash(password, 12, (err, hash)=>{
+                if(err) return reject(err);
+                password = process.env.NODE_ENV=="development"?password:hash;
+                return resolve(password);
+            })
+        })
     },
     
     generateHash: function(key){

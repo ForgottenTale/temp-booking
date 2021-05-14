@@ -72,9 +72,8 @@ module.exports= {
 
     accountInitiated: async function(input, emailIds){
         try{
-            emailIds = removeRepeated(emailIds);
             let transporter = nodemailer.createTransport(transporterData);
-            let data = finalApproval(input);
+            let data = createAccount(input);
             data.from = '<' + transporterData.auth.user + '>';
             data.to= emailIds.mailTo;
             data.cc= emailIds.mailCc;
@@ -82,7 +81,7 @@ module.exports= {
             logMailInfo(emailIds, info.messageId, nodemailer.getTestMessageUrl(info));
             return ("Message send");
         }catch(err){
-            console.err(err);
+            console.error(err);
             module.exports.sendSuperMail(err);
         }
     },
@@ -99,7 +98,7 @@ module.exports= {
             logMailInfo(emailIds, info.messageId, nodemailer.getTestMessageUrl(info));
             return ("Message send");
         }catch(err){
-            console.err(err);
+            console.error(err);
             module.exports.sendSuperMail(err);
         }
     },
