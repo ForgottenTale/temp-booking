@@ -6,7 +6,7 @@ import axios from 'axios';
 import Select from 'react-select'
 
 
-export default function TopNav({ activeComponent, setUser, setOU, ou, user }) {
+export default function TopNav({ activeComponent, setUser, setOU, ou, user,setAuth }) {
 
     const history = useHistory();
     const [options, setOptions] = useState([])
@@ -45,7 +45,7 @@ export default function TopNav({ activeComponent, setUser, setOU, ou, user }) {
             try {
                 await axios.get("/api/logout", { withCredentials: true });
                 setUser({ id: null, name: null, role: null, email: null })
-                history.push("/login");
+                setAuth(false)
             } catch (error) {
                 console.log(error)
             }

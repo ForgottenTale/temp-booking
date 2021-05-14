@@ -18,7 +18,7 @@ export default function All(props) {
         <div className="content">
             <Menu toggle={setOpen} state={open} setActiveComponent={setActiveComponent} role={props.role} user={props.user} setOU={props.setOU} />
             <div className={open ? "content_container open" : "content_container"} >
-                <TopNav activeComponent={activeComponent} setUser={props.setUser} setOU={props.setOU} ou={props.ou} user={props.user}/>
+                <TopNav activeComponent={activeComponent} setUser={props.setUser} setOU={props.setOU} ou={props.ou} user={props.user} setAuth={props.setAuth}/>
 
                 <Switch>
                     <Route path="/dashboard" >
