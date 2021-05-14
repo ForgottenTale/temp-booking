@@ -130,7 +130,7 @@ function OtherInfo({ path, type, data, setData }) {
           </form>
         ) : (
           /* ............................................................................................... */
-          <form onSubmit={nextButton}>
+          <form className="cohost-form" onSubmit={nextButton}>
             {cohost.map((e, i) => (
               <CohostData
                 key={i}

@@ -16,7 +16,7 @@ import Verify from "./components/Verify";
 import Confirmation from "./components/Confirmation";
 import "./ubs.css";
 import "./newappo.css";
-import "./mv.scss";
+import "./mv.css";
 
 function App(props) {
   const [data, setData] = useState({

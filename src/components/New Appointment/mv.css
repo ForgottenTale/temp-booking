@@ -47,6 +47,23 @@
     bottom: 60px;
     left: 23px;
   }
+
+  .cohost-form {
+    max-height: 350px;
+    overflow-y: scroll;
+  }
+
+  .cohost-form .back-btn {
+    position: absolute;
+    bottom: 25px;
+    left: 23px;
+  }
+
+  .cohost-form .next-btn {
+    position: absolute;
+    bottom: 25px;
+    right: 23px;
+  }
 }
 
 @media (max-width: 576px) {
@@ -57,5 +74,10 @@
   .info-container .next-btn,
   .info-container .back-btn {
     margin-bottom: 1rem !important;
+  }
+
+  .cohost-form .next-btn,
+  .cohost-form .back-btn {
+    margin: 0 !important;
   }
 }
