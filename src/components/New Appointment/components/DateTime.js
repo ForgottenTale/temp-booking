@@ -4,7 +4,7 @@ import dateIcon from "../../../images/date.png";
 
 function minDay() {
   let newday = new Date();
-  newday.setDate(newday.getDate() + 5);
+  newday.setDate(newday.getDate() + 6);
   let year = newday.getFullYear();
   let month = newday.getMonth() + 1;
   let day = newday.getDate();
@@ -21,6 +21,7 @@ function DateTime({ path, type, setData, data }) {
   const [date, setDate] = useState("");
   const [startTime, setTimeFrom] = useState("");
   const [endTime, setTimeTo] = useState("");
+  const [publishTime, setPublishTime] = useState("");
 
   const history = useHistory();
 
@@ -34,14 +35,20 @@ function DateTime({ path, type, setData, data }) {
     var fromMin = startTime.slice(3, 5);
     var toHour = endTime.slice(0, 2);
     var toMin = endTime.slice(3, 5);
+    var pubHour = publishTime.slice(0, 2);
+    var pubMin = publishTime.slice(3, 5);
     let tempStartTime = new Date(date);
-    tempStartTime.setHours(fromHour, fromMin, 0, 0)
+    tempStartTime.setHours(fromHour, fromMin, 0, 0);
     let tempEndtime = new Date(date);
     tempEndtime.setHours(toHour, toMin, 0, 0);
+    let tempPublishTime = new Date(date);
+    tempPublishTime.setHours(pubHour, pubMin, 0, 0);
+
     setData({
       ...data,
       startTime: tempStartTime.toISOString(),
-      endTime: tempEndtime.toISOString()
+      endTime: tempEndtime.toISOString(),
+      publishTime: tempPublishTime.toISOString(),
     });
 
     if (type === "online_meeting" || type === "publicity") {
@@ -52,19 +59,17 @@ function DateTime({ path, type, setData, data }) {
     // }
   };
 
-  const setdate = ()=>{
+  const setdate = () => {
     var d = new Date(data.startTime),
-        month = '' + (d.getMonth() + 1),
-        day = '' + d.getDate(),
-        year = d.getFullYear();
+      month = "" + (d.getMonth() + 1),
+      day = "" + d.getDate(),
+      year = d.getFullYear();
 
-    if (month.length < 2) 
-        month = '0' + month;
-    if (day.length < 2) 
-        day = '0' + day;
+    if (month.length < 2) month = "0" + month;
+    if (day.length < 2) day = "0" + day;
 
-    return [year, month, day].join('-');
-  }
+    return [year, month, day].join("-");
+  };
 
   return (
     <div className="service-container row">
@@ -80,7 +85,7 @@ function DateTime({ path, type, setData, data }) {
 
         <form onSubmit={next}>
           <div className="row mb-4">
-            <div className="col-5">
+            <div className="col-sm-5 col-6">
               <label className="form-label">Date</label>
               <input
                 defaultValue={setdate()}
@@ -93,9 +98,9 @@ function DateTime({ path, type, setData, data }) {
               />
             </div>
           </div>
-          {data.type === "online_meeting" ? (
+          {data.type === "online_meeting" || data.type === "intern_support" ? (
             <div className="row mb-5">
-              <div className="col-5">
+              <div className="col-sm-5 col-6">
                 <label className="form-label">From</label>
                 <input
                   type="time"
@@ -105,7 +110,7 @@ function DateTime({ path, type, setData, data }) {
                   required
                 />
               </div>
-              <div className="col-5">
+              <div className="col-sm-5 col-6">
                 <label className="form-label">To</label>
                 <input
                   type="time"
@@ -116,30 +121,28 @@ function DateTime({ path, type, setData, data }) {
                 />
               </div>
             </div>
-          ) : (
+          ) : null}
+          {data.type === "e_notice" || data.type === "publicity" ? (
             <div className="row mb-5">
-              <div className="col-5">
+              <div className="col-sm-5 col-6">
                 <label className="form-label">Time</label>
                 <input
                   type="time"
                   className="form-control"
                   name="time"
-                  onChange={(e) => setTimeFrom(e.target.value)}
+                  onChange={(e) => setPublishTime(e.target.value)}
                   required
                 />
               </div>
-
             </div>
-
-          )}
+          ) : null}
           <button
             type="button"
             className="mt-5 back-btn"
             onClick={() => history.push(path + "/services")}
           >
             Prev
-
-            </button>
+          </button>
           <button className="btn btn-primary mt-5 next-btn">Next</button>
         </form>
       </div>

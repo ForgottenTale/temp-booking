@@ -3,13 +3,12 @@ import { useHistory } from "react-router-dom";
 import axios from "axios";
 import confirmIcon from "../../../images/info.png";
 
-function Verify({ path, type, data, setId, setErr}) {
+function Verify({ path, type, data, setId, setErr }) {
   const history = useHistory();
   const [proceed, setProceed] = useState(false);
 
-  useEffect(()=>{
-    if(proceed)
-      history.push(path + "/confirmation");
+  useEffect(() => {
+    if (proceed) history.push(path + "/confirmation");
   });
 
   const handleSubmit = () => {
@@ -34,14 +33,13 @@ function Verify({ path, type, data, setId, setErr}) {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-        withCredentials: true
-
+        withCredentials: true,
       });
       setId(res.data.id);
       setProceed(true);
     } catch (err) {
-        console.error(err);
-        setErr(err.response.data.error);
+      console.error(err);
+      setErr(err.response.data.error);
     }
   };
 
@@ -77,7 +75,12 @@ function Verify({ path, type, data, setId, setErr}) {
               {console.log(data.endTime)}
 
               {/* Temporary fix */}
-              <p>{new Date(data.startTime).toLocaleTimeString()}{(data.endTime !=="2021-05-07T18:30:00.000Z" ?"-"+ new Date(data.endTime).toLocaleTimeString():null)}</p>
+              <p>
+                {new Date(data.startTime).toLocaleTimeString()}
+                {data.endTime !== "2021-05-07T18:30:00.000Z"
+                  ? "-" + new Date(data.endTime).toLocaleTimeString()
+                  : null}
+              </p>
             </div>
           </div>
         </div>
