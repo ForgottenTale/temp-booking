@@ -59,6 +59,7 @@ export default function Setting({ setErr }) {
                     phone: userInfo.phone,
                     email: userInfo.email
                 })
+               
             })
             .catch(err => {
                 console.error(err);
@@ -71,7 +72,7 @@ export default function Setting({ setErr }) {
     const handleSave = () => {
         const formData = new URLSearchParams();
         formData.append('name', userDetails.name);
-        formData.append('email', userDetails.email);
+        // formData.append('email', userDetails.email);
         formData.append('phone', userDetails.phone);
         const headers = {
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -81,6 +82,7 @@ export default function Setting({ setErr }) {
             .then((data) => {
                 console.log(data);
                 setRefresh(!refresh);
+                window.location.replace('/dashboard')
             })
             .catch(err => {
                 console.error(err);

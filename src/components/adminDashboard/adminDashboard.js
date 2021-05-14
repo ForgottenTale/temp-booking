@@ -97,12 +97,12 @@ export default function AdminDashboard({ role, setErr,user }) {
                             </div>
                         </div>
                     </div>
-                    <h6 className="request_sub_title" style={{ margin: 30 }}>All completed request</h6>
+                    <h6 className="request_sub_title" style={{ margin: 30 }}>My requests</h6>
                     <div className="request_sub">
 
 
                         <Input2 className="request_sub_input" placeholder="Search for requests" onChange={(e) => setSearchTerm(e.target.value)} />
-                        <button className="button" onClick={() => { setPop(true) }}>+ New Appointment</button>
+                        <button className="button" onClick={() => { setPop(true) }}>+ Book service</button>
                     </div>
 
                     <Table headers={header} data={data} type='request' setRequest={setRequest} searchTerm={searchTerm} />

@@ -1,14 +1,13 @@
 import './topNav.scss';
 import userPic from '../../images/profile.png';
 import { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import Select from 'react-select'
 
 
 export default function TopNav({ activeComponent, setUser, setOU, ou, user,setAuth }) {
 
-    const history = useHistory();
+
     const [options, setOptions] = useState([])
     const [selectedOU,setSelectedOU ] = useState({})
     const customStyles = {
@@ -59,14 +58,14 @@ export default function TopNav({ activeComponent, setUser, setOU, ou, user,setAu
     useEffect(() => {
 
 
-        if (user.ou !== undefined && user.ou !== null && user.ou.length > 1) {
+        if (user.ou !== undefined && user.ou !== null && user.ou.length > 0) {
             var temp = user.ou.map((item) => {
-                return { "value": item.name, "label": item.name }
+                return { "value": item.ouName, "label": item.ouName }
             })
-            setSelectedOU({ "value": ou.name, "label": ou.name })
+            setSelectedOU({ "value": ou.ouName, "label": ou.ouName })
             setOptions(temp)
         }
-        console.log(ou);
+
     }, [user.ou, ou]);
 
 

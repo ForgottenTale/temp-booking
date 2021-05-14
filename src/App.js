@@ -14,7 +14,7 @@ import ProtectedLogin from './components/protectedLogin/protectedLogin';
 
 function App() {
   const [user, setUser] = useState({ name: null, ou: null, email: null });
-  const [isAuth, setAuth] = useState(false);
+  const [isAuth, setAuth] = useState(null);
   const [err, setErr] = useState(null);
   const [role, setRole] = useState(null);
   const [ou, setOU] = useState({})
@@ -30,18 +30,14 @@ function App() {
         console.log(userInfo)
 
         if (userInfo.status === 200) {
-          // setAuth(true)
+          setAuth(true)
           setUser({
             name: userInfo.data.name,
-            ou: [
-              { name: "College of Engineering, Kidangoor", role: "Admin" },
-              { name: "College of Engineering, Permon", role: "user" },
-              { name: "Young", role: "user" }
-            ],
+            ou: userInfo.data.ous,
             email: userInfo.data.email,
             phone:userInfo.phone
           })
-          setOU({ name: "College of Engineering, Kidangoor", role: "Admin" });
+          setOU(userInfo.data.ous[0]);
 
         }
         else {
@@ -57,7 +53,7 @@ function App() {
 
   useEffect(() => {
     if (ou !== undefined) {
-      setRole(ou.role)
+      setRole(ou.ouAdmin)
     }
 
   }, [ou])
