@@ -695,12 +695,14 @@ module.exports = {
 				else 
 					query+= " WHERE"
 				
-				if(constraint.user.activeOu.groupAdmin)
+				if(constraint.user.activeOu.id == 1 && constraint.user.activeOu.admin)
 					query+= " level<2";
 				else if(constraint.user.activeOu.reviewer)
 					query+= " level<3";
+				else if(constraint.user.activeOu.admin)
+					query+= " level<4"
 				else
-					query+= " ou_id=" + constraint.user.activeOu.id
+					query+= ` ou_id=${constraint.user.activeOu.id} AND level<4`
 				if(bltId)
 					query += " AND blt._id=" + bltId + ";"
 				else
@@ -750,6 +752,8 @@ module.exports = {
 				let bltBooking = await executeQuery("SELECT * FROM blt WHERE _id=" + bltId + " AND ou_id=" + userActiveOuId);
 				if(bltBooking.length<1)
 					throw new Error("Booking not found");
+				if(bltBooking[0].status == "CANCELLED" || bltBooking[0].status == "DELETED")
+					throw new Error("Cancelled/deleted bookings are not editable");
 				let {type, typeId} = findServiceType(bltBooking[0]);
 				ServiceClass = getClass(type);
 				let values = ServiceClass.getValuesForEdit(newValues);
@@ -771,7 +775,7 @@ module.exports = {
 				emailIds.mailCc = info.involved.map(person=>person.email);
 
 				if(info.level==0){
-					await executeQuery("UPDATE blt SET status='APPROVED' WHERE _id=" + bookingId);
+					await executeQuery("UPDATE blt SET status='APPROVED', approved_at=CURRENT_TIMESTAMP WHERE _id=" + bookingId);
 					let booking = await executeQuery("SELECT * FROM blt INNER JOIN online_meeting ON online_meeting_id=online_meeting._id");
 					if(booking.length>0){
 						booking = booking[0];
@@ -797,7 +801,7 @@ module.exports = {
 				);
 				if(result.length>0){
 					await delFromNextToApprove(bookingId);
-					await executeQuery("UPDATE blt SET status='DECLINED' WHERE _id=" + bookingId);
+					await executeQuery("UPDATE blt SET status='DECLINED', status=CURRENT_TIMESTAMP WHERE _id=" + bookingId);
 					let involved = await findMailsOfInvolved(bookingId);
 					emailIds = {mailTo: user.email, mailCc: involved};
 					await mail.finalDeclined({id: bookingId, response: input.response}, emailIds);
@@ -820,32 +824,48 @@ module.exports = {
         })
     },
 
-    delBooking: function(input){
-        return new Promise(async (resolve, reject)=>{
+	cancelBooking: function(input){
+		return new Promise(async (resolve, reject)=>{
             try{
                 let booking = await executeQuery("SELECT * FROM blt WHERE _id=" + input.bookingId + " AND ou_id=" + input.user.activeOu.id +";")
-                let type = "";
-                let typeId;
                 if(booking.length < 1)
                     return reject(new Error("Booking not found"))
-                if(booking[0].creator_id==input.user.id){
+                if(booking[0].creator_id == input.user.id || (input.user.activeOu.admin)){
                     //find type
                     let {type, typeId} = findServiceType(booking[0]);
                     if(!type)
                         return reject(new Error("Booking type not found"));
-                    let involved = await findMailsOfInvolved(input.bookingId)
-                    let emailIds = {mailCc: involved};
-                    emailIds.mailTo = [input.user.email];
-                    let query = "DELETE FROM next_to_approve WHERE blt_id=" + input.bookingId + ";"
-                    + "DELETE FROM response WHERE blt_id=" + input.bookingId + ";"
-                    + "DELETE FROM blt WHERE _id=" + input.bookingId + ";"
-                    + "DELETE FROM " + type + " WHERE _id=" + typeId + ";";
-                    
+                    let query = `DELETE FROM next_to_approve WHERE blt_id= ${input.bookingId} ;
+                    	UPDATE blt SET status='CANCELLED' WHERE _id= ${input.bookingId} ;
+                    `;
                     await executeQuery(query);
-                    await mail.deleted(input.bookingId, emailIds);
+                    return resolve("Cancelled Successfully");
+                }else
+                    return resolve("Services can only be cancelled only by creator, group and global admins");
+            }catch(err){
+                return reject(err);
+            }
+		})
+	},
+
+    delBooking: function(input){
+        return new Promise(async (resolve, reject)=>{
+            try{
+                let booking = await executeQuery("SELECT * FROM blt WHERE _id=" + input.bookingId + ";")
+                if(booking.length < 1)
+                    return reject(new Error("Booking not found"))
+                if(input.user.activeOu.id==1 && input.user.activeOu.admin){
+                    //find type
+                    let {type, typeId} = findServiceType(booking[0]);
+                    if(!type)
+                        return reject(new Error("Booking type not found"));
+                    let query = `DELETE FROM next_to_approve WHERE blt_id= ${input.bookingId} ;
+                    	UPDATE blt SET level=10, status='DELETED' WHERE _id= ${input.bookingId} ;
+                    `;
+                    await executeQuery(query);
                     return resolve("Deleted Successfully");
                 }else
-                    return resolve("Services can only be deleted by the creator");
+                    return resolve("Services can only be deleted by global admins");
             }catch(err){
                 return reject(err);
             }
