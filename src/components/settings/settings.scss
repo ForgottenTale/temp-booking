@@ -4,10 +4,11 @@
 
     & h5{
         margin-bottom: 30px;
+        font-size: 17px;
+    }
 
-        &:nth-child(2){
-            margin-top: 30px;
-        }
+    & .save{
+        margin-bottom: 40px;
     }
 
     & button {
@@ -81,42 +82,47 @@
 
 @media only screen and (max-width: 786px) {
     .settings {
-        margin-top: 100px;
-        display: flex;
-        flex-direction: column;
-        &_con {
-            width: auto;
-       
-            &_item {
-                &:nth-child(even){
-                    margin-left: 0px;
-                }
-            }
-        }
-    }
-}
-@media only screen and (max-width: 717px) {
-    .settings {
-      
-        &_con {
-            display: inline;
-            width: 100%;
+    
+        & .save{
             margin-top: 30px;
-       
-            &_item {
-                &:nth-child(even){
-                    margin-left: 0px;
-                }
-                & input{
-               
-                   width: 100%;
-                   padding: 10px 0;
-                   padding-left: 10px;
+            margin-bottom: 60px;
+        }
+        & button{
+            margin-top: 30px;
+        }
 
+        & h5{
+           
+            margin-bottom: 60px;
+        }
+   
+        &_con{
+            width: 85%;
+            padding: 0;
+            background-color: white;
             
-
+            &_img{
+          
+           margin-top: 60px;
+           margin-bottom: 60px;
+        
+            }
+        
+            &_itemCon {
+                margin-bottom: 60px;
+               
+                flex-direction: column;
+                align-items: unset;
+                &_item {
+                   & input{
+                       width: 100%; 
+                       padding: 10px 0;
+                   }
+                   
                 }
             }
         }
+    
+       
     }
 }

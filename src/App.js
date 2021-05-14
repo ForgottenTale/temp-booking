@@ -24,7 +24,7 @@ function App() {
     const headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
     }
-    const url = "/api/credentials/"
+    const url = "http://localhost:5000/api/credentials/"
     axios.get(url, { headers: headers, withCredentials: true })
       .then(userInfo => {
         console.log(userInfo)
@@ -51,6 +51,7 @@ function App() {
       })
       .catch(err => {
         console.log(err)
+        // setAuth(false)
       });
   }, [])
 

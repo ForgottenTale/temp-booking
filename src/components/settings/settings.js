@@ -133,7 +133,7 @@ export default function Setting({ setErr }) {
                 <Item name="Email" userDetails={userDetails} setUserDetails={setUserDetails} type="email"  />
                 <Item name="Phone No" userDetails={userDetails} setUserDetails={setUserDetails} type="phone" />
 
-                <button onClick={() => handleSave()}>Save</button>
+                <button className="save" onClick={() => handleSave()}>Save</button>
                 <h5>Set a new Password</h5>
                 <div className="settings_con_itemCon">
                     <div className="settings_con_itemCon_item">
@@ -151,7 +151,7 @@ export default function Setting({ setErr }) {
                     </div>
 
                 </div>
-                <button onClick={() => handlePasswordSave()} >Save</button>
+                <button className="save" onClick={() => handlePasswordSave()} >Save</button>
             </div>
         </div>
     );
