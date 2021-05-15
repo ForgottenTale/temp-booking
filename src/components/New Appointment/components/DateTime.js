@@ -52,13 +52,23 @@ function DateTime({ path, type, setData, data, user, ou }) {
     else if (data.startTime > data.endTime) {
       setShortTimeError(true);
     }
-    console.log(data.ouId.length);
+    // console.log(data.ouId.length);
     if (data.startTime !== "" && data.endTime !== "" && data.startTime !== data.endTime && data.startTime < data.endTime && ouId !=="") {
       if (type === "online_meeting" || type === "publicity") {
         history.push(path + "/event-info");
       } else if (type === "intern_support" || type === "e_notice") {
         history.push(path + "/support-info");
       }
+    }
+    if (type === "e_notice" || type === "publicity") {
+      if (data.startTime !== "" &&  ouId !=="") {
+        if (type === "online_meeting" || type === "publicity") {
+          history.push(path + "/event-info");
+        } else if (type === "intern_support" || type === "e_notice") {
+          history.push(path + "/support-info");
+        }
+      }
+
     }
   };
 
