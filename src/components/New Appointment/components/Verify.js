@@ -62,7 +62,7 @@ function Verify({ path, type, data, setId, setErr }) {
           <div className="col">
             <div className="mb-2">
               <p className="label">Date:</p>
-              <p>{data.startTime.slice(0, 10)}</p>
+              <p>{new Date(data.startTime).toDateString()}</p>
             </div>
             <div className="mb-4">
               <p className="label">Service:</p>
