@@ -95,18 +95,18 @@ module.exports = {
 
     createMeeting: function(input, serviceName){
         let payload, config, duration;
-        input.start_time = module.exports.convertSqlDateTimeToDate(input.end_time);
-        input.end_time = module.exports.convertSqlDateTimeToDate(input.start_time);
+        input.startTime = module.exports.convertSqlDateTimeToDate(input.endTime);
+        input.endTime = module.exports.convertSqlDateTimeToDate(input.startTime);
         if(serviceName=="zoom"){
             config = {
                 Authorization: `Bearer ${token}`
             };
-            duration =(input.end_time.getTime() - input.start_time.getTime()) / 1000;
+            duration =(input.endTime.getTime() - input.startTime.getTime()) / 1000;
             duration /= 60;
             duration = Math.abs(Math.round(duration));
             payload = {
                 "topic": input.title,
-                "start_time": input.start_time.toISOString(),
+                "start_time": input.startTime.toISOString(),
                 "duration": duration,
                 "timezone": "UTC",
                 "agenda": input.description,

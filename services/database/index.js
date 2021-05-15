@@ -526,8 +526,8 @@ module.exports = {
 				return done(null, newBooking);
 			}
 			emailIds.mailCc.push(user.email);
-			newBooking.ouName = await executeQuery(`SELECT name FROM ou INNER JOIN blt ON blt.ou_id=ou._id WHERE ou_id=${newBooking.ouId}`)
-			newBooking.ouName = newBooking.ouName[0].name;
+			let temp = await executeQuery(`SELECT name FROM ou INNER JOIN blt ON blt.ou_id=ou._id WHERE ou_id=${newBooking.ouId}`)
+			newBooking.ouName = temp[0].name;
 			mail.newBooking(newBooking, {mailTo: user.email});
 			mail.reviewRequest(newBooking, emailIds);
 			return done(null, newBooking);
@@ -785,17 +785,17 @@ module.exports = {
 			let bltBooking = await executeQuery(`SELECT * FROM blt WHERE _id=${bookingId}`);
 			if(bltBooking.length<1)
 				throw new Error("Unable to find booking");
-			let {type, typeId} = findServiceType(bltBooking[0]);
-			let booking = await executeQuery(`SELECT * FROM ${type} WHERE _id=${typeId}`);
-			booking = transmuteSnakeToCamel(booking[0]);
-			booking.type = type;
-			if(booking.startTime){
-				booking.startTime = convertSqlDateTimeToDate(booking.startTime);
-				booking.endTime = convertSqlDateTimeToDate(booking.endTime);
-			}else{
-				booking.publishTime = convertSqlDateTimeToDate(booking.publishTime).toISOString();
-			}
 			if(input.encourages){
+				let {type, typeId} = findServiceType(bltBooking[0]);
+				let booking = await executeQuery(`SELECT * FROM ${type} WHERE _id=${typeId}`);
+				booking = transmuteSnakeToCamel(booking[0]);
+				booking.type = type;
+				if(booking.startTime){
+					booking.startTime = convertSqlDateTimeToDate(booking.startTime);
+					booking.endTime = convertSqlDateTimeToDate(booking.endTime);
+				}else{
+					booking.publishTime = convertSqlDateTimeToDate(booking.publishTime).toISOString();
+				}
 				await checkAvailability(booking);
 				await addResponse(user.personId, bookingId, input.encourages, input.response);
 				let info = await tryLevelUp(bookingId, user.personId);
@@ -805,12 +805,15 @@ module.exports = {
 
 				if(info.level==0){
 					await executeQuery("UPDATE blt SET status='APPROVED', approved_at=CURRENT_TIMESTAMP WHERE _id=" + bookingId);
-					let booking = await executeQuery("SELECT * FROM blt INNER JOIN online_meeting ON online_meeting_id=online_meeting._id");
+					booking = await executeQuery("SELECT * FROM blt WHERE _id=" + bookingId);
 					booking = booking[0];
 					let {type, typeId} = findServiceType(booking);
 					ServiceClass = getClass(type);
+					booking = await executeQuery(`SELECT * FROM blt INNER JOIN ${type} ON ${type}._id=${type}_id WHERE blt._id=${bookingId}`);
+					booking = booking[0];
 					let config= await getConfig(type, booking.service_name);
 					booking = transmuteSnakeToCamel(booking);
+					booking.type=type;
 					if(booking.startTime){
 						booking.startTime = convertSqlDateTimeToDate(booking.startTime);
 						booking.endTime = convertSqlDateTimeToDate(booking.endTime);
@@ -832,8 +835,7 @@ module.exports = {
 				}
 	
 				emailIds.mailCc.push(user.email);
-				let booking = await executeQuery(`SELECT * FROM blt WHERE _id=${bookingId}`);
-				let {type, typeId} = findServiceType(booking[0]);
+				booking = await executeQuery(`SELECT * FROM blt WHERE _id=${bookingId}`);
 				booking = await executeQuery(`SELECT *,blt._id as _id, ou.name as ou_name FROM blt INNER JOIN ${type} ON ${type}_id=${type}._id INNER JOIN ou ON ou_id=ou._id WHERE blt._id=${bookingId}`);
 				booking=transmuteSnakeToCamel(booking[0]);
 				booking.type = type;
