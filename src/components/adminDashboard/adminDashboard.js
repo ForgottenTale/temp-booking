@@ -4,6 +4,7 @@ import Table from '../table/table';
 import { Input2 } from '../utils/myReactLib';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import RequestView from '../requestView/requestView';
+import RequestView2 from '../requestView/requestView2';
 import axios from 'axios';
 import ServiceSelection from '../New Appointment/App';
 
@@ -113,17 +114,17 @@ export default function AdminDashboard({ role, setErr,user ,ou}) {
                         <button className="button" onClick={() => { setPop(true) }}>+ Book service</button>
                     </div>
 
-                    <Table headers={header} data={data} path="requests" type='request' setRequest={setRequest} searchTerm={searchTerm} edit={true} />
+                    <Table headers={header} data={data} path="dashboard" type='request' setRequest={setRequest} searchTerm={searchTerm} edit={true} />
 
 
                 </div>
             </Route>
-            {/* <Route path={path+"/:id"}>
+            <Route path={"/dashboard/:id"} exact>
                 <RequestView req={request} edit={true} setRefresh={setRefresh} refresh={refresh} showButton={true} setErr={setErr} readProtect={true}/>
             </Route>
-            <Route path={path+"/:id/edit"} exact>
-                <RequestView req={request} edit={true} setRefresh={setRefresh} refresh={refresh} showButton={true} setErr={setErr} readProtect={false}/>
-            </Route> */}
+            <Route path={"/dashboard/:id/edit"} exact>
+                <RequestView2 req={request} edit={true} setRefresh={setRefresh} refresh={refresh} showButton={true} setErr={setErr} readProtect={false}/>
+            </Route>
         </Switch>
     );
 }
