@@ -490,6 +490,8 @@ module.exports = {
 		try{
 			var addedBooking, bltBooking;
 			//confirm if user is associated with the ou
+			if(!newBooking.ouId)
+				throw new Error("OuId is required");
             let checkOu = await executeQuery("SELECT * FROM ou_map INNER JOIN user ON user.person_id=ou_map.person_id WHERE ou_id=" + newBooking.ouId + " AND user._id="+ newBooking.creatorId);
             if(checkOu.length<1){
                 throw new Error("User not associated with Ou");
