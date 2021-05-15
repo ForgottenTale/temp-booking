@@ -185,7 +185,7 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                             : <button onClick={() => { setReadOnly(false); }}>Save</button>}
                     </div> : null
                 }
-                {message ? <Message setMessage={setMessage} setRefresh={setRefresh} setSpinner={setSpinner} refresh={refresh} data={data} setErr={setErr} /> : null}
+                {message ? <Message ouId={ou.ouId} setMessage={setMessage} setRefresh={setRefresh} setSpinner={setSpinner} refresh={refresh} data={data} setErr={setErr} /> : null}
             </div >
             : null
     );
