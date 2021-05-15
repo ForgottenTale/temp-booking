@@ -20,7 +20,7 @@ export default function Message({ setMessage, setRefresh, data, setSpinner, refr
                 'Content-Type': 'application/x-www-form-urlencoded',
             }
 
-            const url = "/api/my-approvals/?ouId="+ouId;
+            const url = `/api/approvals/${data.id}?ouId=${ouId}`;
             await axios.post(url, formData, { headers: headers, withCredentials: true });
             setRefresh(!refresh);
             setSpinner(false);
@@ -44,7 +44,7 @@ export default function Message({ setMessage, setRefresh, data, setSpinner, refr
                 </p>
                 <textarea placeholder="Enter your responses" defaultValue={msg} onChange={(e) => setMsg(e.target.value)} />
                 <button onClick={() => handleLogin('approve')}>Submit</button>
-                <button onClick={() => handleLogin('decline')}>Cancel</button>
+                <button onClick={() => setMessage(false)}>Cancel</button>
             </div>
 
 
