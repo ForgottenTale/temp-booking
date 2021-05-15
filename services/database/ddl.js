@@ -53,6 +53,8 @@ module.exports = {
             title VARCHAR(30) NOT NULL,
             description VARCHAR(200),
             img VARCHAR(255),
+            url VARCHAR(255) DEFAULT 'WILL BE UPDATED',
+            meeting_password VARCHAR(50) DEFAULT 'WILL BE UPDATED',
             comments VARCHAR(30),
             start_time DATETIME NOT NULL,
             end_time DATETIME NOT NULL,

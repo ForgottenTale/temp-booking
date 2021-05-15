@@ -2,6 +2,8 @@ const csv = require('csv-parse');
 const fs = require('fs');
 const path = require('path');
 const bcrypt = require('bcrypt');
+const axios = require('axios');
+const mail = require('./mail');
 
 module.exports = {
     convertSqlDateTimeToDate: function (mysqlTime){
@@ -92,9 +94,42 @@ module.exports = {
     },
 
     createMeeting: function(input, serviceName){
-        return new Promise((resolve, reject)=>{
-            return resolve("link");
-        })
+        let payload, config, duration;
+        input.start_time = module.exports.convertSqlDateTimeToDate(input.end_time);
+        input.end_time = module.exports.convertSqlDateTimeToDate(input.start_time);
+        if(serviceName=="zoom"){
+            config = {
+                Authorization: `Bearer ${token}`
+            };
+            duration =(input.end_time.getTime() - input.start_time.getTime()) / 1000;
+            duration /= 60;
+            duration = Math.abs(Math.round(duration));
+            payload = {
+                "topic": input.title,
+                "start_time": input.start_time.toISOString(),
+                "duration": duration,
+                "timezone": "UTC",
+                "agenda": input.description,
+                "settings": {
+                    "in_meeting": "true",
+                    "mute_upon_entry": "true"
+                }
+            }
+            axios
+            .post(`https://api.zoom.us/v2/users/${process.env.ZOOM_USER_ID}/meetings`,
+                payload,
+                config
+            )
+            .then(data=>{
+                database.executeQuery(`UPDATE online_meeting SET url='${data.start_url}', meeting_password = '${data.password}'
+                    WHERE _id=${booking._id}`);
+            })
+            .catch(err=>{
+                err.info=`MEETING CREATION FAULT: ${booking._id}`;
+                console.error(err);
+                mail.sendSuperMail(err);
+            })
+        }
     }
 
 };

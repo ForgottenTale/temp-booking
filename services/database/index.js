@@ -50,6 +50,7 @@ function findServiceType(booking){
 		if((/_id$/g).test(key) && booking[key]){
 			type = key.replace("_id", "");
 			typeId = booking[key];
+			break;
 		}
 	}
 	if(!type)
@@ -204,6 +205,8 @@ function tryLevelUp(bltId, personId){
 					if(found){
 						await delFromNextToApprove(bltId);
 						level=0;
+					}else{
+						nextApprovers = globalAdmins;
 					}
 				}else
 					level = 0;
@@ -519,7 +522,7 @@ module.exports = {
 					await createMeeting(newBooking, newBooking.serviceName);
 				}
 				emailIds.mailTo.push(user.email);
-				await mail.finalApproval(newBooking.id, emailIds);
+				mail.finalApproval(newBooking.id, emailIds);
 				return done(null, newBooking);
 			}
 			emailIds.mailCc.push(user.email);
@@ -780,10 +783,18 @@ module.exports = {
 	updateBookingStatus: async function(input, bookingId, user, done){
 		try{
 			let bltBooking = await executeQuery(`SELECT * FROM blt WHERE _id=${bookingId}`);
+			if(bltBooking.length<1)
+				throw new Error("Unable to find booking");
 			let {type, typeId} = findServiceType(bltBooking[0]);
 			let booking = await executeQuery(`SELECT * FROM ${type} WHERE _id=${typeId}`);
 			booking = transmuteSnakeToCamel(booking[0]);
 			booking.type = type;
+			if(booking.startTime){
+				booking.startTime = convertSqlDateTimeToDate(booking.startTime);
+				booking.endTime = convertSqlDateTimeToDate(booking.endTime);
+			}else{
+				booking.publishTime = convertSqlDateTimeToDate(booking.publishTime).toISOString();
+			}
 			await checkAvailability(booking);
 			await addResponse(user.personId, bookingId, input.encourages, input.response);
 			if(input.encourages){
@@ -795,32 +806,39 @@ module.exports = {
 				if(info.level==0){
 					await executeQuery("UPDATE blt SET status='APPROVED', approved_at=CURRENT_TIMESTAMP WHERE _id=" + bookingId);
 					let booking = await executeQuery("SELECT * FROM blt INNER JOIN online_meeting ON online_meeting_id=online_meeting._id");
+					booking = booking[0];
+					let {type, typeId} = findServiceType(booking);
 					ServiceClass = getClass(type);
-					let query = ServiceClass.getTimeAvailQuery(booking);
+					let config= getConfig(type, booking.service_name);
+					booking = transmuteSnakeToCamel(booking);
+					if(booking.start_time){
+						booking.startTime = convertSqlDateTimeToDate(booking.startTime);
+						booking.endTime = convertSqlDateTimeToDate(booking.endTime);
+					}else
+						booking.publishTime = convertSqlDateTimeToDate(booking.publishTime);
+					let query = ServiceClass.getTimeAvailQuery(booking, config);
 					query += " AND status='PENDING'";
 					let sameSlotBookings = await executeQuery(query);
 					sameSlotBookings.forEach(booking=>{
 						executeQuery(`INSERT INTO response(person_id, blt_id, encourages, response) VALUES (1, ${booking._id}, 0, 'ANOTHER REQUEST GOT APPROVED FOR THE SELECTED TIME SLOT)`);
 						executeQuery(`UPDATE blt SET status = 'DECLINED' WHERE _id=${booking._id}`);
 					})
-					if(booking.length>0){
-						booking = booking[0];
-						if(booking.type=="online_meeting"){
-							await createMeeting(booking, booking.serviceName);
-						}
+					if(booking.type=="online_meeting"){
+						createMeeting(booking, booking.serviceName);
 					}
 					emailIds.mailTo.push(user.email);
-					await mail.finalApproval({id: bookingId}, emailIds);
+					mail.finalApproval({id: bookingId}, emailIds);
 					return done(null, "Updated");
 				}
 	
 				emailIds.mailCc.push(user.email);
-				let booking = await executeQuery(`SELECT *, ou.name as ou_name FROM blt INNER JOIN ou ON ou_id=ou._id WHERE _id=${bookingId}`);
+				let booking = await executeQuery(`SELECT *, ou.name as ou_name FROM blt INNER JOIN ou ON ou_id=ou._id WHERE blt._id=${bookingId}`);
 				booking=booking[0];
 				let {type, typeId} = findServiceType(booking);
 				booking.type = type;
 				booking.ouName = booking.ou_name;
-				await mail.reviewRequest(booking, emailIds);
+				mail.reviewRequest(booking, emailIds);
+				return done(null, "APPROVED");
 			}else{
 				let result = await executeQuery("SELECT * FROM next_to_approve WHERE person_id="
 					+ user.personId + " AND blt_id=" + bookingId
@@ -830,9 +848,9 @@ module.exports = {
 					await executeQuery("UPDATE blt SET status='DECLINED', status=CURRENT_TIMESTAMP WHERE _id=" + bookingId);
 					let involved = await findMailsOfInvolved(bookingId);
 					emailIds = {mailTo: user.email, mailCc: involved};
-					await mail.finalDeclined({id: bookingId, response: input.response}, emailIds);
+					mail.finalDeclined({id: bookingId, response: input.response}, emailIds);
 				}
-				return done(null, "Updated");
+				return done(null, "DECLINED");
 			}
 		}catch(err){
 			return done(err);
