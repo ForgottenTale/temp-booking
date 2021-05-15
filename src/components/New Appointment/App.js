@@ -20,7 +20,9 @@ import "./mv.css";
 
 function App(props) {
   const [data, setData] = useState({
+ 
     startTime: "",
+    ouId:"",
     endTime: "",
     publishTime: "",
     title: "",
@@ -70,7 +72,7 @@ function App(props) {
             <Services path={path} type={type} data={data} setData={setData} />
           </Route>
           <Route path={path + "/date-time"}>
-            <DateTime path={path} type={type} data={data} setData={setData} />
+            <DateTime path={path} type={type} data={data} setData={setData} user={props.user}/>
           </Route>
           <Route path={path + "/event-info"}>
             <EventInfo path={path} type={type} data={data} setData={setData} />

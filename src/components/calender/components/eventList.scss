@@ -1,14 +1,46 @@
 .eventList {
-    width: 300px;
-    max-height: 600px;
-    position: absolute;
-    background-color: rgb(245, 245, 245);
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
-    &_date {
-        color: black;
-        margin: 6px;
-        margin-top: 10px;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    overflow-y: scroll;
+    overflow: hidden;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    z-index: 6;
+
+    &_overlay{
+        width: 100%;
+        height:100%;
+        background-color: rgba(0, 0, 0, 0.055);
+        
     }
+    &_con {
+        z-index: 7;
+        width: 400px;
+        max-height: 600px;
+        overflow-y: scroll;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        border-radius: 5px;
+        transform: translate(-50%, -50%);
+        background-color: rgb(245, 245, 245);
+        padding: 20px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
+    }
+    &_head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        &_date {
+            color: black;
+            margin: 6px;
+            margin-top: 10px;
+        }
+    }
+
     &_number {
         color: grey;
         margin: 10px 6px;
@@ -26,15 +58,14 @@
             &_title {
                 margin-left: 3px;
                 font-weight: 600;
-                font-size: 12px;
+                font-size: 16px;
             }
             &_time {
                 margin-left: 3px;
                 color: grey;
-                font-size: 8px;
+                margin-top: 5px;
+                font-size: 12px;
             }
         }
     }
 }
-
-

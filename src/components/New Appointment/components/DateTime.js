@@ -1,6 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import dateIcon from "../../../images/date.png";
+import Select from 'react-select'
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
+import { KeyboardTimePicker } from '@material-ui/pickers';
+
+
 
 function minDay() {
   let newday = new Date();
@@ -12,16 +18,19 @@ function minDay() {
   if (month < 10) month = "0" + month;
   if (day < 10) day = "0" + day;
 
-  let min = year + "-" + month + "-" + day;
+  let min = year + "/" + month + "/" + day;
+  min = new Date(min)
 
   return min;
 }
 
-function DateTime({ path, type, setData, data }) {
-  const [date, setDate] = useState("");
-  const [startTime, setTimeFrom] = useState("");
-  const [endTime, setTimeTo] = useState("");
+function DateTime({ path, type, setData, data, user,ou }) {
+  const [equalTimeError, setequalTimeError] = useState(false);
+  const [shortTimeError, setShortTimeError] = useState(false);
+  const [ouError, setOuError] = useState(false);
   const [publishTime, setPublishTime] = useState("");
+  const [options, setOptions] = useState([])
+  const [ouId, setOuID] = useState([])
 
   const history = useHistory();
 
@@ -29,48 +38,98 @@ function DateTime({ path, type, setData, data }) {
 
   const next = (event) => {
     event.preventDefault();
-
-    // if (timeFrom !== "") {
-    var fromHour = startTime.slice(0, 2);
-    var fromMin = startTime.slice(3, 5);
-    var toHour = endTime.slice(0, 2);
-    var toMin = endTime.slice(3, 5);
-    var pubHour = publishTime.slice(0, 2);
-    var pubMin = publishTime.slice(3, 5);
-    let tempStartTime = new Date(date);
-    tempStartTime.setHours(fromHour, fromMin, 0, 0);
-    let tempEndtime = new Date(date);
-    tempEndtime.setHours(toHour, toMin, 0, 0);
-    let tempPublishTime = new Date(date);
-    tempPublishTime.setHours(pubHour, pubMin, 0, 0);
-
     setData({
-      ...data,
-      startTime: tempStartTime.toISOString(),
-      endTime: tempEndtime.toISOString(),
-      publishTime: tempPublishTime.toISOString(),
-    });
+        ...data,
+        ouId:ouId
+      });
 
-    if (type === "online_meeting" || type === "publicity") {
-      history.push(path + "/event-info");
-    } else if (type === "intern_support" || type === "e_notice") {
-      history.push(path + "/support-info");
+      if(data.ouid===""){
+        setOuError(true);
+      }
+      else if(data.startTime===data.endTime){
+        setequalTimeError(true);
+      }
+      else if(data.startTime>data.endTime){
+        setShortTimeError(true);
+      }
+
+    if(data.startTime!==""&&data.endTime!==""&&data.startTime!==data.endTime&&data.startTime<data.endTime&&data.ouid!==""){
+      if (type === "online_meeting" || type === "publicity") {
+        history.push(path + "/event-info");
+      } else if (type === "intern_support" || type === "e_notice") {
+        history.push(path + "/support-info");
+      }
     }
-    // }
   };
 
-  const setdate = () => {
-    var d = new Date(data.startTime),
-      month = "" + (d.getMonth() + 1),
-      day = "" + d.getDate(),
-      year = d.getFullYear();
 
-    if (month.length < 2) month = "0" + month;
-    if (day.length < 2) day = "0" + day;
 
-    return [year, month, day].join("-");
-  };
+  useEffect(() => {
 
+
+    if (user.ou !== undefined && user.ou !== null && user.ou.length > 0) {
+      var temp = user.ou.map((item) => {
+        return { "value": item.ouName, "label": item.ouName }
+      })
+
+      setOptions(temp)
+    }
+    setData(prevState => {
+
+
+      return ({
+        ...prevState,
+        startTime: minDate.toISOString(),
+        endTime:  minDate.toISOString(),
+        publishTime: minDate.toISOString(),
+      })
+    })
+
+  }, [user.ou]);
+
+
+  const handleChange = (e) => {
+    var temp = user.ou.filter((item) => {
+      console.log()
+
+      return item.ouName === e.value ? item : null
+    })
+
+    console.log(temp[0].ouId)
+    setOuID(temp[0].ouId)
+  }
+
+  const handleDateChange = (e) => {
+
+
+    setData(prevState => {
+
+      var d = new Date(e)
+      var start = new Date(prevState.startTime === "" ? new Date() : prevState.startTime);
+      var end = new Date(prevState.endTime === "" ? new Date() : prevState.endTime);
+      var publishTime = new Date(prevState.publishTime === "" ? new Date() : prevState.publishTime);
+      console.log(e);
+
+
+      return ({
+        ...prevState,
+        startTime: new Date(d.setHours(start.getHours(), start.getMinutes(), 0, 0)).toISOString(),
+        endTime: new Date(d.setHours(end.getHours(), end.getMinutes(), 0, 0)).toISOString(),
+        publishTime:new Date(d.setHours(publishTime.getHours(),publishTime.getMinutes(), 0, 0)).toISOString(),
+      })
+    })
+
+
+  }
+  const handleTimeChange = (e, name) => {
+    setData(prevState => {
+      return ({
+        ...prevState,
+        [name]: e.toISOString(),
+        date: e.toISOString(),
+      })
+    })
+  }
   return (
     <div className="service-container row">
       <div className="select-service col-5">
@@ -85,54 +144,94 @@ function DateTime({ path, type, setData, data }) {
 
         <form onSubmit={next}>
           <div className="row mb-4">
+
             <div className="col-sm-5 col-6">
-              <label className="form-label">Date</label>
-              <input
-                defaultValue={setdate()}
-                type="date"
-                className="form-control"
-                min={minDate}
-                name="date"
-                onChange={(e) => setDate(e.target.value)}
+              <label className="form-label">Select OU</label>
+              <Select
+              error={ouError}
+                options={options}
                 required
+                onChange={(e) => {
+                  console.log(e.value)
+                  handleChange(e)
+                }}
               />
             </div>
+            <div className="col-sm-5 col-6">
+              <label className="form-label">Date</label>
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <KeyboardDatePicker
+                
+                  margin="normal"
+                  id="time-picker"
+                  minDate={minDate}
+                  value={data.startTime === "" ? minDate : data.startTime}
+                  KeyboardButtonProps={{
+                    'aria-label': 'change time',
+                  }}
+                  onChange={(e) => handleDateChange(e)}
+                />
+              </MuiPickersUtilsProvider>
+            </div>
           </div>
+
+
+
           {data.type === "online_meeting" || data.type === "intern_support" ? (
+
             <div className="row mb-5">
               <div className="col-sm-5 col-6">
                 <label className="form-label">From</label>
-                <input
-                  type="time"
-                  className="form-control"
-                  name="time"
-                  onChange={(e) => setTimeFrom(e.target.value)}
-                  required
-                />
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardTimePicker
+                  error={shortTimeError||equalTimeError}
+                    margin="normal"
+                    id="time-picker"
+                    value={data.startTime === "" ? undefined : data.startTime}
+                    onChange={(e) => handleTimeChange(e, "startTime")}
+                    required
+                    KeyboardButtonProps={{
+                      'aria-label': 'change time',
+                    }}
+                  />
+                </MuiPickersUtilsProvider>
               </div>
+
               <div className="col-sm-5 col-6">
-                <label className="form-label">To</label>
-                <input
-                  type="time"
-                  className="form-control"
-                  name="time"
-                  onChange={(e) => setTimeTo(e.target.value)}
-                  required
-                />
+                <label className="form-label">From</label>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardTimePicker
+                  error={shortTimeError||equalTimeError}
+                    margin="normal"
+                    id="time-picker"
+                    value={data.endTime === "" ? undefined : data.endTime}
+                    onChange={(e) => handleTimeChange(e, "endTime")}
+                    required
+                    KeyboardButtonProps={{
+                      'aria-label': 'change time',
+                    }}
+                  />
+                </MuiPickersUtilsProvider>
               </div>
+
             </div>
           ) : null}
           {data.type === "e_notice" || data.type === "publicity" ? (
             <div className="row mb-5">
               <div className="col-sm-5 col-6">
                 <label className="form-label">Time</label>
-                <input
-                  type="time"
-                  className="form-control"
-                  name="time"
-                  onChange={(e) => setPublishTime(e.target.value)}
-                  required
-                />
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardTimePicker
+                    margin="normal"
+                    id="time-picker"
+                    value={data.endTime === "" ? undefined : data.endTime}
+                    onChange={(e) => handleTimeChange(e, "publishTime")}
+                    required
+                    KeyboardButtonProps={{
+                      'aria-label': 'change time',
+                    }}
+                  />
+                </MuiPickersUtilsProvider>
               </div>
             </div>
           ) : null}

@@ -24,16 +24,17 @@ function DateBody(props) {
 
     return (
         <div className="daytime"
-            onMouseEnter={() => { setEventList(!showEventList) }}
-            onMouseLeave={() => { setEventList(!showEventList) }}
+            // onMouseEnter={() => { setEventList(!showEventList) }}
+            // onMouseLeave={() => { setEventList(!showEventList) }}
+            style={props.dayBodyWidth}
         >
             <div className="daytime_day">{props.day.format("D")}</div>
             <p style={{ color: "white", fontSize: 12 }}>{props.day.key}</p>
 
-            {props.day.events !== null && props.day.events !== undefined && props.day.events.length >= 1 ? props.day.events.map((event) => <Tile event={event} />) : null}
-
+            {props.day.events !== null && props.day.events !== undefined && props.day.events.length >= 1 ? <Tile event={props.day.events[0]}  tileStyle={props.tileStyle}setEventList={setEventList}/>: null}
+            {props.day.events !== null && props.day.events !== undefined && props.day.events.length > 1 ? <Tile event={props.day.events[0]}  tileStyle={`${props.day.events.length -1} more`}setEventList={setEventList}/>: null}
             <div className="daytime_events">
-                {showEventList ? <EventsList day={props.day} /> : null}
+                {showEventList ? <EventsList day={props.day} setEventList={setEventList}/> : null}
             </div>
         </div>
     );

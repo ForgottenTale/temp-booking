@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './calender.scss';
 import DayView from './components/dayView';
 import WeekView from './components/weekView';
@@ -12,6 +12,7 @@ import axios from 'axios';
 
 function Calender({ setErr }) {
 
+    const ref = useRef()
     const [monthView, setMonthView] = useState(window.outerWidth <= 786 ? false : true);
     const [weekView, setWeekView] = useState(false);
     const [dayView, setDayView] = useState(window.outerWidth <= 786 ? true : false);
@@ -20,6 +21,8 @@ function Calender({ setErr }) {
     const [day, setDay] = useState({});
     const [value, setValue] = useState(moment());
     const [mobileView, setMobileView] = useState(window.outerWidth <= 786 ? true : false)
+    const [titleWidth, setTitleWidth] = useState({ display: "none" });
+    const [dayBodyWidth, setdayBodyWidth] = useState({ display: "none" });
     // const [dayList, setDayList] = useState([]);
     const [data, setData] = useState([
         {
@@ -146,9 +149,19 @@ function Calender({ setErr }) {
 
 
     useEffect(() => {
+        var width = ref.current.clientWidth - (7 * 4)
+        console.log(window.outerHeight)
+        var height = window.outerHeight -177.2
+        setTitleWidth({ maxWidth: width / 7 })
+        setdayBodyWidth({ maxWidth: width / 7, height: height/6 })
 
 
         const handleResize = () => {
+            width = ref.current.clientWidth - (7 * 4)
+            height = window.outerHeight -177.2
+            setTitleWidth({ maxWidth: width / 7 })
+            setdayBodyWidth({ maxWidth: width / 7, height: height/6 })
+            
             if (window.outerWidth <= 786) {
                 setDayView(true);
                 setMonthView(false);
@@ -226,7 +239,7 @@ function Calender({ setErr }) {
 
 
     return (
-        <div className="calender">
+        <div className="calender" ref={ref}>
 
             <div className="calender_menu">
                 <h2 className="calender_menu_today">
@@ -263,7 +276,7 @@ function Calender({ setErr }) {
 
             {dayView ? <DayView day={day} /> : null}
             {weekView ? <WeekView days={week} /> : null}
-            {monthView ? <MonthView days={calender} /> : null}
+            {monthView ? <MonthView days={calender} tileStyle={titleWidth} dayBodyWidth={dayBodyWidth} /> : null}
 
         </div>
     );

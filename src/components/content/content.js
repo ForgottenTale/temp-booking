@@ -33,7 +33,7 @@ export default function All(props) {
                         <Setting setErr={props.setErr} />
                     </Route>
                     <Route path={'/requests'}>
-                        <Request setErr={props.setErr} />
+                        <Request setErr={props.setErr} ou={props.ou} />
                     </Route>
                     <Route path={'/users'}>
                         <Users setErr={props.setErr} />

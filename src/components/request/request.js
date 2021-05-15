@@ -1,21 +1,23 @@
 
 import './request.scss';
 import { useState, useEffect } from 'react';
-import Table from '../table/table';
 import { Input2 } from '../utils/myReactLib';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import RequestView from '../requestView/requestView';
+import MyRequests from './myrequest';
 import axios from 'axios';
+import History from './history';
 
 
-export default function Request({ role, setErr}) {
+export default function Request({ role, setErr,ou}) {
 
     const [data, setData] = useState(null);
-    const header = ['Id', "Name", "Service", "Type", "Time", "Status", "Action"];
     const { path } = useRouteMatch();
     const [request, setRequest] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [refresh, setRefresh] = useState(true);
+    const [requesttype, setRequestType] = useState('myrequests');
+    const [requestNumber,setRequestNumber] = useState(0);
 
 
     useEffect(() => {
@@ -27,7 +29,7 @@ export default function Request({ role, setErr}) {
             })
             .catch(err =>{
                 console.error(err);
-                setErr(err.response.data.error);
+                setErr(err.response!==undefined?err.response.data.error : err);
             });
 
 
@@ -41,14 +43,21 @@ export default function Request({ role, setErr}) {
 
                        <h6 className="request_header_title">All requests</h6> 
                     </div>
+                    <div className="request_type">
+                    <h6 className={requesttype === 'myrequests' ? "request_type_title active" : "request_type_title "} onClick={() => setRequestType('myrequests')}>My Requests</h6>
+                        <h6 className={requesttype === 'history' ? "request_type_title active" : "request_type_title"} onClick={() => setRequestType('history')}>History</h6>
+                        
+
+                    </div>
                     <div className="request_sub">
-                        <h6 className="request_sub_title">You have {data !== null && data !== undefined ? data.length : 0} request</h6>
+                        <h6 className="request_sub_title">You have {requestNumber} request</h6>
 
                         <Input2 className="request_sub_input" placeholder="Search for requests" onChange={(e) => setSearchTerm(e.target.value)} />
 
                     </div>
-
-                    <Table headers={header} data={data} type='request' setRequest={setRequest} searchTerm={searchTerm} />
+                   {requesttype==="history"?<History data={data} setRequestNumber={setRequestNumber} setRequest={setRequest} searchTerm={searchTerm} setErr={setErr} ouid={ou.ouId}/>:null}
+                   {requesttype==="myrequests"?<MyRequests data={data} setRequestNumber={setRequestNumber} setRequest={setRequest} searchTerm={searchTerm} setErr={setErr} ouid={ou.ouId}/>:null}
+                    {/* <Table headers={header} data={data} type='request' setRequest={setRequest} searchTerm={searchTerm} /> */}
 
 
                 </div>

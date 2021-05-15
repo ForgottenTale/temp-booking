@@ -1,12 +1,12 @@
 .daytime {
-    width: 98%;
-    height: 98%;
+    width: 100%;
+    height: 100%;
     background-color: rgb(245, 245, 245);
     margin: 1px;
     transition: background-color 0.08s ease-in-out;
-    &:hover {
-        background-color: #00ffb3;
-    }
+    // &:hover {
+    //     background-color: #00ffb3;
+    // }
 
     .active {
         background-color: #eed600;

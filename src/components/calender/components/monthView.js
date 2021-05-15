@@ -4,7 +4,7 @@ import WeekNames from './weekNames';
 
 
 
-function MonthView({ days }) {
+function MonthView({ days,tileStyle,dayBodyWidth }) {
 
 
     return (
@@ -12,7 +12,7 @@ function MonthView({ days }) {
             <WeekNames />
             <div className="monthView">
                 {(days === []) ? {} : days.map((date) =>
-                    date.map((day) => <DateBody day={day} key={day.format("D").toString()} />)
+                    date.map((day) => <DateBody day={day} key={day.format("D").toString()} tileStyle={tileStyle} dayBodyWidth={dayBodyWidth}/>)
                 )}
             </div>
         </div>
