@@ -173,7 +173,11 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                 {data.img !== null ? <img src={"/image/" + data.img} alt='poster' /> : null}
 
 
-
+                <div className="requestView_button"> <button onClick={() => {
+                    setReadOnly(true);
+                    handleSave();
+                    history.push(`/requests/${params.id}`)
+                }}>Save</button> </div>
 
                 {showButton && data.status !== "APPROVED" ?
                     <div className="requestView_button">
@@ -188,13 +192,9 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                     </div> : null
 
                 }
-                {!readOnly ?   <div className="requestView_button"><button onClick={() => {
-                    setReadOnly(true);
-                    handleSave();
-                    history.push(`/requests/${params.id}`)
-                }}>Save</button> </div>: null
+                
 
-                }
+                
                 {/* 
                 {showButton && data.status !== "APPROVED" ? <div className="requestView_button">
                     <button onClick={() => setMessage(true)}>Approve</button>

@@ -118,12 +118,12 @@ export default function AdminDashboard({ role, setErr,user ,ou}) {
 
                 </div>
             </Route>
-            <Route path={path+"/:id"}>
+            {/* <Route path={path+"/:id"}>
                 <RequestView req={request} edit={true} setRefresh={setRefresh} refresh={refresh} showButton={true} setErr={setErr} readProtect={true}/>
             </Route>
             <Route path={path+"/:id/edit"} exact>
                 <RequestView req={request} edit={true} setRefresh={setRefresh} refresh={refresh} showButton={true} setErr={setErr} readProtect={false}/>
-            </Route>
+            </Route> */}
         </Switch>
     );
 }

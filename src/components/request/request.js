@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Input2 } from '../utils/myReactLib';
 import { Route, Switch, useRouteMatch, useHistory } from 'react-router-dom';
 import RequestView from '../requestView/requestView';
+import RequestView2 from '../requestView/requestView2';
 import MyRequests from './myrequest';
 import axios from 'axios';
 import History from './history';
@@ -81,10 +82,10 @@ export default function Request({ role, setErr, ou }) {
                 </div>
             </Route>
             <Route path={path + '/:id'} >
-                <RequestView req={request} setRefresh={setRefresh} refresh={refresh} showButton={true} setErr={setErr} readProtect={true} ou={ou} />
+                <RequestView req={request} edit={false} setRefresh={setRefresh} refresh={refresh} showButton={true} setErr={setErr} readProtect={false} ou={ou} />
             </Route>
             <Route path={path + '/:id/edit'} exact>
-                <RequestView req={request} setRefresh={setRefresh} refresh={refresh} showButton={true} setErr={setErr} readProtect={false} ou={ou} />
+                <RequestView2 req={request} edit={true} setRefresh={setRefresh} refresh={refresh} showButton={true} setErr={setErr} readProtect={`${false}`} ou={ou} />
             </Route>
             <Route path={path + '/history/:id'} exact>
                 <RequestView req={request} edit={false} setRefresh={setRefresh} refresh={refresh} showButton={false} setErr={setErr} readProtect={true} ou={ou} />
