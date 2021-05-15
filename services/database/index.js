@@ -598,11 +598,11 @@ module.exports = {
 	},
 
     getAllUsers: function(constraint, done){
-		let query = "SELECT user._id, name, email, phone FROM user INNER JOIN person ON person_id=person._id ";
+		let query = "SELECT *, user._id as id FROM user INNER JOIN person ON person_id=person._id INNER JOIN ou_map ON ou_map.person_id=person._id";
 		if(constraint.role == "admin")
-			query+="WHERE role='GLOBAL_ADMIN' OR role='GROUP_ADMIN'";
+			query+=" WHERE ou_map.admin=1";
 		else if(constraint.role == "user")
-			query+="WHERE role='USER'";
+			query+=" WHERE ou_map.admin=0";
 		else if(!constraint.role)
 			query+=";";
 		else
