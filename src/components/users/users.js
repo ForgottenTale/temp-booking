@@ -7,7 +7,7 @@ import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import UserView from '../userView/userView';
 
 
-export default function Users() {
+export default function Users({ou}) {
 
     const [usertype, setUserType] = useState('user');
     const [user, setUser] = useState(null);
@@ -28,13 +28,13 @@ export default function Users() {
 
                     </div>
 
-                    {usertype === 'admin' ? <Admins setUser={setUser} /> : <User setUser={setUser} />}
+                    {usertype === 'admin' ? <Admins setUser={setUser} ouId={ou.ouId}/> : <User setUser={setUser} ouId={ou.ouId}/>}
 
 
                 </div>
             </Route>
             <Route path={path+'/user/:id'}>
-                <UserView user={user} type={usertype} />
+                <UserView user={user} type={usertype}  />
             </Route>
             <Route path={path+'/admin/:id'}>
                 <UserView user={user} type={usertype} />

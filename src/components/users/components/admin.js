@@ -4,21 +4,24 @@ import { useState, useEffect } from 'react';
 import Table from '../../table/table';
 
 import axios from 'axios';
-export default function Admin({ setUser }) {
+export default function Admin({ setUser,ouId  }) {
     const [searchTerm, setSearchTerm] = useState("");
 
     const header = ['Id', "Name", "Email", "Role", ""];
     const [data,setData] = useState(null);
     useEffect(() => {
-        const url = "/api/users?role=admin";
-        axios.get(url, { withCredentials: true })
-            .then((d) => {
-                setData(d.data);
-            })
-            .catch(err => console.error(err));
+        if(ouId!==undefined){
+            const url = "/api/users?role=admin&ouId="+ouId;
+            axios.get(url, { withCredentials: true })
+                .then((d) => {
+                    setData(d.data);
+                })
+                .catch(err => console.error(err));
+    
+        }
+       
 
-
-    }, [])
+    }, [ouId])
     return (
         <div className="admin">
             <div className="admin_sub">

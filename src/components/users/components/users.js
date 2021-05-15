@@ -5,14 +5,14 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 
-export default function Admin({ setUser }) {
+export default function Admin({ setUser,ouId }) {
     const header = ['Id', "Name", "Email", "Role", ""];
     const [searchTerm, setSearchTerm] = useState("");
     const [data, setData] = useState(null);
 
     useEffect(() => {
         const source = axios.CancelToken.source();
-        const url = "/api/users?role=regular";
+        const url = "/api/users?role=user&ouId="+ouId;
 
         const loadData = async () => {
             try {
@@ -22,6 +22,7 @@ export default function Admin({ setUser }) {
                 })
                 if (res.status === 200) {
                     setData(res.data);
+                    console.log(res.data)
                 }
 
 
@@ -40,7 +41,7 @@ export default function Admin({ setUser }) {
             source.cancel();
         };
 
-    }, [])
+    }, [ouId])
     return (
         <div className="admin">
             <div className="admin_sub">
