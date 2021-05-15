@@ -12,7 +12,7 @@ export default function MyRequests({ setErr, ouid, setRequest, searchTerm, setRe
 
     useEffect(() => {
         if (ouid !== undefined && ouid !== null) {
-            const url = `/api/bookings?ouId=${ouid}&filter=pending`;
+            const url = `/api/approvals?ouId=${ouid}&filter=pending`;
             axios.get(url, { withCredentials: true })
                 .then((data) => {
                     setData(data.data);
