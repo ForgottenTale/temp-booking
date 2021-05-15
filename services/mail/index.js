@@ -6,7 +6,7 @@ const createAccount = require('./templates/createAccount.js');
 const newBooking = require('./templates/newBooking.js');
 
 let transporterData;
-if(process.env.NODE_ENV=="testing" || process.env.NODE_ENV=="development"){
+if(process.env.NODE_ENV=="testing"){
     transporterData = {
         host: "smtp.ethereal.email",
         port: 587,
@@ -19,7 +19,7 @@ if(process.env.NODE_ENV=="testing" || process.env.NODE_ENV=="development"){
             rejectUnauthorized:false
         }
     };    
-}else if(process.env.NODE_ENV=="production"){
+}else if(process.env.NODE_ENV=="production" || process.env.NODE_ENV=="development"){
     transporterData = {
         host: process.env.MAIL_HOST,
         port: process.env.MAIL_PORT,
