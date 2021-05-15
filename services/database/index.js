@@ -656,7 +656,7 @@ module.exports = {
 				if(constraint.bookingId)
 					query += " AND blt._id=" + constraint.bookingId;
                 query += " ORDER BY _id DESC;";
-			})
+			})a
 			let bookingsOfAllTypes = await executeQuery(query);
 			if(constraint.bookingId)
 				return done(new Error("Unable to find request"));
@@ -835,7 +835,8 @@ module.exports = {
 						executeQuery(`UPDATE blt SET status = 'DECLINED' WHERE _id=${booking._id}`);
 						executeQuery(`DELETE FROM next_to_approve WHERE blt_id=${booking._id}`);
 						let emailIds = {mailTo: creator[0].email};
-						mail.finalDeclined({id: booking._id, response: "ANOTHER REQUEST GOT APPROVED FOR THE SELECTED TIME SLOT"}, emailIds);
+						let {type, typeId} = findServiceType(creator[0]);
+						mail.finalDeclined({id: booking._id, response: "ANOTHER REQUEST GOT APPROVED FOR THE SELECTED TIME SLOT", type}, emailIds);
 					})
 					if(booking.type=="online_meeting"){
 						createMeeting(booking, booking.serviceName);
@@ -863,10 +864,11 @@ module.exports = {
 					await delFromNextToApprove(bookingId);
 					await executeQuery("UPDATE blt SET status='DECLINED', approved_at=CURRENT_TIMESTAMP WHERE _id=" + bookingId);
 					let involved = await findMailsOfInvolved(bookingId);
-					let creator = await executeQuery(`SELECT email FROM blt INNER JOIN user ON user._id=creator_id INNER JOIN person ON person._id=user.person_id WHERE blt._id=${bookingId}`);
+					let creator = await executeQuery(`SELECT * FROM blt INNER JOIN user ON user._id=creator_id INNER JOIN person ON person._id=user.person_id WHERE blt._id=${bookingId}`);
 					creator = creator[0];
+					let {type, typeId} = findServiceType(creator);
 					emailIds = {mailTo: creator.email, mailCc: involved};
-					mail.finalDeclined({id: bookingId, response: input.response}, emailIds);
+					mail.finalDeclined({id: bookingId, response: input.response, type}, emailIds);
 				}
 				return done(null, "DECLINED");
 			}

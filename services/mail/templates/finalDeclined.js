@@ -263,7 +263,7 @@ module.exports = function (input){
         <div style="color: #000000; line-height: 140%; text-align: left; word-wrap: break-word;">
           <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 18px; line-height: 25.2px; color: #666666;">Hello,</span></p>
       <p style="font-size: 14px; line-height: 140%;">&nbsp;</p>
-      <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 18px; line-height: 25.2px; color: #666666;">This email is to inform that your booking for (service) under the booking ID ${input.id} has been rejected due to the following reasons.<br>${input.response}<br>If you have any inquiries, please do not hesitate to contact us.
+      <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 18px; line-height: 25.2px; color: #666666;">This email is to inform that your booking for ${input.type} under the booking ID ${input.id} has been rejected due to the following reasons.<br>${input.response}<br>If you have any inquiries, please do not hesitate to contact us.
 
       
         </span></p>
