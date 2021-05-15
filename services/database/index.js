@@ -718,7 +718,7 @@ module.exports = {
 				else if(constraint.user.activeOu.reviewer)
 					query+= " level<3";
 				else if(constraint.user.activeOu.admin)
-					query+= " level<4"
+					query+= ` level<4 AND ou_id=${constraint.user.activeOu.id}`
 				else
 					query+= ` ou_id=${constraint.user.activeOu.id} AND level<4`
 				if(bltId)
