@@ -72,9 +72,18 @@ function App() {
           <Route path="/create-account/:id" exact>
             <Register setErr={setErr}/>
           </Route>
-          <ProtectedLogin path="/login" setErr={setErr} setAuth={setAuth} isAuth={isAuth} setOU={setOU} component={Login} setUser={setUser} />
+          <Route path="/create-account/:id" exact>
+            <Register setErr={setErr}/>
+          </Route>
+          <Route path="/login">
+            <Login setErr={setErr} setAuth={setAuth} isAuth={isAuth} setOU={setOU} csetUser={setUser} />
+          </Route>
+          <Route path="/*" >
+            <Content ou={ou} setAuth={setAuth} user={user} role={role} setOU={setOU} setErr={setErr} isAuth={isAuth} setUser={setUser}/>
+          </Route>
+          {/* <ProtectedLogin path="/login" setErr={setErr} setAuth={setAuth} isAuth={isAuth} setOU={setOU} component={Login} setUser={setUser} />
           <ProtectedRoute path="/*" ou={ou} setAuth={setAuth} user={user} role={role} setOU={setOU} setErr={setErr} isAuth={isAuth} setUser={setUser} component={Content} />
-         
+          */}
 
         </Switch>
       </Router>
