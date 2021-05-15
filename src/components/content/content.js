@@ -21,7 +21,7 @@ export default function All(props) {
                 <TopNav activeComponent={activeComponent} setUser={props.setUser} setOU={props.setOU} ou={props.ou} user={props.user} setAuth={props.setAuth} />
                 <div className="mobileViewOp"></div>
                 <Switch>
-                    <Route path="/dashboard" >
+                    <Route path="/dashboard/" >
 
                         <h5 className="content_container_user">Welcome {props.user.name} !</h5>
                         <AdminDashboard setErr={props.setErr} role={props.role} user={props.user} ou={props.ou} />
