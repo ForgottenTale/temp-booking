@@ -24,8 +24,14 @@ function App() {
     const headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
     }
-    const url = "/api/credentials/"
-    axios.get(url, { headers: headers, withCredentials: true })
+
+    const url = "http://localhost:5000/api/credentials/"
+    axios.get(url, { headers: headers, withCredentials: true }).then((data) => {
+      console.log(data)
+      if (data.status === 200)
+        return data.data
+    })
+
       .then(userInfo => {
         console.log(userInfo)
 
