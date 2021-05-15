@@ -848,7 +848,7 @@ module.exports = {
 				);
 				if(result.length>0){
 					await delFromNextToApprove(bookingId);
-					await executeQuery("UPDATE blt SET status='DECLINED', status=CURRENT_TIMESTAMP WHERE _id=" + bookingId);
+					await executeQuery("UPDATE blt SET status='DECLINED', approved_at=CURRENT_TIMESTAMP WHERE _id=" + bookingId);
 					let involved = await findMailsOfInvolved(bookingId);
 					emailIds = {mailTo: user.email, mailCc: involved};
 					mail.finalDeclined({id: bookingId, response: input.response}, emailIds);

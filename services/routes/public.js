@@ -13,9 +13,9 @@ module.exports = function(app){
     app.route('/api/create-account/:hash')
     .post((req, res)=>{
         try{
-            if(!req.body.password)
+            if(!req.body.password || !req.body.confirmPassword)
                 throw new Error("Required field(s) is missing");
-            if(req.body.password.trim().length<1)
+            if(req.body.password!=req.body.confirmPassword || req.body.password.trim().length<1)
                 throw new Error("Password cannot be empty");
             database.getUserWithHash(req.params.hash)
             .then(person=>{
