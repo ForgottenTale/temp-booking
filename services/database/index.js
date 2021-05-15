@@ -678,13 +678,13 @@ module.exports = {
 		}
 	},
 
-    getActivity: async function(ouId, done){
+    getActivity: async function(userId, done){
 		let returnData = {};
 		try{
 			let query = "SELECT status, count(*) FROM blt";
             // if(ouId != 1)
             //     query += " WHERE ou_id=" + ouId ;
-            query+= ` GROUP BY status WHERE ou_id=${ouId};`;
+            query+= `  WHERE creator_id=${userId} GROUP BY status;`;
             let data = await executeQuery(query);
 			data.forEach(statusType=>{
 				returnData[statusType.status.toLowerCase()] = statusType["count(*)"];
@@ -830,6 +830,7 @@ module.exports = {
 					sameSlotBookings.forEach(booking=>{
 						executeQuery(`INSERT INTO response(person_id, blt_id, encourages, response) VALUES (1, ${booking._id}, 0, 'ANOTHER REQUEST GOT APPROVED FOR THE SELECTED TIME SLOT)`);
 						executeQuery(`UPDATE blt SET status = 'DECLINED' WHERE _id=${booking._id}`);
+						executeQuery(`DELETE FROM next_to_approve WHERE blt_id=${booking._id}`);
 					})
 					if(booking.type=="online_meeting"){
 						createMeeting(booking, booking.serviceName);
