@@ -834,7 +834,7 @@ module.exports = {
 						executeQuery(`INSERT INTO response(person_id, blt_id, encourages, response) VALUES (1, ${booking._id}, 0, 'ANOTHER REQUEST GOT APPROVED FOR THE SELECTED TIME SLOT')`);
 						executeQuery(`UPDATE blt SET status = 'DECLINED' WHERE _id=${booking._id}`);
 						executeQuery(`DELETE FROM next_to_approve WHERE blt_id=${booking._id}`);
-						let emailIds = {to: creator[0].email}
+						let emailIds = {mailTo: creator[0].email};
 						mail.finalDeclined({id: booking._id, response: "ANOTHER REQUEST GOT APPROVED FOR THE SELECTED TIME SLOT"}, emailIds);
 					})
 					if(booking.type=="online_meeting"){
