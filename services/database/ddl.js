@@ -134,6 +134,12 @@ module.exports = {
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY(person_id) REFERENCES person(_id),
             FOREIGN KEY(blt_id) REFERENCES blt(_id) 
+        );`,
+        `CREATE TABLE IF NOT EXISTS feedback(
+            user_id INT NOT NULL,
+            type VARCHAR(50),
+            text VARCHAR(300),
+            FOREIGN KEY(user_id) REFERENCES user(_id)
         );`
     ]
 }

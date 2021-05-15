@@ -558,6 +558,17 @@ module.exports = {
 		})
 	},
 
+	addFeedback: async function(body, userId, done){
+		try{
+			if(!body.type)
+				body.type=null;
+			await executeQuery(`INSERT INTO feedback (user_id, type, text) VALUES (${userId}, '${body.type}', '${body.text}')`);
+			return ("Feedback added successfully");
+		}catch(err){
+			return done(err);
+		}
+	},
+
 	getUserWithHash: function(hash){
         return new Promise(async(resolve, reject)=>{
             try{

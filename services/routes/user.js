@@ -115,4 +115,12 @@ module.exports = function(app){
             res.status(200).json(results);
         })
     })
+
+    app.route('/api/feedback')
+    .put(auth.ensureAuthenticated, (req, res)=>{
+        database.addFeedback(req.body, req.user.id, (err, msg)=>{
+            if(err) return respondError(err, res);
+            res.status(200).json({message: msg});
+        })
+    })
 }
