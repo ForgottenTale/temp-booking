@@ -795,9 +795,9 @@ module.exports = {
 			}else{
 				booking.publishTime = convertSqlDateTimeToDate(booking.publishTime).toISOString();
 			}
-			await checkAvailability(booking);
-			await addResponse(user.personId, bookingId, input.encourages, input.response);
 			if(input.encourages){
+				await checkAvailability(booking);
+				await addResponse(user.personId, bookingId, input.encourages, input.response);
 				let info = await tryLevelUp(bookingId, user.personId);
 				await executeQuery("UPDATE blt SET level="+ info.level + " WHERE _id=" + bookingId);
 				let emailIds = {mailTo: info.nextApprovers.map(person=>person.email)};
@@ -809,7 +809,7 @@ module.exports = {
 					booking = booking[0];
 					let {type, typeId} = findServiceType(booking);
 					ServiceClass = getClass(type);
-					let config= getConfig(type, booking.service_name);
+					let config= await getConfig(type, booking.service_name);
 					booking = transmuteSnakeToCamel(booking);
 					if(booking.startTime){
 						booking.startTime = convertSqlDateTimeToDate(booking.startTime);
@@ -832,14 +832,15 @@ module.exports = {
 				}
 	
 				emailIds.mailCc.push(user.email);
-				let booking = await executeQuery(`SELECT *, ou.name as ou_name FROM blt INNER JOIN ou ON ou_id=ou._id WHERE blt._id=${bookingId}`);
-				booking=booking[0];
-				let {type, typeId} = findServiceType(booking);
+				let booking = await executeQuery(`SELECT * FROM blt WHERE _id=${bookingId}`);
+				let {type, typeId} = findServiceType(booking[0]);
+				booking = await executeQuery(`SELECT *,blt._id as _id, ou.name as ou_name FROM blt INNER JOIN ${type} ON ${type}_id=${type}._id INNER JOIN ou ON ou_id=ou._id WHERE blt._id=${bookingId}`);
+				booking=transmuteSnakeToCamel(booking[0]);
 				booking.type = type;
-				booking.ouName = booking.ou_name;
 				mail.reviewRequest(booking, emailIds);
 				return done(null, "APPROVED");
 			}else{
+				await addResponse(user.personId, bookingId, input.encourages, input.response);
 				let result = await executeQuery("SELECT * FROM next_to_approve WHERE person_id="
 					+ user.personId + " AND blt_id=" + bookingId
 				);

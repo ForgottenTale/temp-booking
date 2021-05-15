@@ -281,7 +281,8 @@ class OnlineMeeting extends Service {
 
     static getTimeAvailQuery(input, config){
         let padding = config.padding_between_bookings_mins;
-        let paddedStart = convertDateToSqlDateTime(new Date(input.startTime.getTime() - (padding*60000)));
+        let tempStartTime = input.startTime.getTime() - (padding*60000);
+        let paddedStart = convertDateToSqlDateTime(new Date(tempStartTime));
         let paddedEnd = convertDateToSqlDateTime(new Date(input.endTime.getTime() + (padding*60000)));
         return (`SELECT * FROM ${input.type}
             INNER JOIN blt ON ${input.type}_id=${input.type}._id WHERE
