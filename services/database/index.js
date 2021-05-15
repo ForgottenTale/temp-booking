@@ -50,6 +50,7 @@ function findServiceType(booking){
 		if((/_id$/g).test(key) && booking[key]){
 			type = key.replace("_id", "");
 			typeId = booking[key];
+			break;
 		}
 	}
 	if(!type)
@@ -204,6 +205,8 @@ function tryLevelUp(bltId, personId){
 					if(found){
 						await delFromNextToApprove(bltId);
 						level=0;
+					}else{
+						nextApprovers = globalAdmins;
 					}
 				}else
 					level = 0;
@@ -519,12 +522,12 @@ module.exports = {
 					await createMeeting(newBooking, newBooking.serviceName);
 				}
 				emailIds.mailTo.push(user.email);
-				await mail.finalApproval(newBooking.id, emailIds);
+				mail.finalApproval(newBooking.id, emailIds);
 				return done(null, newBooking);
 			}
 			emailIds.mailCc.push(user.email);
-			newBooking.ouName = await executeQuery(`SELECT name FROM ou INNER JOIN blt ON blt.ou_id=ou._id WHERE ou_id=${newBooking.ouId}`)
-			newBooking.ouName = newBooking.ouName[0].name;
+			let temp = await executeQuery(`SELECT name FROM ou INNER JOIN blt ON blt.ou_id=ou._id WHERE ou_id=${newBooking.ouId}`)
+			newBooking.ouName = temp[0].name;
 			mail.newBooking(newBooking, {mailTo: user.email});
 			mail.reviewRequest(newBooking, emailIds);
 			return done(null, newBooking);
@@ -556,6 +559,17 @@ module.exports = {
 				reject(err);
 			}
 		})
+	},
+
+	addFeedback: async function(body, userId, done){
+		try{
+			if(!body.type)
+				body.type=null;
+			await executeQuery(`INSERT INTO feedback (user_id, type, text) VALUES (${userId}, '${body.type}', '${body.text}')`);
+			return done(null, "Feedback added successfully");
+		}catch(err){
+			return done(err);
+		}
 	},
 
 	getUserWithHash: function(hash){
@@ -598,11 +612,11 @@ module.exports = {
 	},
 
     getAllUsers: function(constraint, done){
-		let query = "SELECT user._id, name, email, phone FROM user INNER JOIN person ON person_id=person._id ";
+		let query = "SELECT *, user._id as id FROM user INNER JOIN person ON person_id=person._id INNER JOIN ou_map ON ou_map.person_id=person._id";
 		if(constraint.role == "admin")
-			query+="WHERE role='GLOBAL_ADMIN' OR role='GROUP_ADMIN'";
+			query+=" WHERE ou_map.admin=1";
 		else if(constraint.role == "user")
-			query+="WHERE role='USER'";
+			query+=" WHERE ou_map.admin=0";
 		else if(!constraint.role)
 			query+=";";
 		else
@@ -769,13 +783,21 @@ module.exports = {
 	updateBookingStatus: async function(input, bookingId, user, done){
 		try{
 			let bltBooking = await executeQuery(`SELECT * FROM blt WHERE _id=${bookingId}`);
-			let {type, typeId} = findServiceType(bltBooking[0]);
-			let booking = await executeQuery(`SELECT * FROM ${type} WHERE _id=${typeId}`);
-			booking = transmuteSnakeToCamel(booking[0]);
-			booking.type = type;
-			await checkAvailability(booking);
-			await addResponse(user.personId, bookingId, input.encourages, input.response);
+			if(bltBooking.length<1)
+				throw new Error("Unable to find booking");
 			if(input.encourages){
+				let {type, typeId} = findServiceType(bltBooking[0]);
+				let booking = await executeQuery(`SELECT * FROM ${type} WHERE _id=${typeId}`);
+				booking = transmuteSnakeToCamel(booking[0]);
+				booking.type = type;
+				if(booking.startTime){
+					booking.startTime = convertSqlDateTimeToDate(booking.startTime);
+					booking.endTime = convertSqlDateTimeToDate(booking.endTime);
+				}else{
+					booking.publishTime = convertSqlDateTimeToDate(booking.publishTime).toISOString();
+				}
+				await checkAvailability(booking);
+				await addResponse(user.personId, bookingId, input.encourages, input.response);
 				let info = await tryLevelUp(bookingId, user.personId);
 				await executeQuery("UPDATE blt SET level="+ info.level + " WHERE _id=" + bookingId);
 				let emailIds = {mailTo: info.nextApprovers.map(person=>person.email)};
@@ -783,34 +805,44 @@ module.exports = {
 
 				if(info.level==0){
 					await executeQuery("UPDATE blt SET status='APPROVED', approved_at=CURRENT_TIMESTAMP WHERE _id=" + bookingId);
-					let booking = await executeQuery("SELECT * FROM blt INNER JOIN online_meeting ON online_meeting_id=online_meeting._id");
+					booking = await executeQuery("SELECT * FROM blt WHERE _id=" + bookingId);
+					booking = booking[0];
+					let {type, typeId} = findServiceType(booking);
 					ServiceClass = getClass(type);
-					let query = ServiceClass.getTimeAvailQuery(booking);
+					booking = await executeQuery(`SELECT * FROM blt INNER JOIN ${type} ON ${type}._id=${type}_id WHERE blt._id=${bookingId}`);
+					booking = booking[0];
+					let config= await getConfig(type, booking.service_name);
+					booking = transmuteSnakeToCamel(booking);
+					booking.type=type;
+					if(booking.startTime){
+						booking.startTime = convertSqlDateTimeToDate(booking.startTime);
+						booking.endTime = convertSqlDateTimeToDate(booking.endTime);
+					}else
+						booking.publishTime = convertSqlDateTimeToDate(booking.publishTime);
+					let query = ServiceClass.getTimeAvailQuery(booking, config);
 					query += " AND status='PENDING'";
 					let sameSlotBookings = await executeQuery(query);
 					sameSlotBookings.forEach(booking=>{
 						executeQuery(`INSERT INTO response(person_id, blt_id, encourages, response) VALUES (1, ${booking._id}, 0, 'ANOTHER REQUEST GOT APPROVED FOR THE SELECTED TIME SLOT)`);
 						executeQuery(`UPDATE blt SET status = 'DECLINED' WHERE _id=${booking._id}`);
 					})
-					if(booking.length>0){
-						booking = booking[0];
-						if(booking.type=="online_meeting"){
-							await createMeeting(booking, booking.serviceName);
-						}
+					if(booking.type=="online_meeting"){
+						createMeeting(booking, booking.serviceName);
 					}
 					emailIds.mailTo.push(user.email);
-					await mail.finalApproval({id: bookingId}, emailIds);
+					mail.finalApproval({id: bookingId}, emailIds);
 					return done(null, "Updated");
 				}
 	
 				emailIds.mailCc.push(user.email);
-				let booking = await executeQuery(`SELECT *, ou.name as ou_name FROM blt INNER JOIN ou ON ou_id=ou._id WHERE _id=${bookingId}`);
-				booking=booking[0];
-				let {type, typeId} = findServiceType(booking);
+				booking = await executeQuery(`SELECT * FROM blt WHERE _id=${bookingId}`);
+				booking = await executeQuery(`SELECT *,blt._id as _id, ou.name as ou_name FROM blt INNER JOIN ${type} ON ${type}_id=${type}._id INNER JOIN ou ON ou_id=ou._id WHERE blt._id=${bookingId}`);
+				booking=transmuteSnakeToCamel(booking[0]);
 				booking.type = type;
-				booking.ouName = booking.ou_name;
-				await mail.reviewRequest(booking, emailIds);
+				mail.reviewRequest(booking, emailIds);
+				return done(null, "APPROVED");
 			}else{
+				await addResponse(user.personId, bookingId, input.encourages, input.response);
 				let result = await executeQuery("SELECT * FROM next_to_approve WHERE person_id="
 					+ user.personId + " AND blt_id=" + bookingId
 				);
@@ -819,9 +851,9 @@ module.exports = {
 					await executeQuery("UPDATE blt SET status='DECLINED', status=CURRENT_TIMESTAMP WHERE _id=" + bookingId);
 					let involved = await findMailsOfInvolved(bookingId);
 					emailIds = {mailTo: user.email, mailCc: involved};
-					await mail.finalDeclined({id: bookingId, response: input.response}, emailIds);
+					mail.finalDeclined({id: bookingId, response: input.response}, emailIds);
 				}
-				return done(null, "Updated");
+				return done(null, "DECLINED");
 			}
 		}catch(err){
 			return done(err);

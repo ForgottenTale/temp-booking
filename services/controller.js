@@ -281,13 +281,14 @@ class OnlineMeeting extends Service {
 
     static getTimeAvailQuery(input, config){
         let padding = config.padding_between_bookings_mins;
-        let paddedStart = convertDateToSqlDateTime(new Date(input.startTime.getTime() - (padding*60000)));
+        let tempStartTime = input.startTime.getTime() - (padding*60000);
+        let paddedStart = convertDateToSqlDateTime(new Date(tempStartTime));
         let paddedEnd = convertDateToSqlDateTime(new Date(input.endTime.getTime() + (padding*60000)));
-        return ("SELECT * FROM " + input.type 
-            + " WHERE"
-            + " (start_time>'" + paddedStart + "' AND start_time<'" + paddedEnd + "') OR "
-            + " (end_time>'" + paddedStart +"' AND end_time<'" + paddedEnd + "') OR "
-            + " (start_time='" + paddedStart +"' AND end_time='" + paddedEnd + "')"
+        return (`SELECT * FROM ${input.type}
+            INNER JOIN blt ON ${input.type}_id=${input.type}._id WHERE
+            ((start_time>'${paddedStart}' AND start_time<'${paddedEnd}') OR 
+            (end_time>'${paddedStart}' AND end_time<'${paddedEnd}') OR 
+            (start_time='${paddedStart}' AND end_time='${paddedEnd}'))`
         )
     }
 
@@ -352,9 +353,9 @@ class InternSupport extends Service{
         let paddedEnd = convertDateToSqlDateTime(new Date(input.endTime.getTime() + (padding*60000)));
         return (`SELECT * FROM ${input.type}
             INNER JOIN blt ON ${input.type}_id=${input.type}._id WHERE
-            (start_time>'${paddedStart}' AND start_time<'${paddedEnd}') OR 
-            + " (end_time>'${paddedStart}' AND end_time<'${paddedEnd}') OR 
-            + " (start_time='${paddedStart}' AND end_time='${paddedEnd}')`
+            ((start_time>'${paddedStart}' AND start_time<'${paddedEnd}') OR 
+            (end_time>'${paddedStart}' AND end_time<'${paddedEnd}') OR 
+            (start_time='${paddedStart}' AND end_time='${paddedEnd}'))`
         )
     }
 
@@ -407,10 +408,8 @@ class ENotice extends Service{
         let paddedStart = convertDateToSqlDateTime(new Date(input.publishTime.getTime() - (padding*60000)));
         let paddedEnd = convertDateToSqlDateTime(new Date(input.publishTime.getTime() + (padding*60000)));
         return (`SELECT * FROM ${input.type}
-            INNER JOIN blt ON ${input.type}_id=${input.type}._id WHERE
-            (start_time>'${paddedStart}' AND start_time<'${paddedEnd}') OR 
-            + " (end_time>'${paddedStart}' AND end_time<'${paddedEnd}') OR 
-            + " (start_time='${paddedStart}' AND end_time='${paddedEnd}')`
+                INNER JOIN blt ON blt.${input.type}_id=${input.type}._id WHERE
+                ((publish_time>='${paddedStart}' AND publish_time<='${paddedEnd}'))`
         )
     }
 
@@ -458,7 +457,7 @@ class Publicity extends Service{
         let paddedEnd = convertDateToSqlDateTime(new Date(input.publishTime.getTime() + (padding*60000)));
         return (`SELECT * FROM ${input.type}
                 INNER JOIN blt ON blt.${input.type}_id=${input.type}._id WHERE
-                (publish_time>='${paddedStart}' AND publish_time<='${paddedEnd}')`
+                ((publish_time>='${paddedStart}' AND publish_time<='${paddedEnd}'))`
         )
     }
 

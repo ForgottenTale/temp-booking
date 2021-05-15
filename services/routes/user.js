@@ -21,7 +21,7 @@ module.exports = function(app){
                     if(err){
                         return respondError(err, res);
                     }
-                    return res.status(200).json(doc.getPublicInfo());
+                    return res.status(200).json(doc);
                 })
             }
             catch(err){
@@ -113,6 +113,14 @@ module.exports = function(app){
         database.getActivity(req.query.ouId, (err, results)=>{
             if(err) return respondError(err, res);
             res.status(200).json(results);
+        })
+    })
+
+    app.route('/api/feedback')
+    .put(auth.ensureAuthenticated, (req, res)=>{
+        database.addFeedback(req.body, req.user.id, (err, msg)=>{
+            if(err) return respondError(err, res);
+            res.status(200).json({message: msg});
         })
     })
 }
