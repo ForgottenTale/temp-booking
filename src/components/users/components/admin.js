@@ -28,7 +28,7 @@ export default function Admin({ setUser,ouId  }) {
                 <Input2 className="admin_sub_input" placeholder="Search for admins" onChange={(e) => setSearchTerm(e.target.value)} />
 
             </div>
-            <Table headers={header} data={data} type='admin' setUser={setUser} searchTerm={searchTerm} />
+            <Table headers={header} data={data} type='admin' setUser={setUser} searchTerm={searchTerm} path={"admin"} />
         </div>
     )
 }

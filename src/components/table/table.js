@@ -3,9 +3,10 @@ import pic from '../../images/pic3.jpg';
 import { NavLink, useRouteMatch } from 'react-router-dom';
 import SkeletonRowRequest from '../skeleton/skeletonRowRequest';
 import SkeletonRowUser from '../skeleton/skeletonRowUser';
+import axios from 'axios';
 
 
-export default function Table({ headers, data, type, setUser, setRequest, searchTerm }) {
+export default function Table({ headers, data, type, setUser, setRequest, searchTerm, path, edit, ouId }) {
 
 
 
@@ -36,11 +37,11 @@ export default function Table({ headers, data, type, setUser, setRequest, search
                                 else {
                                     return null
                                 }
-                            }).map((data, key) => <Row key={key} data={data} type={type} setUser={setUser} setRequest={setRequest} />
+                            }).map((data, key) => <Row ouId={ouId} edit={edit} path={path} key={key} data={data} type={type} setUser={setUser} setRequest={setRequest} />
                             )
 
-                            : (type === "user" || type === "admin" ? [1, 2, 3, 5, 6, 7, 8].map((key) => <SkeletonRowUser key={key} />) : 
-                             data!==null&&data.length>0 ? [1, 2, 3, 5, 6, 7, 8].map((key) => <SkeletonRowRequest key={key} />):null)
+                            : (type === "user" || type === "admin" ? [1, 2, 3, 5, 6, 7, 8].map((key) => <SkeletonRowUser key={key} />) :
+                                data !== null && data.length > 0 ? [1, 2, 3, 5, 6, 7, 8].map((key) => <SkeletonRowRequest key={key} />) : null)
                     }
                 </tbody>
             </table>
@@ -51,8 +52,35 @@ export default function Table({ headers, data, type, setUser, setRequest, search
 
 
 
-function Row({ data, type, setRequest, setUser }) {
-    const { path } = useRouteMatch();
+function Row({ data, type, setRequest, setUser, path, edit, ouId }) {
+    // const { path } = useRouteMatch();
+
+
+    const handleCancel = () => {
+        const url = `api/bookings/${data.id}?ouId=${ouId}&cancel=true`;
+
+        // axios.delete(url, { withCredentials: true })
+        //     .then((data) => {
+        //         if (data.status === 200) {
+        //             console.log(data.data)
+        //         }
+        //     }).catch((err) => {
+        //         console.log(err);
+        //     })
+    }
+
+    const handleDelete = () => {
+        const url = `api/bookings/${data.id}?ouId=${ouId}`;
+
+        // axios.delete(url, { withCredentials: true })
+        //     .then((data) => {
+        //         if (data.status === 200) {
+        //             console.log(data.data)
+        //         }
+        //     }).catch((err) => {
+        //         console.log(err);
+        //     })
+    }
     return (
 
         <tr className={data.encourages === 0 ? "discouraged-row" : (data.encourages === 1 ? "encouraged-row" : "")}>
@@ -103,7 +131,7 @@ function Row({ data, type, setRequest, setUser }) {
                                 <circle cx="12" cy="12" r="3"></circle>
                             </svg>
                         </NavLink>,
-                        <NavLink key='2' to={`${path}/${data.id}/edit`} onClick={() => setRequest(data)}>
+                        edit ? <NavLink key='2' to={`${path}/${data.id}/edit`} onClick={() => setRequest(data)}>
                             <svg
                                 key='3'
                                 xmlns="http://www.w3.org/2000/svg"
@@ -119,44 +147,47 @@ function Row({ data, type, setRequest, setUser }) {
                                 <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path>
                                 <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                             </svg>
-                        </NavLink>,
-                        <svg
-                            key='4'
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="18"
-                            height="18"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            className="feather feather-x-circle"
-                            viewBox="0 0 24 24"
-                        >
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <path d="M15 9L9 15"></path>
-                            <path d="M9 9L15 15"></path>
-                        </svg>,
-                        <svg
-                            key='5'
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="18"
-                            height="18"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            className="feather feather-trash-2"
-                            viewBox="0 0 24 24"
-                        >
-                            <path d="M3 6L5 6 21 6"></path>
-                            <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path>
-                            <path d="M10 11L10 17"></path>
-                            <path d="M14 11L14 17"></path>
-                        </svg>
-
-
+                        </NavLink> : null,
+                        
+                            <svg
+                                onClick={() => { handleCancel() }}
+                                key='4'
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="18"
+                                height="18"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                className="feather feather-x-circle"
+                                viewBox="0 0 24 24"
+                            >
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M15 9L9 15"></path>
+                                <path d="M9 9L15 15"></path>
+                            </svg>,
+                       
+                            <svg
+                                onClick={() => { handleDelete() }}
+                                key='5'
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="18"
+                                height="18"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                className="feather feather-trash-2"
+                                viewBox="0 0 24 24"
+                            >
+                                <path d="M3 6L5 6 21 6"></path>
+                                <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path>
+                                <path d="M10 11L10 17"></path>
+                                <path d="M14 11L14 17"></path>
+                            </svg>
+                        
                     ]
-                    : <NavLink to={path + '/user/' + data.id} onClick={() => setUser(data)}>View</NavLink>}
+                    : <NavLink to={`users/${path}/${data.id}`} onClick={() => setUser(data)}>View</NavLink>}
 
             </td>
         </tr>

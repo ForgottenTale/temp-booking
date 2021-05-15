@@ -11,7 +11,7 @@ import ItemDate from './ItemDate';
 
 
 
-export default function RequestView({ req, setRefresh, refresh, showButton, setErr, readProtect, ou }) {
+export default function RequestView({ req, setRefresh, refresh, showButton, setErr, readProtect, ou,edit }) {
 
     const [spinner, setSpinner] = useState(false);
     const [data, setData] = useState({
@@ -42,20 +42,20 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
 
     useEffect(() => {
         // if (ou.id !== undefined) {
-            if (req !== undefined && req !== null) {
-                setData(req);
-            }
-            else {
-                const url = `/api/approvals/${params.id}?ouId=${ou.ouId}`;
-                axios.get(url, { withCredentials: true })
-                    .then((d) => {
-                        setData(d.data[0]);
-                    })
-                    .catch(err => {
-                        console.error(err);
-                        setErr(err.response.data.error);
-                    });
-            }
+        if (req !== undefined && req !== null) {
+            setData(req);
+        }
+        else {
+            const url = `/api/approvals/${params.id}?ouId=${ou.ouId}`;
+            axios.get(url, { withCredentials: true })
+                .then((d) => {
+                    setData(d.data[0]);
+                })
+                .catch(err => {
+                    console.error(err);
+                    setErr(err.response.data.error);
+                });
+        }
         // }
 
         // eslint-disable-next-line
@@ -74,13 +74,14 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
 
         handleUpload(formData);
 
+
         console.log(Array.from(formData));
     };
 
     const handleUpload = async (data) => {
         try {
-            const url = "/api/book/";
-            const res = await axios.post(url, data, {
+            const url = `/api/bookings/${data.id}?ouId=${ou.ouId}`;
+            const res = await axios.patch(url, data, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
@@ -162,6 +163,24 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                 </div >
                 {data.img !== null ? <img src={"/image/" + data.img} alt='poster' /> : null}
 
+
+
+
+                {showButton && data.status !== "APPROVED" ?
+                    <div className="requestView_button">
+                        <button onClick={() => setMessage(true)}>Approve</button>
+                        <button onClick={() => setMessage(true)}>Reject</button>
+                    </div> : null
+
+                }
+                {edit?<button onClick={() => {
+                        setReadOnly(true);
+                        handleSave();
+                        history.push(`/requests/${params.id}`)
+                    }}>Save</button>:null
+
+                }
+                {/* 
                 {showButton && data.status !== "APPROVED" ? <div className="requestView_button">
                     <button onClick={() => setMessage(true)}>Approve</button>
                     <button onClick={() => setMessage(true)}>Reject</button>
@@ -184,7 +203,7 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                             </>
                             : <button onClick={() => { setReadOnly(false); }}>Save</button>}
                     </div> : null
-                }
+                } */}
                 {message ? <Message ouId={ou.ouId} setMessage={setMessage} setRefresh={setRefresh} setSpinner={setSpinner} refresh={refresh} data={data} setErr={setErr} /> : null}
             </div >
             : null
