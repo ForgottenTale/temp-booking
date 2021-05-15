@@ -67,10 +67,10 @@ export default function Request({ role, setErr, ou }) {
                 </div>
             </Route>
             <Route path={path + '/:id'} >
-                <RequestView req={request} setRefresh={setRefresh} refresh={refresh} showButton={true} setErr={setErr} readProtect={true} />
+                <RequestView req={request} setRefresh={setRefresh} refresh={refresh} showButton={true} setErr={setErr} readProtect={true} ou={ou}/>
             </Route>
             <Route path={path + '/:id/edit'} exact>
-                <RequestView req={request} setRefresh={setRefresh} refresh={refresh} showButton={true} setErr={setErr} readProtect={false} />
+                <RequestView req={request} setRefresh={setRefresh} refresh={refresh} showButton={true} setErr={setErr} readProtect={false} ou={ou}/>
             </Route>
         </Switch>
 

@@ -11,7 +11,7 @@ import ItemDate from './ItemDate';
 
 
 
-export default function RequestView({ req, setRefresh, refresh, showButton, setErr, readProtect }) {
+export default function RequestView({ req, setRefresh, refresh, showButton, setErr, readProtect, ou }) {
 
     const [spinner, setSpinner] = useState(false);
     const [data, setData] = useState({
@@ -41,23 +41,25 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
     const history = useHistory();
 
     useEffect(() => {
+        // if (ou.id !== undefined) {
+            if (req !== undefined && req !== null) {
+                setData(req);
+            }
+            else {
+                const url = `/api/approvals/${params.id}?ouId=${ou.ouId}`;
+                axios.get(url, { withCredentials: true })
+                    .then((d) => {
+                        setData(d.data[0]);
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        setErr(err.response.data.error);
+                    });
+            }
+        // }
 
-        if (req !== undefined && req !== null) {
-            setData(req);
-        }
-        else {
-            const url = "http://localhost:5000/api/my-approvals";
-            axios.get(url, { withCredentials: true })
-                .then((d) => {
-                    setData(d.data[0]);
-                })
-                .catch(err => {
-                    console.error(err);
-                    setErr(err.response.data.error);
-                });
-        }
         // eslint-disable-next-line
-    }, [req])
+    }, [req, ou])
 
     const handleSave = () => {
         console.log(data);
@@ -127,7 +129,7 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
 
 
                         ] : [
-                            <ItemDate  title="Date" value={data.startTime} key="9" readOnly={readOnly} setData={setData} />,
+                            <ItemDate title="Date" value={data.startTime} key="9" readOnly={readOnly} setData={setData} />,
                             <ItemTime title="Time" value={data.startTime} key="10" readOnly={readOnly} setData={setData} />,
                             <Item title="Comments" value={data.comments} key="11" name="comments" readOnly={readOnly} setData={setData} />
                         ]
@@ -136,7 +138,7 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
 
                     {data.type === "intern_support" ? <Item title="Purpose" value={data.purpose} name="purpose" readOnly={readOnly} /> : null}
                     {data.serviceName === "content writing" ? <Item title="Word Count" value={data.wordsCount} name="wordCount" readOnly={readOnly} /> : null}
-                    {data.serviceName=== "poster design" ? <Item title="Poster Diamensions" value={data.diamensions} name="diamensions" readOnly={readOnly} /> : null}
+                    {data.serviceName === "poster design" ? <Item title="Poster Diamensions" value={data.diamensions} name="diamensions" readOnly={readOnly} /> : null}
                     {data.serviceName === "website development" ? <Item title="URL" value={data.url} name="url" /> : null}
                     {data.type === "e_notice" ? <Item title="Delivery Type" value={data.deliveryType} name="deliveryType" readOnly={readOnly} /> : null}
                     {data.type === "publicity" ? [
@@ -160,7 +162,7 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                 </div >
                 {data.img !== null ? <img src={"/image/" + data.img} alt='poster' /> : null}
 
-                {showButton &&data.status!=="APPROVED" ? <div className="requestView_button">
+                {showButton && data.status !== "APPROVED" ? <div className="requestView_button">
                     <button onClick={() => setMessage(true)}>Approve</button>
                     <button onClick={() => setMessage(true)}>Reject</button>
 
@@ -169,7 +171,7 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                         handleSave();
                         history.push(`/requests/${params.id}`)
                     }}>Save</button>}
-                </div> :data.status!=="APPROVED"?
+                </div> : data.status !== "APPROVED" ?
                     <div className="requestView_button">
 
                         {readOnly ?
@@ -181,7 +183,7 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                                 <button onClick={() => setReadOnly(true)}>Cancel</button>
                             </>
                             : <button onClick={() => { setReadOnly(false); }}>Save</button>}
-                    </div>:null
+                    </div> : null
                 }
                 {message ? <Message setMessage={setMessage} setRefresh={setRefresh} setSpinner={setSpinner} refresh={refresh} data={data} setErr={setErr} /> : null}
             </div >

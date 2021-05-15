@@ -83,7 +83,7 @@ function App() {
           </Route> */}
           <ProtectedLogin path="/login" setErr={setErr} setAuth={setAuth} isAuth={isAuth} setOU={setOU} component={Login} setUser={setUser} />
           <ProtectedRoute path="/*" ou={ou} setAuth={setAuth} user={user} role={role} setOU={setOU} setErr={setErr} isAuth={isAuth} setUser={setUser} component={Content} />
-          */}
+          
 
         </Switch>
       </Router>
