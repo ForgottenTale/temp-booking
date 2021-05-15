@@ -20,7 +20,7 @@ export default function Message({ setMessage, setRefresh, data, setSpinner, refr
                 'Content-Type': 'application/x-www-form-urlencoded',
             }
 
-            const url = "/api/my-approvals/?"
+            const url = "/api/my-approvals/?ouId="+ouId;
             await axios.post(url, formData, { headers: headers, withCredentials: true });
             setRefresh(!refresh);
             setSpinner(false);
