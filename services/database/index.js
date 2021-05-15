@@ -811,7 +811,7 @@ module.exports = {
 					ServiceClass = getClass(type);
 					let config= getConfig(type, booking.service_name);
 					booking = transmuteSnakeToCamel(booking);
-					if(booking.start_time){
+					if(booking.startTime){
 						booking.startTime = convertSqlDateTimeToDate(booking.startTime);
 						booking.endTime = convertSqlDateTimeToDate(booking.endTime);
 					}else
