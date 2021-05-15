@@ -4,6 +4,7 @@ const path = require('path');
 const bcrypt = require('bcrypt');
 const axios = require('axios');
 const mail = require('./mail');
+const jwt = require('jsonwebtoken');
 
 module.exports = {
     convertSqlDateTimeToDate: function (mysqlTime){
@@ -94,9 +95,11 @@ module.exports = {
     },
 
     createMeeting: function(input, serviceName){
+        return "yes";
         let payload, config, duration;
-        input.startTime = module.exports.convertSqlDateTimeToDate(input.endTime);
-        input.endTime = module.exports.convertSqlDateTimeToDate(input.startTime);
+
+        let token = jwt.sign({ApiSecret: process.env.ZOOM_SECRET, ApiKey: process.env.ZOOM_KEY});
+
         if(serviceName=="zoom"){
             config = {
                 Authorization: `Bearer ${token}`
