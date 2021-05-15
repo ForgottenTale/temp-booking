@@ -361,9 +361,10 @@ module.exports = {
 			if(eventsOfAllTypes.length<1){
 				return dataArray;
 			}
-			eventsOfAllTypes.forEach(eventsOfType=>{
-				eventsOfType.forEach(event=>dataArray.push(transmuteSnakeToCamel(event)));
-			})
+			eventsOfAllTypes.forEach(event=>dataArray.push(transmuteSnakeToCamel(event)));
+			// eventsOfAllTypes.forEach(eventsOfType=>{
+			// 	eventsOfType.forEach(event=>dataArray.push(transmuteSnakeToCamel(event)));
+			// })
 
 			// query = "SELECT * FROM blt INNER JOIN e_notice ON e_notice_id=e_notice._id WHERE"
 			// 	+ " status='APPROVED' OR status='PENDING'"
