@@ -212,7 +212,18 @@
                     position: relative;
 
                     &:nth-child(1) {
+                        
                         padding-left: 0;
+                    }
+                    &:nth-child(7) {
+          
+
+                    & svg{
+                        padding: 20px;
+                        &:hover{
+                            background-color: rgb(233, 233, 233);
+                        }
+                    }
                     }
                     &::before {
                         content: attr(data-label);
