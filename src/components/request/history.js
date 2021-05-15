@@ -12,7 +12,7 @@ export default function History({ setErr, ouid,setRequest,searchTerm,setRequestN
 
     useEffect(() => {
 if(ouid!==undefined&&ouid!==null)
-      {  const url = "/api/bookings?ouId=" + ouid;
+      {  const url = `/api/bookings?ouId=${ouid}&filter=history`;
         axios.get(url, { withCredentials: true })
             .then((data) => {
                 setData(data.data);

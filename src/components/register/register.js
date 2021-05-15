@@ -27,8 +27,7 @@ const useStyles = makeStyles({
     },
 });
 export default function Register({ setErr }) {
-    // const{path} = useLocation()
-    // console.log(path)
+    const{params} = useRouteMatch()
     let initialRender = true;
     const history = useHistory();
     const classes = useStyles();
@@ -42,7 +41,7 @@ export default function Register({ setErr }) {
 
 
     useEffect(() => {
-//   console.log("Hi")
+
         if (initialRender) {
             initialRender = false;
         }
@@ -91,9 +90,10 @@ export default function Register({ setErr }) {
 
         if (password.password === password.confirmPassword && password.password !== "" & password.confirmPassword !== "") {
             setErr("done")
-            const url = '';
+            const url = '/api/create-account/'+params.id;
             const formData = new URLSearchParams();
             formData.append('password', password);
+            formData.append('confirmPassword', confirmPassword);
 
             axios.post(url, formData)
                 .then((d) => {
