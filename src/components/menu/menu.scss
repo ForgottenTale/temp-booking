@@ -111,6 +111,14 @@
             align-items: center;
             padding-left: 0;
 
+            &.active{
+                & .menu_item_deo{
+                    height: 4px;
+                    width: 100%;
+                    top:unset;
+                    bottom: 0;
+                }
+            }
             &:first-child {
                 display: none;
             }
