@@ -7,7 +7,7 @@ import RequestView from '../requestView/requestView';
 import axios from 'axios';
 import ServiceSelection from '../New Appointment/App';
 
-export default function AdminDashboard({ role, setErr,user }) {
+export default function AdminDashboard({ role, setErr,user ,ou}) {
     const [data, setData] = useState(null);
     const header = ['Id', "Name", "Service", "Type", "Time", "Status", "Action"];
     const { path } = useRouteMatch();
@@ -24,20 +24,20 @@ export default function AdminDashboard({ role, setErr,user }) {
 
     useEffect(() => {
         var url = ""
-        if (role === "ALPHA_ADMIN" || role === "BETA_ADMIN") {
-            url = "/api/my-approvals/history";
-            axios.get(url, { withCredentials: true })
-                .then((data) => {
-                    if (data.status === 200)
-                        setData(data.data);
-                })
-                .catch(err => {
-                    console.error(err);
-                    setErr(err.response.data.error);
-                });
+        // if (role === "ALPHA_ADMIN" || role === "BETA_ADMIN") {
+        //     url = "/api/my-approvals/history";
+        //     axios.get(url, { withCredentials: true })
+        //         .then((data) => {
+        //             if (data.status === 200)
+        //                 setData(data.data);
+        //         })
+        //         .catch(err => {
+        //             console.error(err);
+        //             setErr(err.response.data.error);
+        //         });
 
-        } else if (role === "REGULAR") {
-            url = "/api/my-appointments";
+        // } else if (role === "REGULAR") {
+            url = "/api/bookings?ouId="+ou.ouId;
             axios.get(url, { withCredentials: true })
                 .then((data) => {
                     if (data.status === 200)
@@ -47,7 +47,7 @@ export default function AdminDashboard({ role, setErr,user }) {
                     console.error(err)
                     setErr(err.response.data.error);
                 });
-        }
+        // }
         url = "/api/activity";
         axios.get(url, { withCredentials: true })
             .then((data) => {

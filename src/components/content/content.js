@@ -1,8 +1,8 @@
 import './content.scss';
 import Menu from '../menu/menu';
 import TopNav from '../topNav/topNav';
-import { useState} from 'react';
-import { Route, Switch} from 'react-router-dom';
+import { useState } from 'react';
+import { Route, Switch } from 'react-router-dom';
 import Calender from '../calender/calender';
 import Setting from '../settings/settings';
 import Request from '../request/request';
@@ -18,13 +18,13 @@ export default function All(props) {
         <div className="content">
             <Menu toggle={setOpen} state={open} setActiveComponent={setActiveComponent} role={props.role} user={props.user} setOU={props.setOU} />
             <div className={open ? "content_container open" : "content_container"} >
-                <TopNav activeComponent={activeComponent} setUser={props.setUser} setOU={props.setOU} ou={props.ou} user={props.user} setAuth={props.setAuth}/>
-
+                <TopNav activeComponent={activeComponent} setUser={props.setUser} setOU={props.setOU} ou={props.ou} user={props.user} setAuth={props.setAuth} />
+                <div className="mobileViewOp"></div>
                 <Switch>
                     <Route path="/dashboard" >
 
                         <h5 className="content_container_user">Welcome {props.user.name} !</h5>
-                        <AdminDashboard setErr={props.setErr} role={props.role} user={props.user} />
+                        <AdminDashboard setErr={props.setErr} role={props.role} user={props.user} ou={props.ou} />
                     </Route>
                     <Route path="/calendar" >
                         <Calender setErr={props.setErr} />

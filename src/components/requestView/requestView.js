@@ -127,17 +127,17 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
 
 
                         ] : [
-                            <ItemTime title="Date" value={data.date} key="9" readOnly={readOnly} setData={setData} />,
-                            <ItemTime title="Time" value={data.time} key="10" readOnly={readOnly} setData={setData} />,
+                            <ItemDate  title="Date" value={data.startTime} key="9" readOnly={readOnly} setData={setData} />,
+                            <ItemTime title="Time" value={data.startTime} key="10" readOnly={readOnly} setData={setData} />,
                             <Item title="Comments" value={data.comments} key="11" name="comments" readOnly={readOnly} setData={setData} />
                         ]
                     }
 
 
-                    {data.service === "Intern support" ? <Item title="Purpose" value={data.purpose} name="purpose" readOnly={readOnly} /> : null}
-                    {data.type === "Content Writing" ? <Item title="Word Count" value={data.wordCount} name="wordCount" readOnly={readOnly} /> : null}
-                    {data.type === "Poster Design" ? <Item title="Poster Diamensions" value={data.diamensions} name="diamensions" readOnly={readOnly} /> : null}
-                    {data.type === "Website development" ? <Item title="URL" value={data.url} name="url" /> : null}
+                    {data.type === "intern_support" ? <Item title="Purpose" value={data.purpose} name="purpose" readOnly={readOnly} /> : null}
+                    {data.serviceName === "content writing" ? <Item title="Word Count" value={data.wordsCount} name="wordCount" readOnly={readOnly} /> : null}
+                    {data.serviceName=== "poster design" ? <Item title="Poster Diamensions" value={data.diamensions} name="diamensions" readOnly={readOnly} /> : null}
+                    {data.serviceName === "website development" ? <Item title="URL" value={data.url} name="url" /> : null}
                     {data.service === "e_notice" ? <Item title="Delivery Type" value={data.deliveryType} name="deliveryType" readOnly={readOnly} /> : null}
                     {data.service === "Publicity" ? [
                         <Item title="Program Schedule" value={data.schedule} key="12" name="schedule" readOnly={readOnly} />,

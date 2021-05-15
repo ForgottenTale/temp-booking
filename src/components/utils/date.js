@@ -7,10 +7,7 @@ export function pushEvents(d,data){
     var dMoment = d._d.toDateString();
     
     var temp = data.filter((Obj) => {
-       var dataObj = new Date(Obj.date).toDateString();
-     
-      
-     
+       var dataObj = new Date(Obj.startTime).toDateString();
         if (dataObj===dMoment) {
             return dataObj
         }
@@ -22,7 +19,7 @@ export function pushEvents(d,data){
     });
 
     if (temp.length !== 0) {
-        return temp[0].events;
+        return temp;
     }
     else {
         return null

@@ -26,9 +26,7 @@ function Calender({ setErr }) {
     // const [dayList, setDayList] = useState([]);
     const [data, setData] = useState([
         {
-            "date": "2021-05-13T18:30:00.000Z",
-            "events": [
-                {
+         
                     "id": 1,
                     "serviceName": "webex",
                     "title": "SpaceX",
@@ -41,13 +39,11 @@ function Calender({ setErr }) {
                     "speakerEmail": "elonmusck@ieee.org",
                     "coHosts": "[[\"dsf\", \"sdfsd\"]]",
                     "type": "online_meeting"
-                }
-            ]
+                
+            
         },
         {
-            "date": "2021-05-24T18:30:00.000Z",
-            "events": [
-                {
+            
                     "id": 2,
                     "serviceName": "zoom",
                     "title": "A very important job sadasdasdasdasdasdasdasda",
@@ -60,8 +56,8 @@ function Calender({ setErr }) {
                     "speakerEmail": "arundhathi@gmail.com",
                     "coHosts": null,
                     "type": "online_meeting"
-                }
-            ]
+                
+            
         }
     ]);
 
@@ -235,7 +231,7 @@ function Calender({ setErr }) {
     const monthList = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "Novemeber", "December"];
     const yearList = ["2021", "2022", "2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030", "2031"];
 
-
+console.log(calender)
 
 
     return (

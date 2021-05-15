@@ -3,7 +3,7 @@ import './message.scss';
 import { useState } from 'react';
 import axios from 'axios';
 
-export default function Message({ setMessage, setRefresh, data, setSpinner, refresh, setErr }) {
+export default function Message({ setMessage, setRefresh, data, setSpinner, refresh, setErr,ouId }) {
 
     const [msg, setMsg] = useState("");
     const history = useHistory();
@@ -12,7 +12,7 @@ export default function Message({ setMessage, setRefresh, data, setSpinner, refr
 
         setSpinner(true);
         const formData = new URLSearchParams();
-        formData.append('id', data.id);
+        // formData.append('id', data.id);
         formData.append('action', action);
         formData.append('response', msg);
         try {
@@ -20,7 +20,7 @@ export default function Message({ setMessage, setRefresh, data, setSpinner, refr
                 'Content-Type': 'application/x-www-form-urlencoded',
             }
 
-            const url = "/api/my-approvals/"
+            const url = "/api/my-approvals/?"
             await axios.post(url, formData, { headers: headers, withCredentials: true });
             setRefresh(!refresh);
             setSpinner(false);
