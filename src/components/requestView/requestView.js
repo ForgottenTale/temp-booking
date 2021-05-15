@@ -138,8 +138,8 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                     {data.serviceName === "content writing" ? <Item title="Word Count" value={data.wordsCount} name="wordCount" readOnly={readOnly} /> : null}
                     {data.serviceName=== "poster design" ? <Item title="Poster Diamensions" value={data.diamensions} name="diamensions" readOnly={readOnly} /> : null}
                     {data.serviceName === "website development" ? <Item title="URL" value={data.url} name="url" /> : null}
-                    {data.service === "e_notice" ? <Item title="Delivery Type" value={data.deliveryType} name="deliveryType" readOnly={readOnly} /> : null}
-                    {data.service === "Publicity" ? [
+                    {data.type === "e_notice" ? <Item title="Delivery Type" value={data.deliveryType} name="deliveryType" readOnly={readOnly} /> : null}
+                    {data.type === "publicity" ? [
                         <Item title="Program Schedule" value={data.schedule} key="12" name="schedule" readOnly={readOnly} />,
                         <Item title="Publish Time" value={new Date(data.publishTime).toLocaleTimeString()} key="13" name="publishTime" readOnly={readOnly} />] : null
                     }
@@ -160,7 +160,7 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                 </div >
                 {data.img !== null ? <img src={"/image/" + data.img} alt='poster' /> : null}
 
-                {showButton ? <div className="requestView_button">
+                {showButton &&data.status!=="APPROVED" ? <div className="requestView_button">
                     <button onClick={() => setMessage(true)}>Approve</button>
                     <button onClick={() => setMessage(true)}>Reject</button>
 
@@ -169,7 +169,7 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                         handleSave();
                         history.push(`/requests/${params.id}`)
                     }}>Save</button>}
-                </div> :
+                </div> :data.status!=="APPROVED"?
                     <div className="requestView_button">
 
                         {readOnly ?
@@ -181,7 +181,7 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                                 <button onClick={() => setReadOnly(true)}>Cancel</button>
                             </>
                             : <button onClick={() => { setReadOnly(false); }}>Save</button>}
-                    </div>
+                    </div>:null
                 }
                 {message ? <Message setMessage={setMessage} setRefresh={setRefresh} setSpinner={setSpinner} refresh={refresh} data={data} setErr={setErr} /> : null}
             </div >

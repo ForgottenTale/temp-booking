@@ -36,7 +36,7 @@ export default function All(props) {
                         <Request setErr={props.setErr} ou={props.ou} />
                     </Route>
                     <Route path={'/users'}>
-                        <Users setErr={props.setErr} />
+                        <Users setErr={props.setErr}ou={props.ou}/>
                     </Route>
                 </Switch>
 

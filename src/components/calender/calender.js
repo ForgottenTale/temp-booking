@@ -26,38 +26,38 @@ function Calender({ setErr }) {
     // const [dayList, setDayList] = useState([]);
     const [data, setData] = useState([
         {
-         
-                    "id": 1,
-                    "serviceName": "webex",
-                    "title": "SpaceX",
-                    "description": "This is a test",
-                    "img": "1619278428240ms-homepage-desktop.jpg",
-                    "comments": null,
-                    "startTime": "2021-05-14T03:30:00.000Z",
-                    "endTime": "2021-05-14T04:30:00.000Z",
-                    "speakerName": "Elon musk",
-                    "speakerEmail": "elonmusck@ieee.org",
-                    "coHosts": "[[\"dsf\", \"sdfsd\"]]",
-                    "type": "online_meeting"
-                
-            
+
+            "id": 1,
+            "serviceName": "webex",
+            "title": "SpaceX",
+            "description": "This is a test",
+            "img": "1619278428240ms-homepage-desktop.jpg",
+            "comments": null,
+            "startTime": "2021-05-14T03:30:00.000Z",
+            "endTime": "2021-05-14T04:30:00.000Z",
+            "speakerName": "Elon musk",
+            "speakerEmail": "elonmusck@ieee.org",
+            "coHosts": "[[\"dsf\", \"sdfsd\"]]",
+            "type": "online_meeting"
+
+
         },
         {
-            
-                    "id": 2,
-                    "serviceName": "zoom",
-                    "title": "A very important job sadasdasdasdasdasdasdasda",
-                    "description": "This is asking for intern support",
-                    "img": "1619292671235ms-homepage-desktop.jpg",
-                    "comments": "nothing to say",
-                    "startTime": "2021-05-24T18:30:00.000Z",
-                    "endTime": "2021-05-24T05:30:00.000Z",
-                    "speakerName": "Arundhathi",
-                    "speakerEmail": "arundhathi@gmail.com",
-                    "coHosts": null,
-                    "type": "online_meeting"
-                
-            
+
+            "id": 2,
+            "serviceName": "zoom",
+            "title": "A very important job sadasdasdasdasdasdasdasda",
+            "description": "This is asking for intern support",
+            "img": "1619292671235ms-homepage-desktop.jpg",
+            "comments": "nothing to say",
+            "startTime": "2021-05-24T18:30:00.000Z",
+            "endTime": "2021-05-24T05:30:00.000Z",
+            "speakerName": "Arundhathi",
+            "speakerEmail": "arundhathi@gmail.com",
+            "coHosts": null,
+            "type": "online_meeting"
+
+
         }
     ]);
 
@@ -118,9 +118,9 @@ function Calender({ setErr }) {
 
 
         if (dayView) {
-
+            console.log(currentDay)
             var tem = data.filter((Obj) => {
-                if (Obj.date.toString() === currentDay.toISOString()) {
+                if (new Date(Obj.startTime).toDateString() === currentDay._d.toDateString()) {
                     return Obj
                 }
                 else {
@@ -130,7 +130,7 @@ function Calender({ setErr }) {
             });
 
             if (tem.length !== 0) {
-                currentDay.events = tem[0].events;
+                currentDay.events = tem;
             }
             else {
                 currentDay.events = null
@@ -147,17 +147,17 @@ function Calender({ setErr }) {
     useEffect(() => {
         var width = ref.current.clientWidth - (7 * 4)
         console.log(window.outerHeight)
-        var height = window.outerHeight -177.2
+        var height = window.outerHeight - 177.2
         setTitleWidth({ maxWidth: width / 7 })
-        setdayBodyWidth({ maxWidth: width / 7, height: height/6 })
+        setdayBodyWidth({ maxWidth: width / 7, height: height / 6 })
 
 
         const handleResize = () => {
             width = ref.current.clientWidth - (7 * 4)
-            height = window.outerHeight -177.2
+            height = window.outerHeight - 177.2
             setTitleWidth({ maxWidth: width / 7 })
-            setdayBodyWidth({ maxWidth: width / 7, height: height/6 })
-            
+            setdayBodyWidth({ maxWidth: width / 7, height: height / 6 })
+
             if (window.outerWidth <= 786) {
                 setDayView(true);
                 setMonthView(false);
@@ -231,7 +231,7 @@ function Calender({ setErr }) {
     const monthList = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "Novemeber", "December"];
     const yearList = ["2021", "2022", "2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030", "2031"];
 
-console.log(calender)
+    console.log(calender)
 
 
     return (
