@@ -527,10 +527,9 @@ module.exports = {
 					await createMeeting(newBooking, newBooking.serviceName);
 				}
 				emailIds.mailTo.push(user.email);
-				mail.finalApproval(newBooking.id, emailIds);
+				mail.finalApproval({id: newBooking.id}, emailIds);
 				return done(null, newBooking);
 			}
-			emailIds.mailCc.push(user.email);
 			let temp = await executeQuery(`SELECT name FROM ou INNER JOIN blt ON blt.ou_id=ou._id WHERE ou_id=${newBooking.ouId}`)
 			newBooking.ouName = temp[0].name;
 			mail.newBooking(newBooking, {mailTo: user.email});
