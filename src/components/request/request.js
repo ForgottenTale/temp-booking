@@ -45,12 +45,15 @@ export default function Request({ role, setErr, ou }) {
                         <h6 className="request_header_title">All requests</h6>
                     </div>
                     <div className="request_type">
-                        <h6 className={requesttype === 'myrequests' ? "request_type_title active" : "request_type_title "} onClick={() => setRequestType('myrequests')}>My Requests</h6>
+                        <h6 className={requesttype === 'myrequests' ? "request_type_title active" : "request_type_title "} onClick={() => setRequestType('myrequests')}>Pending</h6>
                         <h6 className={requesttype === 'history' ? "request_type_title active" : "request_type_title"} onClick={() => setRequestType('history')}>History</h6>
                         <h6 className={requesttype === 'all' ? "request_type_title active" : "request_type_title"} onClick={() => setRequestType('all')}>All</h6>
                     </div>
                     <div className="request_sub">
-                        <h6 className="request_sub_title">You have {requestNumber} request</h6>
+                        {requesttype === 'myrequests'?<h6 className="request_sub_title">You have {requestNumber} request</h6>:null}
+                        {requesttype === 'history' ?<h6 className="request_sub_title">You have processed {requestNumber} request</h6>:null}
+                        {requesttype === 'all'?<h6 className="request_sub_title">Total requests submitted {requestNumber}</h6>:null}
+
 
                         <Input2 className="request_sub_input" placeholder="Search for requests" onChange={(e) => setSearchTerm(e.target.value)} />
 
@@ -63,7 +66,7 @@ export default function Request({ role, setErr, ou }) {
 
                 </div>
             </Route>
-            <Route path={path + '/:id'} exact>
+            <Route path={path + '/:id'} >
                 <RequestView req={request} setRefresh={setRefresh} refresh={refresh} showButton={true} setErr={setErr} readProtect={true} />
             </Route>
             <Route path={path + '/:id/edit'} exact>

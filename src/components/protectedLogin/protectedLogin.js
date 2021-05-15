@@ -6,7 +6,7 @@ export default function ProtectedRoute({isAuth,component:Component,path, ...rest
     const {state} = useLocation();
     return(
         <Route
-        
+        path={path}
         {...rest}
           render={(props)=>{
               if(isAuth!==true){

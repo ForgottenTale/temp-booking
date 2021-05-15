@@ -1,5 +1,5 @@
 import './menu.scss';
-import logo from '../../images/logo.png';
+import logo from '../../images/logo2.png';
 import { useState, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
 
@@ -13,7 +13,7 @@ export default function Menu({ toggle, state, setActiveComponent, role, user, ou
     return (
         <div className={open ? "menu open" : "menu"} ref={ref}>
             <div className="menu_item">
-                <img src={logo} alt="logo" />
+                <img  src={logo} alt="logo" className={open ? "" : "smImg"}/>
             </div>
     
 

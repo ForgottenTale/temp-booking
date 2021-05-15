@@ -37,16 +37,9 @@ export default function AdminDashboard({ role, setErr,user ,ou}) {
         //         });
 
         // } else if (role === "REGULAR") {
-            url = "/api/bookings?ouId="+ou.ouId;
-            axios.get(url, { withCredentials: true })
-                .then((data) => {
-                    if (data.status === 200)
-                        setData(data.data);
-                })
-                .catch(err => {
-                    console.error(err)
-                    setErr(err.response.data.error);
-                });
+
+       
+           
         // }
         url = "/api/activity";
         axios.get(url, { withCredentials: true })
@@ -70,6 +63,21 @@ export default function AdminDashboard({ role, setErr,user ,ou}) {
             });
 
     }, [role,setErr]);
+
+    useEffect(()=>{
+        if(ou.ouId!==undefined){
+           var url = "/api/bookings?ouId="+ou.ouId;
+            axios.get(url, { withCredentials: true })
+                .then((data) => {
+                    if (data.status === 200)
+                        setData(data.data);
+                })
+                .catch(err => {
+                    console.error(err)
+                    setErr(err.response.data.error);
+                });
+        }
+    },[ou])
 
     return (
         <Switch>
