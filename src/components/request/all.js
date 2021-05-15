@@ -29,7 +29,7 @@ if(ouid!==undefined&&ouid!==null)
 
     return (
         <div className="history">
-           <Table headers={header} data={data} type='request' setRequest={setRequest} searchTerm={searchTerm} />
+           <Table ouId={ouid}  headers={header} data={data} type='request' setRequest={setRequest} searchTerm={searchTerm} path="/requests/all" />
 
         </div>
     );

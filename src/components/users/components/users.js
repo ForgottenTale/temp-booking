@@ -49,7 +49,7 @@ export default function Admin({ setUser,ouId }) {
 
 
             </div>
-            <Table headers={header} data={data} type='user' setUser={setUser} searchTerm={searchTerm} />
+            <Table path="user" headers={header} data={data} type='user' setUser={setUser} searchTerm={searchTerm} />
 
         </div>
     )

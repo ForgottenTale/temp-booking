@@ -2,7 +2,7 @@
 import './request.scss';
 import { useState, useEffect } from 'react';
 import { Input2 } from '../utils/myReactLib';
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Route, Switch, useRouteMatch, useHistory } from 'react-router-dom';
 import RequestView from '../requestView/requestView';
 import MyRequests from './myrequest';
 import axios from 'axios';
@@ -13,6 +13,7 @@ import All from './all'
 export default function Request({ role, setErr, ou }) {
 
     const [data, setData] = useState(null);
+    const history = useHistory();
     const { path } = useRouteMatch();
     const [request, setRequest] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
@@ -45,14 +46,27 @@ export default function Request({ role, setErr, ou }) {
                         <h6 className="request_header_title">All requests</h6>
                     </div>
                     <div className="request_type">
-                        <h6 className={requesttype === 'myrequests' ? "request_type_title active" : "request_type_title "} onClick={() => setRequestType('myrequests')}>Pending</h6>
-                        <h6 className={requesttype === 'history' ? "request_type_title active" : "request_type_title"} onClick={() => setRequestType('history')}>History</h6>
-                        <h6 className={requesttype === 'all' ? "request_type_title active" : "request_type_title"} onClick={() => setRequestType('all')}>All</h6>
+                        <h6 className={requesttype === 'myrequests' ? "request_type_title active" : "request_type_title "}
+                            onClick={() => {
+                                setRequestType('myrequests')
+                                // history.push("/requests")
+                            }
+                            }>Pending</h6>
+                        <h6 className={requesttype === 'history' ? "request_type_title active" : "request_type_title"}
+                            onClick={() => {
+                                setRequestType('history')
+                                // history.push("requests/history")
+                            }}>History</h6>
+                        <h6 className={requesttype === 'all' ? "request_type_title active" : "request_type_title"}
+                            onClick={() => {
+                                setRequestType('all')
+                                // history.push("requests/all")
+                                }}>All</h6>
                     </div>
                     <div className="request_sub">
-                        {requesttype === 'myrequests'?<h6 className="request_sub_title">You have {requestNumber} request</h6>:null}
-                        {requesttype === 'history' ?<h6 className="request_sub_title">You have processed {requestNumber} request</h6>:null}
-                        {requesttype === 'all'?<h6 className="request_sub_title">Total requests submitted {requestNumber}</h6>:null}
+                        {requesttype === 'myrequests' ? <h6 className="request_sub_title">You have {requestNumber} request</h6> : null}
+                        {requesttype === 'history' ? <h6 className="request_sub_title">You have processed {requestNumber} request</h6> : null}
+                        {requesttype === 'all' ? <h6 className="request_sub_title">Total requests submitted {requestNumber}</h6> : null}
 
 
                         <Input2 className="request_sub_input" placeholder="Search for requests" onChange={(e) => setSearchTerm(e.target.value)} />
@@ -67,10 +81,16 @@ export default function Request({ role, setErr, ou }) {
                 </div>
             </Route>
             <Route path={path + '/:id'} >
-                <RequestView req={request} setRefresh={setRefresh} refresh={refresh} showButton={true} setErr={setErr} readProtect={true} ou={ou}/>
+                <RequestView req={request} setRefresh={setRefresh} refresh={refresh} showButton={true} setErr={setErr} readProtect={true} ou={ou} />
             </Route>
             <Route path={path + '/:id/edit'} exact>
-                <RequestView req={request} setRefresh={setRefresh} refresh={refresh} showButton={true} setErr={setErr} readProtect={false} ou={ou}/>
+                <RequestView req={request} setRefresh={setRefresh} refresh={refresh} showButton={true} setErr={setErr} readProtect={false} ou={ou} />
+            </Route>
+            <Route path={path + '/history/:id'} exact>
+                <RequestView req={request} edit={false} setRefresh={setRefresh} refresh={refresh} showButton={false} setErr={setErr} readProtect={true} ou={ou} />
+            </Route>
+            <Route path={path + '/all/:id'} exact>
+                <RequestView req={request} edit={false} setRefresh={setRefresh} refresh={refresh} showButton={false} setErr={setErr} readProtect={true} ou={ou} />
             </Route>
         </Switch>
 
