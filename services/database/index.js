@@ -563,7 +563,7 @@ module.exports = {
 			if(!body.type)
 				body.type=null;
 			await executeQuery(`INSERT INTO feedback (user_id, type, text) VALUES (${userId}, '${body.type}', '${body.text}')`);
-			return ("Feedback added successfully");
+			return done(null, "Feedback added successfully");
 		}catch(err){
 			return done(err);
 		}
