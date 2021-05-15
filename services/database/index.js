@@ -830,11 +830,11 @@ module.exports = {
 					sameSlotBookings.forEach(async booking=>{
 						//UPDATE: to be decided cc on reject
 						
-						let creator = await executeQuery(`SELECT * FROM blt_id INNER JOIN user ON user._id=creator_id INNER JOIN person ON person_id=person._id WHERE blt._id=${booking._id}`);
+						let creator = await executeQuery(`SELECT * FROM blt INNER JOIN user ON user._id=creator_id INNER JOIN person ON person_id=person._id WHERE blt._id=${booking._id}`);
 						executeQuery(`INSERT INTO response(person_id, blt_id, encourages, response) VALUES (1, ${booking._id}, 0, 'ANOTHER REQUEST GOT APPROVED FOR THE SELECTED TIME SLOT')`);
 						executeQuery(`UPDATE blt SET status = 'DECLINED' WHERE _id=${booking._id}`);
 						executeQuery(`DELETE FROM next_to_approve WHERE blt_id=${booking._id}`);
-						let emailIds = {to: creator[0].email}
+						let emailIds = {mailTo: creator[0].email};
 						mail.finalDeclined({id: booking._id, response: "ANOTHER REQUEST GOT APPROVED FOR THE SELECTED TIME SLOT"}, emailIds);
 					})
 					if(booking.type=="online_meeting"){
