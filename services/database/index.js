@@ -833,7 +833,9 @@ module.exports = {
 					if(booking.type=="online_meeting"){
 						createMeeting(booking, booking.serviceName);
 					}
-					emailIds.mailTo.push(user.email);
+					let creator = await executeQuery(`SELECT email FROM blt INNER JOIN user ON user._id=creator._id INNER JOIN person ON person._id=user.person_id WHERE blt._id=${bookingId}`);
+					creator = creator[0];
+					emailIds.mailTo.push(creator.email);
 					mail.finalApproval({id: bookingId}, emailIds);
 					return done(null, "Updated");
 				}
@@ -854,7 +856,9 @@ module.exports = {
 					await delFromNextToApprove(bookingId);
 					await executeQuery("UPDATE blt SET status='DECLINED', approved_at=CURRENT_TIMESTAMP WHERE _id=" + bookingId);
 					let involved = await findMailsOfInvolved(bookingId);
-					emailIds = {mailTo: user.email, mailCc: involved};
+					let creator = await executeQuery(`SELECT email FROM blt INNER JOIN user ON user._id=creator._id INNER JOIN person ON person._id=user.person_id WHERE blt._id=${bookingId}`);
+					creator = creator[0];
+					emailIds = {mailTo: creator.email, mailCc: involved};
 					mail.finalDeclined({id: bookingId, response: input.response}, emailIds);
 				}
 				return done(null, "DECLINED");
