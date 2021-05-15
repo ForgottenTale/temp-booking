@@ -11,7 +11,7 @@ import ItemDate from './ItemDate';
 
 
 
-export default function RequestView({ req, setRefresh, refresh, showButton, setErr, readProtect, ou,edit }) {
+export default function RequestView({ req, setRefresh, refresh, showButton, setErr, readProtect, ou, edit }) {
 
     const [spinner, setSpinner] = useState(false);
     const [data, setData] = useState({
@@ -35,10 +35,19 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
         schedule: "",
         img: "",
     })
+    console.log(readProtect)
     const [message, setMessage] = useState(false);
     const [readOnly, setReadOnly] = useState(readProtect)
     const { params } = useRouteMatch();
     const history = useHistory();
+    const [msg, setMsg] = useState("");
+
+
+    useEffect(() => {
+
+        setReadOnly(readProtect);
+
+    }, [readProtect])
 
     useEffect(() => {
         // if (ou.id !== undefined) {
@@ -168,16 +177,22 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
 
                 {showButton && data.status !== "APPROVED" ?
                     <div className="requestView_button">
-                        <button onClick={() => setMessage(true)}>Approve</button>
-                        <button onClick={() => setMessage(true)}>Reject</button>
+                        <button onClick={() => {
+                            setMessage(true)
+                            setMsg("approve")
+                        }}>Approve</button>
+                        <button onClick={() => {
+                            setMessage(true)
+                            setMsg("decline")}
+                        }>Reject</button>
                     </div> : null
 
                 }
-                {edit?<button onClick={() => {
-                        setReadOnly(true);
-                        handleSave();
-                        history.push(`/requests/${params.id}`)
-                    }}>Save</button>:null
+                {edit ? <button onClick={() => {
+                    setReadOnly(true);
+                    handleSave();
+                    history.push(`/requests/${params.id}`)
+                }}>Save</button> : null
 
                 }
                 {/* 
@@ -204,7 +219,7 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                             : <button onClick={() => { setReadOnly(false); }}>Save</button>}
                     </div> : null
                 } */}
-                {message ? <Message ouId={ou.ouId} setMessage={setMessage} setRefresh={setRefresh} setSpinner={setSpinner} refresh={refresh} data={data} setErr={setErr} /> : null}
+                {message ? <Message ouId={ou.ouId} msg2={msg} setMessage={setMessage} setRefresh={setRefresh} setSpinner={setSpinner} refresh={refresh} data={data} setErr={setErr} /> : null}
             </div >
             : null
     );

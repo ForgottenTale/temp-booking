@@ -24,13 +24,13 @@ function minDay() {
   return min;
 }
 
-function DateTime({ path, type, setData, data, user,ou }) {
+function DateTime({ path, type, setData, data, user, ou }) {
   const [equalTimeError, setequalTimeError] = useState(false);
   const [shortTimeError, setShortTimeError] = useState(false);
   const [ouError, setOuError] = useState(false);
   const [publishTime, setPublishTime] = useState("");
   const [options, setOptions] = useState([])
-  const [ouId, setOuID] = useState([])
+  const [ouId, setOuID] = useState("")
 
   const history = useHistory();
 
@@ -39,21 +39,21 @@ function DateTime({ path, type, setData, data, user,ou }) {
   const next = (event) => {
     event.preventDefault();
     setData({
-        ...data,
-        ouId:ouId
-      });
+      ...data,
+      ouId: ouId
+    });
 
-      if(data.ouid===""){
-        setOuError(true);
-      }
-      else if(data.startTime===data.endTime){
-        setequalTimeError(true);
-      }
-      else if(data.startTime>data.endTime){
-        setShortTimeError(true);
-      }
-
-    if(data.startTime!==""&&data.endTime!==""&&data.startTime!==data.endTime&&data.startTime<data.endTime&&data.ouid!==""){
+    if (data.ouid === "") {
+      setOuError(true);
+    }
+    else if (data.startTime === data.endTime) {
+      setequalTimeError(true);
+    }
+    else if (data.startTime > data.endTime) {
+      setShortTimeError(true);
+    }
+    console.log(data.ouId.length);
+    if (data.startTime !== "" && data.endTime !== "" && data.startTime !== data.endTime && data.startTime < data.endTime && ouId !=="") {
       if (type === "online_meeting" || type === "publicity") {
         history.push(path + "/event-info");
       } else if (type === "intern_support" || type === "e_notice") {
@@ -79,8 +79,9 @@ function DateTime({ path, type, setData, data, user,ou }) {
 
       return ({
         ...prevState,
+        ouId:prevState.ouId,
         startTime: minDate.toISOString(),
-        endTime:  minDate.toISOString(),
+        endTime: minDate.toISOString(),
         publishTime: minDate.toISOString(),
       })
     })
@@ -113,9 +114,10 @@ function DateTime({ path, type, setData, data, user,ou }) {
 
       return ({
         ...prevState,
+        ouId:prevState.ouId,
         startTime: new Date(d.setHours(start.getHours(), start.getMinutes(), 0, 0)).toISOString(),
         endTime: new Date(d.setHours(end.getHours(), end.getMinutes(), 0, 0)).toISOString(),
-        publishTime:new Date(d.setHours(publishTime.getHours(),publishTime.getMinutes(), 0, 0)).toISOString(),
+        publishTime: new Date(d.setHours(publishTime.getHours(), publishTime.getMinutes(), 0, 0)).toISOString(),
       })
     })
 
@@ -148,7 +150,7 @@ function DateTime({ path, type, setData, data, user,ou }) {
             <div className="col-sm-5 col-6">
               <label className="form-label">Select OU</label>
               <Select
-              error={ouError}
+                error={ouError}
                 options={options}
                 required
                 onChange={(e) => {
@@ -161,7 +163,7 @@ function DateTime({ path, type, setData, data, user,ou }) {
               <label className="form-label">Date</label>
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <KeyboardDatePicker
-                
+
                   margin="normal"
                   id="time-picker"
                   minDate={minDate}
@@ -184,7 +186,7 @@ function DateTime({ path, type, setData, data, user,ou }) {
                 <label className="form-label">From</label>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <KeyboardTimePicker
-                  error={shortTimeError||equalTimeError}
+                    error={shortTimeError || equalTimeError}
                     margin="normal"
                     id="time-picker"
                     value={data.startTime === "" ? undefined : data.startTime}
@@ -201,7 +203,7 @@ function DateTime({ path, type, setData, data, user,ou }) {
                 <label className="form-label">From</label>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <KeyboardTimePicker
-                  error={shortTimeError||equalTimeError}
+                    error={shortTimeError || equalTimeError}
                     margin="normal"
                     id="time-picker"
                     value={data.endTime === "" ? undefined : data.endTime}

@@ -21,8 +21,8 @@ function Confirmation({ id }) {
         <div className="mb-5 confirmation-box">
           <p>Confirmation #</p>
           <h4>{id}</h4>
-          <button className="btn btn-outline-danger">Add to Calender</button>
-          <button className="btn btn-outline-info">Print</button>
+          {/* <button className="btn btn-outline-danger">Add to Calender</button>
+          <button className="btn btn-outline-info">Print</button> */}
         </div>
         <Link
           onClick={() => history.push("/dashboard")}

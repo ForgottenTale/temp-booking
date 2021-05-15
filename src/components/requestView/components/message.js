@@ -3,7 +3,7 @@ import './message.scss';
 import { useState } from 'react';
 import axios from 'axios';
 
-export default function Message({ setMessage, setRefresh, data, setSpinner, refresh, setErr,ouId }) {
+export default function Message({ setMessage, setRefresh, data, setSpinner, refresh, setErr,ouId,msg2 }) {
 
     const [msg, setMsg] = useState("");
     const history = useHistory();
@@ -43,7 +43,7 @@ export default function Message({ setMessage, setRefresh, data, setSpinner, refr
                     Enter your response
                 </p>
                 <textarea placeholder="Enter your responses" defaultValue={msg} onChange={(e) => setMsg(e.target.value)} />
-                <button onClick={() => handleLogin('approve')}>Submit</button>
+                <button onClick={() => handleLogin(msg2)}>Submit</button>
                 <button onClick={() => setMessage(false)}>Cancel</button>
             </div>
 
