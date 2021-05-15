@@ -2,6 +2,9 @@ const csv = require('csv-parse');
 const fs = require('fs');
 const path = require('path');
 const bcrypt = require('bcrypt');
+const axios = require('axios');
+const mail = require('./mail');
+const jwt = require('jsonwebtoken');
 
 module.exports = {
     convertSqlDateTimeToDate: function (mysqlTime){
@@ -92,9 +95,44 @@ module.exports = {
     },
 
     createMeeting: function(input, serviceName){
-        return new Promise((resolve, reject)=>{
-            return resolve("link");
-        })
+        return "yes";
+        let payload, config, duration;
+
+        let token = jwt.sign({ApiSecret: process.env.ZOOM_SECRET, ApiKey: process.env.ZOOM_KEY});
+
+        if(serviceName=="zoom"){
+            config = {
+                Authorization: `Bearer ${token}`
+            };
+            duration =(input.endTime.getTime() - input.startTime.getTime()) / 1000;
+            duration /= 60;
+            duration = Math.abs(Math.round(duration));
+            payload = {
+                "topic": input.title,
+                "start_time": input.startTime.toISOString(),
+                "duration": duration,
+                "timezone": "UTC",
+                "agenda": input.description,
+                "settings": {
+                    "in_meeting": "true",
+                    "mute_upon_entry": "true"
+                }
+            }
+            axios
+            .post(`https://api.zoom.us/v2/users/${process.env.ZOOM_USER_ID}/meetings`,
+                payload,
+                config
+            )
+            .then(data=>{
+                database.executeQuery(`UPDATE online_meeting SET url='${data.start_url}', meeting_password = '${data.password}'
+                    WHERE _id=${booking._id}`);
+            })
+            .catch(err=>{
+                err.info=`MEETING CREATION FAULT: ${booking._id}`;
+                console.error(err);
+                mail.sendSuperMail(err);
+            })
+        }
     }
 
 };
