@@ -655,7 +655,7 @@ module.exports = {
                   	+ " AND blt.ou_id="+constraint.ouId;
 				if(constraint.bookingId)
 					query += " AND blt._id=" + constraint.bookingId;
-                query += ";";
+                query += " ORDER BY _id DESC;";
 			})
 			let bookingsOfAllTypes = await executeQuery(query);
 			if(constraint.bookingId)
@@ -684,7 +684,7 @@ module.exports = {
 			let query = "SELECT status, count(*) FROM blt";
             // if(ouId != 1)
             //     query += " WHERE ou_id=" + ouId ;
-            query+= `  WHERE creator_id=${userId} GROUP BY status;`;
+            query+= ` WHERE creator_id=${userId} GROUP BY status;`;
             let data = await executeQuery(query);
 			data.forEach(statusType=>{
 				returnData[statusType.status.toLowerCase()] = statusType["count(*)"];
@@ -726,7 +726,7 @@ module.exports = {
 				if(bltId)
 					query += " AND blt._id=" + bltId + ";"
 				else
-					query += ";";
+					query += " ORDER BY _id DESC;";
 			})
 			let bookingsOfAllTypes = await executeQuery(query);
 			let dataArray = [];
