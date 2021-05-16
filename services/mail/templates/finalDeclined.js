@@ -1,7 +1,7 @@
 
 module.exports = function (input){
   return ({
-      subject: `BOOKING: [${input.id}] SERVICE REQUEST: DECLINED`,
+      subject: `BOOKING #${input.id}: SERVICE REQUEST: DECLINED`,
       html: `<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
       <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
       <head>
@@ -263,7 +263,7 @@ module.exports = function (input){
         <div style="color: #000000; line-height: 140%; text-align: left; word-wrap: break-word;">
           <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 18px; line-height: 25.2px; color: #666666;">Hello,</span></p>
       <p style="font-size: 14px; line-height: 140%;">&nbsp;</p>
-      <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 18px; line-height: 25.2px; color: #666666;">This email is to inform that your booking for ${input.type} under the booking ID ${input.id} has been rejected due to the following reasons.<br>${input.response}<br>If you have any inquiries, please do not hesitate to contact us.
+      <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 18px; line-height: 25.2px; color: #666666;">This email is to inform that your booking for ${input.type.split("_").reduce((total, word)=>{return total + " " +word.charAt(0).toUpperCase() + word.slice(1)},"")} under the booking ID ${input.id} has been rejected due to the following reasons.<br>${input.response}<br>If you have any inquiries, please do not hesitate to contact us.
 
       
         </span></p>

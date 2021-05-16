@@ -7,7 +7,7 @@ module.exports = function(app){
 
     app.route('/api/users')
     .get(auth.ensureAuthenticated, auth.ensureOuAdmin, (req, res)=>{
-        database.getAllUsers({role: req.query.role}, (err, results)=>{
+        database.getAllUsers({role: req.query.role, ouId: req.user.activeOu.id}, (err, results)=>{
             if(err) return respondError(err, res);
             res.status(200).json(results);
         });
@@ -22,9 +22,11 @@ module.exports = function(app){
         })
     })
     .post(auth.ensureAuthenticated, auth.ensureOuAdmin, (req, res)=>{
-        if(!req.body.response || !req.body.action){
+        if(!req.body.action){
             return respondError("Required Fields missing", res);
         }
+        if(!req.body.response)
+            req.body.response=="null";
         database.updateBookingStatus({
             response: req.body.response,
             encourages: req.body.action=="decline"?false:true
