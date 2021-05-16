@@ -726,7 +726,7 @@ module.exports = {
 				if(bltId)
 					query += " AND blt._id=" + bltId + ";"
 				else
-					query += " ORDER BY _id DESC;";
+					query += " ORDER BY blt._id DESC;";
 			})
 			let bookingsOfAllTypes = await executeQuery(query);
 			let dataArray = [];
