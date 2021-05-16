@@ -361,7 +361,11 @@ module.exports = {
 			if(eventsOfAllTypes.length<1){
 				return dataArray;
 			}
-			eventsOfAllTypes.forEach(event=>dataArray.push(transmuteSnakeToCamel(event)));
+			eventsOfAllTypes.forEach(event=>{
+				event.startTime = convertSqlDateTimeToDate(event.startTime).toISOString();
+				event.endTime = convertSqlDateTimeToDate(event.endTime).toISOString();
+				dataArray.push(transmuteSnakeToCamel(event))
+			});
 			// eventsOfAllTypes.forEach(eventsOfType=>{
 			// 	eventsOfType.forEach(event=>dataArray.push(transmuteSnakeToCamel(event)));
 			// })

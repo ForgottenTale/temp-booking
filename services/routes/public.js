@@ -41,8 +41,9 @@ module.exports = function(app){
         try{
             if(!req.query.month || !req.query.year)
                 return respondError(new Error('query parameters missing'), res);
+            let endMonth = (parseInt(req.query.month)+1)%12;
             let startTime = new Date(('0' + req.query.year).slice(-4) + "-" + ('0' + req.query.month).slice(-2) + "-01T00:00:00Z");
-            let endTime = new Date(('0' + req.query.year).slice(-4) + "-" + ('0' +(req.query.month+1)%12).slice(-2) + "-01T00:00:00Z");
+            let endTime = new Date(('0' + req.query.year).slice(-4) + "-" + ('0' +endMonth).slice(-2) + "-01T00:00:00Z");
             database.getCalendarData({startTime, endTime})
             .then(result=>res.status(200).json(result))
             .catch(err=>respondError(err, res));
