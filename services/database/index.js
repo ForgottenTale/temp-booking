@@ -362,8 +362,8 @@ module.exports = {
 				return dataArray;
 			}
 			eventsOfAllTypes.forEach(event=>{
-				event.startTime = convertSqlDateTimeToDate(event.startTime).toISOString();
-				event.endTime = convertSqlDateTimeToDate(event.endTime).toISOString();
+				event.start_time = convertSqlDateTimeToDate(event.start_time).toISOString();
+				event.end_time = convertSqlDateTimeToDate(event.end_time).toISOString();
 				dataArray.push(transmuteSnakeToCamel(event))
 			});
 			// eventsOfAllTypes.forEach(eventsOfType=>{
