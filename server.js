@@ -9,6 +9,7 @@ const database = require('./services/database/index.js');
 const routes = require('./services/routes/index.js');
 const auth = require('./services/auth.js');
 const app = express();
+var MySQLStore = require('express-mysql-session')(session);
 app.use(express.static(__dirname + '/build'));
 app.use(express.static(__dirname + '/public'));
 app.use(express.json());
@@ -30,6 +31,7 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: true,
     saveUninitialized: true,
+    store: sessionStore,
     cookie: {
         secure: false
     }
