@@ -1,6 +1,6 @@
 module.exports = function (input){
 return({
-      subject: `BOOKING: [${input.id}] REVIEW-SERVICE REQUEST `,
+      subject: `BOOKING #${input.id}: REVIEW-SERVICE REQUEST `,
       html: `<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
       <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
       <head>
@@ -268,7 +268,7 @@ return({
       <p style="font-size: 14px; line-height: 140%;">&nbsp;</p>
       <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 18px; line-height: 25.2px; color: #666666;">Booking ID: ${input.id}</span></p>
 
-      <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 18px; line-height: 25.2px; color: #666666;">Service Type: ${input.type}</span></p>
+      <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 18px; line-height: 25.2px; color: #666666;">Service Type: ${input.type.split("_").reduce((total, word)=>{return total + " " +word.charAt(0).toUpperCase() + word.slice(1)},"")}</span></p>
       <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 18px; line-height: 25.2px; color: #666666;">Title: ${input.title}</span></p>
       <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 18px; line-height: 25.2px; color: #666666;">Organizational Unit: ${input.ouName}</span></p>
         </div>
