@@ -655,8 +655,8 @@ module.exports = {
                   	+ " AND blt.ou_id="+constraint.ouId;
 				if(constraint.bookingId)
 					query += " AND blt._id=" + constraint.bookingId;
-                query += " ORDER BY _id DESC;";
-			})a
+                query += " ORDER BY blt._id DESC;";
+			})
 			let bookingsOfAllTypes = await executeQuery(query);
 			if(constraint.bookingId)
 				return done(new Error("Unable to find request"));
