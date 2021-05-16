@@ -28,6 +28,13 @@ app.use(passport.session());
 var access = fs.createWriteStream(process.cwd() + '/logs/'+ Date.now() + 'stdout.log');
 process.stdout.write = process.stderr.write = access.write.bind(access);
 
+const jwt = require('jsonwebtoken');
+console.log(process.env.SESSION_SECRET);
+console.log(jwt.sign({
+    "iss": process.env.ZOOM_KEY,
+    "exp": 1496091964000
+}, 'something'
+  , { algorithm: 'HS256' }));
 database.connect((err)=>{
     if(err){
         console.error(err);

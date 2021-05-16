@@ -51,7 +51,7 @@ module.exports = {
         return new Promise((resolve, reject)=>{
             try{
                 let hash = new Buffer.from(key+"newemail");
-                resolve(hash.toString('base64'));   
+                resolve(hash.toString('base64').replace('/', 's'));   
             }catch(err){
                 console.error(err);
                 throw new Error("Error generating hash");
@@ -95,7 +95,6 @@ module.exports = {
     },
 
     createMeeting: function(input, serviceName){
-        return "yes";
         let payload, config, duration;
 
         let token = jwt.sign({ApiSecret: process.env.ZOOM_SECRET, ApiKey: process.env.ZOOM_KEY});
