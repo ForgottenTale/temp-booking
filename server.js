@@ -13,6 +13,19 @@ app.use(express.static(__dirname + '/build'));
 app.use(express.static(__dirname + '/public'));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+var sessionStore = new MySQLStore({
+    checkExpirationInterval: 900000,// How frequently expired sessions will be cleared; milliseconds.
+    expiration: 86400000,// The maximum age of a valid session; milliseconds.
+    createDatabaseTable: true,// Whether or not to create the sessions database table, if one does not already exist.
+    schema: {
+        tableName: 'sessions',
+        columnNames: {
+            session_id: 'session_id',
+            expires: 'expires',
+            data: 'data'
+        }
+    }
+}, database.connection);
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: true,
