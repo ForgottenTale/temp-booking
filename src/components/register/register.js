@@ -1,12 +1,11 @@
 import './register.scss';
-import pic from '../../images/logo2.png';
+import pic from '../../images/coming.png';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from "@material-ui/core/styles";
 import Button from '@material-ui/core/Button';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import axios from 'axios';
-import { useEffect, useState,useRef } from 'react';
-import under from '../../images/under.jpg'
+import { useEffect, useState, useRef } from 'react';
 const useStyles = makeStyles({
 
     underline: {
@@ -28,7 +27,7 @@ const useStyles = makeStyles({
     },
 });
 export default function Register({ setErr }) {
-    const{params} = useRouteMatch()
+    const { params } = useRouteMatch()
     const initialRender = useRef(true);
     const initialRender2 = useRef(true);
     const history = useHistory();
@@ -42,7 +41,7 @@ export default function Register({ setErr }) {
     const [minLenPass, setMinLenPass] = useState(false);
 
 
-    
+
     useEffect(() => {
 
         if (initialRender.current) {
@@ -50,18 +49,18 @@ export default function Register({ setErr }) {
         }
         else {
 
-            if(password.length < 8 ){
+            if (password.length < 8) {
                 setMinLenPass(true)
             }
-            else if(password===""){
+
+            else if (password === "") {
                 setEmptyPass1(true);
             }
-            else{
+            else {
                 setMinLenPass(false)
                 setEmptyPass1(false)
             }
-            // ?  : 
-            console.log(password.length)
+
         }
 
     }, [password])
@@ -72,13 +71,10 @@ export default function Register({ setErr }) {
         }
 
         else {
-            if(password===""){
+            if (confirmPassword === "") {
                 setEmptyPass2(true);
             }
-            else if(password !== confirmPassword){
-                setEqualPass(true) 
-            }
-            else{
+            else {
                 setEqualPass(false)
                 setEmptyPass2(false);
             }
@@ -88,17 +84,19 @@ export default function Register({ setErr }) {
     const handleKeyPress = (event) => {
         console.log("hi")
         event.preventDefault();
-        if(event.key === 'Enter'){
+        if (event.key === 'Enter') {
             // handleSubmit();
             console.log("hi")
         }
-      }
+    }
 
     const handleSubmit = () => {
-
+        if (password !== confirmPassword) {
+            setEqualPass(true)
+        }
 
         if (password.password === password.confirmPassword && password.password !== "" & password.confirmPassword !== "") {
-            const url = '/api/create-account/'+params.id;
+            const url = '/api/create-account/' + params.id;
             const formData = new URLSearchParams();
             formData.append('password', password);
             formData.append('confirmPassword', confirmPassword);
@@ -164,7 +162,7 @@ export default function Register({ setErr }) {
                         className={classes.root}
                         style={{ width: "100%", marginBottom: 30 }}
                         onClick={() => { handleSubmit() }}
-                        onKeyDown={(e)=>handleKeyPress(e)}
+                        onKeyDown={e => handleKeyPress(e)}
                     >
                         Submit
                          </Button>
@@ -175,7 +173,7 @@ export default function Register({ setErr }) {
 
             </div> */}
 
-            <img src={under} />
+            <img src={pic}/>
         </div>
     )
 }

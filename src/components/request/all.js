@@ -24,7 +24,7 @@ if(ouid!==undefined&&ouid!==null)
             });
 }
 
-    }, [ouid])
+    }, [ouid,setRequestNumber,setErr])
 
 
     return (
