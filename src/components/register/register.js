@@ -5,7 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Button from '@material-ui/core/Button';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useEffect, useState,useRef } from 'react';
 const useStyles = makeStyles({
 
     underline: {
@@ -28,7 +28,8 @@ const useStyles = makeStyles({
 });
 export default function Register({ setErr }) {
     const{params} = useRouteMatch()
-    let initialRender = true;
+    const initialRender = useRef(true);
+    const initialRender2 = useRef(true);
     const history = useHistory();
     const classes = useStyles();
     const [password, setPassword] = useState("")
@@ -40,10 +41,11 @@ export default function Register({ setErr }) {
     const [minLenPass, setMinLenPass] = useState(false);
 
 
+    
     useEffect(() => {
 
-        if (initialRender) {
-            initialRender = false;
+        if (initialRender.current) {
+            initialRender.current = false;
         }
         else {
 
@@ -64,15 +66,15 @@ export default function Register({ setErr }) {
     }, [password])
 
     useEffect(() => {
-        if (initialRender) {
-            initialRender = false;
+        if (initialRender2.current) {
+            initialRender2.current = false;
         }
 
         else {
             if(password===""){
                 setEmptyPass2(true);
             }
-            else if(  password !== confirmPassword){
+            else if(password !== confirmPassword){
                 setEqualPass(true) 
             }
             else{
@@ -86,10 +88,8 @@ export default function Register({ setErr }) {
 
     const handleSubmit = () => {
 
-        // setErr("done")
 
         if (password.password === password.confirmPassword && password.password !== "" & password.confirmPassword !== "") {
-            setErr("done")
             const url = '/api/create-account/'+params.id;
             const formData = new URLSearchParams();
             formData.append('password', password);
