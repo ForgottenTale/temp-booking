@@ -1,5 +1,5 @@
 import './login.scss';
-import pic from '../../images/login.jpg';
+import pic from '../../images/Welcome.png';
 import { useState } from 'react';
 import axios from 'axios';
 
@@ -79,6 +79,7 @@ export default function Login({setUser,setAuth,setErr,setOU}) {
                 </div>
 
             </div>
+            
             <img className="login_img" alt='' src={pic} />
         </div>
     );
