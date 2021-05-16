@@ -132,7 +132,7 @@ export default function Setting({ setErr }) {
 
 
                 <Item name="Name" userDetails={userDetails} setUserDetails={setUserDetails} type="name" />
-                <Item name="Email" userDetails={userDetails} setUserDetails={setUserDetails} type="email"  />
+                {/* <Item name="Email" userDetails={userDetails} setUserDetails={setUserDetails} type="email"  /> */}
                 <Item name="Phone No" userDetails={userDetails} setUserDetails={setUserDetails} type="phone" />
 
                 <button className="save" onClick={() => handleSave()}>Save</button>
