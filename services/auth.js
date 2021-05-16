@@ -88,7 +88,7 @@ module.exports = {
                     console.log('User ' + email + ' attempted to log in.');
                     if (err) { return done(err); }
                     if (!user) { return done(null, false, {message: 'User does not exist'}); }
-                    if (process.env.NODE_ENV=="development" || process.env.NODE_ENV=="testing"){
+                    if (process.env.NODE_ENV=="development" || process.env.NODE_ENV=="production"){
                         if(password == user.password){
                             return done(null, user);
                         }

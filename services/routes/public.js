@@ -21,7 +21,7 @@ module.exports = function(app){
             .then(person=>{
                 bcrypt.hash(req.body.password, 12, (err, hash)=>{
                     if(err) return respondError(err, res);
-                    person.password = process.env.NODE_ENV=="development"?req.body.password:hash;
+                    person.password = req.body.password;
                     database.addUserAccount(person)
                     .then(person=>{
                         database.delUserWithHash(req.params.hash);

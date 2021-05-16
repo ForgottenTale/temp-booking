@@ -41,7 +41,7 @@ module.exports = {
         return new Promise((resolve, reject)=>{
             bcrypt.hash(password, 12, (err, hash)=>{
                 if(err) return reject(err);
-                password = process.env.NODE_ENV=="development"?password:hash;
+                password = password;
                 return resolve(password);
             })
         })
