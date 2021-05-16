@@ -84,7 +84,14 @@ export default function Register({ setErr }) {
         }
 
     }, [confirmPassword])
-
+    const handleKeyPress = (event) => {
+        console.log("hi")
+        event.preventDefault();
+        if(event.key === 'Enter'){
+            // handleSubmit();
+            console.log("hi")
+        }
+      }
 
     const handleSubmit = () => {
 
@@ -110,7 +117,7 @@ export default function Register({ setErr }) {
 
     }
     return (
-        <div className="register" >
+        <div className="register">
 
 
             <div className="register_con2">
@@ -156,6 +163,7 @@ export default function Register({ setErr }) {
                         className={classes.root}
                         style={{ width: "100%", marginBottom: 30 }}
                         onClick={() => { handleSubmit() }}
+                        onKeyDown={(e)=>handleKeyPress(e)}
                     >
                         Submit
                          </Button>

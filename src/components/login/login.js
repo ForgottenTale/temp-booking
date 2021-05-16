@@ -47,6 +47,11 @@ export default function Login({setUser,setAuth,setErr,setOU}) {
         setDetails(values);
 
     }
+    const handleKeyPress = (event) => {
+        if(event.key === 'Enter'){
+            handleLogin();
+        }
+      }
 
     return (
         <div className="login">
@@ -70,7 +75,7 @@ export default function Login({setUser,setAuth,setErr,setOU}) {
                         </div>
                         <p>Forgot password ?</p>
                     </div>
-                    <button className="login_container_box_button" onClick={() => handleLogin()}>Login</button>
+                    <button className="login_container_box_button" onClick={() => handleLogin()} onKeyPress={(e)=>handleKeyPress(e)}>Login</button>
                 </div>
 
             </div>

@@ -2,7 +2,7 @@
 import './request.scss';
 import { useState, useEffect } from 'react';
 import { Input2 } from '../utils/myReactLib';
-import { Route, Switch, useRouteMatch, useHistory } from 'react-router-dom';
+import { Route, Switch, useRouteMatch} from 'react-router-dom';
 import RequestView from '../requestView/requestView';
 import RequestView2 from '../requestView/requestView2';
 import MyRequests from './myrequest';
@@ -11,10 +11,9 @@ import History from './history';
 import All from './all'
 
 
-export default function Request({ role, setErr, ou }) {
+export default function Request({ setErr, ou }) {
 
     const [data, setData] = useState(null);
-    const history = useHistory();
     const { path } = useRouteMatch();
     const [request, setRequest] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");

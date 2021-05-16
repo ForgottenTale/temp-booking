@@ -24,7 +24,7 @@ export default function MyRequests({ setErr, ouid, setRequest, searchTerm, setRe
                 });
         }
 
-    }, [ouid])
+    }, [ouid,setRequestNumber,setErr])
 
 
     return (

@@ -1,9 +1,8 @@
 import './table.scss';
 import pic from '../../images/pic3.jpg';
-import { NavLink, useRouteMatch } from 'react-router-dom';
+import { NavLink} from 'react-router-dom';
 import SkeletonRowRequest from '../skeleton/skeletonRowRequest';
 import SkeletonRowUser from '../skeleton/skeletonRowUser';
-import axios from 'axios';
 
 
 export default function Table({ headers, data, type, setUser, setRequest, searchTerm, path, edit, ouId }) {
@@ -57,7 +56,7 @@ function Row({ data, type, setRequest, setUser, path, edit, ouId }) {
 
 
     const handleCancel = () => {
-        const url = `api/bookings/${data.id}?ouId=${ouId}&cancel=true`;
+        // const url = `api/bookings/${data.id}?ouId=${ouId}&cancel=true`;
 
         // axios.delete(url, { withCredentials: true })
         //     .then((data) => {
@@ -70,7 +69,7 @@ function Row({ data, type, setRequest, setUser, path, edit, ouId }) {
     }
 
     const handleDelete = () => {
-        const url = `api/bookings/${data.id}?ouId=${ouId}`;
+        // const url = `api/bookings/${data.id}?ouId=${ouId}`;
 
         // axios.delete(url, { withCredentials: true })
         //     .then((data) => {

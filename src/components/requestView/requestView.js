@@ -155,7 +155,7 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                         <Item title="Program Schedule" value={data.schedule} key="12" name="schedule" readOnly={readOnly} />,
                         <Item title="Publish Time" value={new Date(data.publishTime).toLocaleTimeString()} key="13" name="publishTime" readOnly={readOnly} />] : null
                     }
-
+                    
                     <div className="requestView_con_item">
                         <h4>Endorsements</h4>
                     </div>
@@ -170,10 +170,11 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                     }
 
                 </div >
+                {data.status === "APPROVED" & data.type === "online_meeting" ? <Item title="Url" value={data.url} name="deliveryType" readOnly={readOnly} /> : null}
                 {data.img !== null ? <img src={"/image/" + data.img} alt='poster' /> : null}
 
 
-
+               
 
                 {showButton && data.status !== "APPROVED" ?
                     <div className="requestView_button">
@@ -183,16 +184,17 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                         }}>Approve</button>
                         <button onClick={() => {
                             setMessage(true)
-                            setMsg("decline")}
+                            setMsg("decline")
+                        }
                         }>Reject</button>
                     </div> : null
 
                 }
-                {!readOnly ?   <div className="requestView_button"><button onClick={() => {
+                {!readOnly ? <div className="requestView_button"><button onClick={() => {
                     setReadOnly(true);
                     handleSave();
                     history.push(`/requests/${params.id}`)
-                }}>Save</button> </div>: null
+                }}>Save</button> </div> : null
 
                 }
                 {/* 

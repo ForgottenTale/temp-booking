@@ -62,15 +62,15 @@ function Calender({ setErr }) {
     ]);
 
     useEffect(() => {
-        const url = "/api/calendar?month=" + (value.clone().format('M')) + "&year=" + value.clone().format('Y');
-        axios.get(url, { withCredentials: true })
-            .then((d) => {
-                setData(d.data);
-            })
-            .catch(err => {
-                console.error(err);
-                setErr(err.response.data.error||err);
-            });
+        // const url = "/api/calendar?month=" + (value.clone().format('M')) + "&year=" + value.clone().format('Y');
+        // axios.get(url, { withCredentials: true })
+        //     .then((d) => {
+        //         setData(d.data);
+        //     })
+        //     .catch(err => {
+        //         console.error(err);
+        //         setErr(err.response.data.error||err);
+        //     });
         // eslint-disable-next-line
     }, [value])
 
