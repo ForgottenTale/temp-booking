@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect, useState,useRef } from 'react';
+import under from '../../images/under.jpg'
 const useStyles = makeStyles({
 
     underline: {
@@ -120,7 +121,7 @@ export default function Register({ setErr }) {
         <div className="register">
 
 
-            <div className="register_con2">
+            {/* <div className="register_con2">
                 <h4>Enter a password</h4>
                 <div className="register_con2_inputs">
                     <TextField
@@ -172,7 +173,9 @@ export default function Register({ setErr }) {
 
 
 
-            </div>
+            </div> */}
+
+            <img src={under} />
         </div>
     )
 }
