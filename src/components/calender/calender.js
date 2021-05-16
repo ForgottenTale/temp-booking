@@ -62,7 +62,7 @@ function Calender({ setErr }) {
     ]);
 
     useEffect(() => {
-        const url = "/api/calendar?month=" + (value.clone().format('M') - 1) + "&year=" + value.clone().format('Y');
+        const url = "/api/calendar?month=" + (value.clone().format('M')) + "&year=" + value.clone().format('Y');
         axios.get(url, { withCredentials: true })
             .then((d) => {
                 setData(d.data);
