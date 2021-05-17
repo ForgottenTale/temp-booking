@@ -55,7 +55,7 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                 setData(req);
             }
             else {
-                const url = `/api/approvals/${params.id}?ouId=${ou.ouId}`;
+                const url = `/api/approvals?filter=${params.id}&ouId=${ou.ouId}`;
                 axios.get(url, { withCredentials: true })
                     .then((d) => {
                         setData(d.data[0]);
