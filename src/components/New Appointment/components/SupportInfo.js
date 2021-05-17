@@ -76,6 +76,7 @@ function SupportInfo({ path, type, data, setData,setPop }) {
                     placeholder="Content/ description for the support"
                     defaultValue={data.description}
                     className="form-control"
+                    required
                     name="supportDesc"
                     onChange={(e) => {
                       setSupport({ ...support, description: e.target.value });
@@ -86,6 +87,7 @@ function SupportInfo({ path, type, data, setData,setPop }) {
                   <input
                     placeholder="Title"
                     type="text"
+                    required
                     className="form-control"
                     defaultValue={data.title}
                     name="title"
@@ -98,6 +100,7 @@ function SupportInfo({ path, type, data, setData,setPop }) {
                   <input
                     placeholder="Purpose"
                     type="text"
+                    required
                     className="form-control"
                     defaultValue={data.purpose}
                     name="purpose"
@@ -125,6 +128,7 @@ function SupportInfo({ path, type, data, setData,setPop }) {
                 <div className="mb-4">
                   <input
                     type="text"
+                    required
                     className="form-control"
                     name="serviceName"
                     value={data.serviceName}
@@ -139,6 +143,7 @@ function SupportInfo({ path, type, data, setData,setPop }) {
                         placeholder="Poster dimensions (if any)"
                         type="text"
                         className="form-control"
+                        required
                         name="posterDimensions"
                         defaultValue={data.dimensions}
                         onChange={(e) => {
@@ -154,6 +159,7 @@ function SupportInfo({ path, type, data, setData,setPop }) {
                       <input
                         placeholder="Writeup words count (if any)"
                         type="number"
+                        required
                         className="form-control"
                         name="wordsCount"
                         defaultValue={data.wordsCount}
@@ -171,6 +177,7 @@ function SupportInfo({ path, type, data, setData,setPop }) {
                     <input
                       placeholder="URL"
                       type="text"
+                      required
                       defaultValue={data.url}
                       className="form-control"
                       name="mockup"
@@ -184,6 +191,7 @@ function SupportInfo({ path, type, data, setData,setPop }) {
                   <textarea
                     placeholder="Comments"
                     rows="3"
+                    required
                     className="form-control"
                     defaultValue={data.comments}
                     name="comments"
@@ -215,6 +223,7 @@ function SupportInfo({ path, type, data, setData,setPop }) {
                   <textarea
                     placeholder="Content/ description"
                     rows="3"
+                    required
                     className="form-control"
                     name="enoticeDesc"
                     defaultValue={data.description}
@@ -227,6 +236,7 @@ function SupportInfo({ path, type, data, setData,setPop }) {
                   <input
                     placeholder="Title"
                     type="text"
+                    required
                     className="form-control"
                     name="title"
                     defaultValue={data.title}
@@ -239,6 +249,7 @@ function SupportInfo({ path, type, data, setData,setPop }) {
                   <select
                     defaultValue={data.express}
                     className="form-select"
+                    required
                     name="express"
                     onChange={(e) => {
                       setSupport({
@@ -283,6 +294,7 @@ function SupportInfo({ path, type, data, setData,setPop }) {
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <KeyboardDatePicker
                   margin="normal"
+                  required
                   id="time-picker"
                   value={support.reminder === "" ? undefined: new Date(support.reminder)}
                   KeyboardButtonProps={{
@@ -296,6 +308,7 @@ function SupportInfo({ path, type, data, setData,setPop }) {
                   <textarea
                     placeholder="Comments"
                     rows="3"
+                    required
                     defaultValue={data.comments}
                     className="form-control"
                     name="comments"

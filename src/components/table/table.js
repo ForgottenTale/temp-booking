@@ -114,7 +114,7 @@ function Row({ setRefresh, data, type, setRequest, setUser, path, edit, ouId, ro
                 <td data-label="Role" key="2">{data.role.replace('_', " ").toLowerCase()}</td>,] : null}
 
             {type === 'request' ? [
-                <td data-label="Service" key="1">{data.type.replace('_', ' ')}</td>,
+                <td data-label="OU" key="1">{data.ouName}</td>,
                 <td data-label="Type" key="2">{data.serviceName}</td>,
                 <td data-label="Time" key="3">{data.type === "publicity" || data.type === "e_notice" ? new Date(data.publishTime).toDateString() : new Date(data.startTime).toDateString()}</td>,
                 <td data-label="Status" key="4">

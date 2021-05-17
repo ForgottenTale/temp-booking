@@ -57,10 +57,7 @@ function App(props) {
           props.setPop(!props.pop);
         }}
       ></div>
-      <div className="close"  onClick={() => {
-          history.push("/dashboard");
-          props.setPop(!props.pop);
-        }}>Close</div>
+    
       <Router>
         <Switch>
           <Route path={path} exact>

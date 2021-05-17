@@ -41,6 +41,11 @@
             & td {
                 font-size: 13px;
                 padding-right: 60px;
+                white-space:nowrap;
+                max-width: 120px;
+                word-wrap: break-word;
+                overflow:hidden;
+                text-overflow:ellipsis;
                 &:nth-child(1) {
                     padding-left: 30px;
                 }
@@ -161,6 +166,8 @@
                 margin-bottom: 30px;
                 & td {
                     padding-right: 20px;
+                    max-width: unset;
+                    white-space:unset;
                     & .pending {
                         font-size: 8px;
                     }
