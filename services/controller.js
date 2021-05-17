@@ -443,6 +443,7 @@ class Publicity extends Service{
         super(input);
         this.required = ["publishTime"];
         this.publishTime = new Date(input.publishTime);
+        this.schedule = input.schedule;
     }
 
     static validateTime(input, config){
@@ -466,8 +467,9 @@ class Publicity extends Service{
 
     getAllNamesAndValues(){
         let namesAndValues = super.getAllNamesAndValues();
-        namesAndValues.names.push('publish_time');
+        namesAndValues.names.push('publish_time', 'schedule');
         namesAndValues.values.push(this.publishTime?("'" + convertDateToSqlDateTime(this.publishTime) + "'"):"null");
+        namesAndValues.values.push(this.schedule?("'" + this.schedule + "'"):"null");
         return(namesAndValues);
     }
     

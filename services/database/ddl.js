@@ -94,6 +94,7 @@ module.exports = {
             service_name VARCHAR(30) NOT NULL,
             title VARCHAR(30) NOT NULL,
             description VARCHAR(200) NOT NULL,
+            schedule VARCHAR(200),
             img VARCHAR(50),
             comments VARCHAR(30),
             publish_time DATETIME NOT NULL
