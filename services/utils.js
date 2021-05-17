@@ -5,6 +5,15 @@ const bcrypt = require('bcrypt');
 const axios = require('axios');
 const mail = require('./mail');
 const jwt = require('jsonwebtoken');
+const mysql = require('mysql');
+let connection = mysql.createConnection({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
+    multipleStatements: true,
+    dateStrings: true
+});
 
 module.exports = {
     convertSqlDateTimeToDate: function (mysqlTime){
@@ -109,7 +118,9 @@ module.exports = {
                 "exp": 1496091964000
             }, process.env.ZOOM_API_SECRET);
             config = {
-                auth: `Bearer ${token}`
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
             };
             console.log(token);
             duration =(input.endTime.getTime() - input.startTime.getTime()) / 1000;
@@ -132,8 +143,13 @@ module.exports = {
                 config
             )
             .then(data=>{
-                database.executeQuery(`UPDATE online_meeting SET url='${data.start_url}', meeting_password = '${data.password}'
-                    WHERE _id=${input.id}`);
+                    console.log(data);
+                    data= data.data;
+                    connection.query(`UPDATE online_meeting SET url='${data.start_url}', meeting_password = '${data.password}'
+                    WHERE _id=${input.id}`, (err, results)=>{
+                        if(err) return reject(err);
+                        return (results);
+                    })
             })
             .catch(err=>{
                 err.info=`MEETING CREATION FAULT: #${input.id}`;
