@@ -706,7 +706,7 @@ module.exports = {
 					bookingsOfAllTypes[mainIdx][idx] = transmuteSnakeToCamel(bookingsOfAllTypes[mainIdx][idx]);
 					bookingsOfAllTypes[mainIdx][idx].otherResponses = await executeQuery("SELECT name, email, encourages, response, created_at FROM response INNER JOIN person on person._id=response.person_id WHERE blt_id=" + bookingsOfAllTypes[mainIdx][idx].id + ";");
 					bookingsOfAllTypes[mainIdx][idx].otherResponses.map(response=>{
-						response.createdAt = ServiceClass.convertSqlTimesToDate(response.created_at);
+						response.createdAt = convertSqlDateTimeToDate(response.created_at);
 					})
 					bookingsOfAllTypes[mainIdx][idx].type = types[mainIdx].type;
 					dataArray.push(bookingsOfAllTypes[mainIdx][idx])
@@ -780,7 +780,7 @@ module.exports = {
 					bookingsOfAllTypes[mainIdx][idx] = transmuteSnakeToCamel(bookingsOfAllTypes[mainIdx][idx]);
 					bookingsOfAllTypes[mainIdx][idx].otherResponses = await executeQuery("SELECT name, email, encourages, response, created_at FROM response INNER JOIN person on person._id=response.person_id WHERE blt_id=" + bookingsOfAllTypes[mainIdx][idx].id + ";");
 					bookingsOfAllTypes[mainIdx][idx].otherResponses.map(response=>{
-						response.createdAt = ServiceClass.convertSqlTimesToDate(response.created_at);
+						response.createdAt = convertSqlDateTimeToDate(response.created_at);
 					})
 					bookingsOfAllTypes[mainIdx][idx].type = types[mainIdx].type;
 					delete(bookingsOfAllTypes[mainIdx][idx].password);
