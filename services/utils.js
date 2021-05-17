@@ -66,7 +66,7 @@ module.exports = {
     },
     
     removeImg: function (imgName){
-        fs.unlink(("/uploads/" + imgName), err=>{
+        fs.unlink((process.cwd()+"/uploads/" + imgName), err=>{
             if(err)
                 console.error(err);
             else
