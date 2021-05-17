@@ -330,9 +330,9 @@ module.exports = function (input){
                       <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Lato',sans-serif;" align="left">
                         
                       <div style="color: #000000; line-height: 140%; text-align: left; word-wrap: break-word;">
-                      <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 16px; line-height: 22.4px; color: #ecf0f1;">Contact Us</span></p> <br>
-                  <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 14px; line-height: 19.6px; color: #ecf0f1;">HarmonIEEE, 1st Floor, </span></p>
-                  <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 14px; line-height: 19.6px; color: #ecf0f1;"> Cherian’s Square, Ambujavilasam Rd, PB77, GPO, Thiruvananthapuram, Kerala 695001.  mintsupport@ieeekerala.org</span></p>
+                      <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 16px; line-height: 22.4px; color: #ffffff;">Contact Us</span></p> <br>
+                  <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 14px; line-height: 19.6px; color: #ffffff;">HarmonIEEE, 1st Floor, </span></p>
+                  <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 14px; line-height: 19.6px; color: #ffffff;"> Cherian’s Square, Ambujavilasam Rd, PB77, GPO, Thiruvananthapuram, Kerala 695001.  mintsupport@ieeekerala.org</span></p>
                     </div>
                 
                       </td>
@@ -415,7 +415,7 @@ module.exports = function (input){
                       <td style="overflow-wrap:break-word;word-break:break-word;padding:5px 10px 10px;font-family:'Lato',sans-serif;" align="left">
                         
                   <div style="color: #000000; line-height: 140%; text-align: left; word-wrap: break-word;">
-                    <p style="line-height: 140%; font-size: 14px;"><span style="font-size: 12px; line-height: 16.8px;"><span style="color: #ecf0f1; line-height: 16.8px; font-size: 12px;"><span style="line-height: 16.8px; font-size: 12px;">IEEE Kerala Section &copy;&nbsp; All Rights Reserved</span></span></span></p>
+                    <p style="line-height: 140%; font-size: 14px;"><span style="font-size: 12px; line-height: 16.8px;"><span style="color: #ffffff; line-height: 16.8px; font-size: 12px;"><span style="line-height: 16.8px; font-size: 12px;">IEEE Kerala Section &copy;&nbsp; All Rights Reserved</span></span></span></p>
                   </div>
                 
                       </td>
