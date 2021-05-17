@@ -11,13 +11,16 @@ module.exports = function(app){
         upload.single('img')(req, res, (err)=>{
             try{
                 if(err) throw err;
-                let newbooking;
+                let newBooking;
                 req.body.img = req.file?req.file.filename:null;
                 req.body.creatorId = req.user.id;
                 ServiceClass= getClass(req.body.type);
-                newbooking = new ServiceClass(req.body);
-                newbooking.checkRequired(newbooking);
-                database.addBooking(newbooking, {email: req.user.email, personId: req.user.personId}, (err, doc)=>{
+                newBooking = new ServiceClass(req.body);
+                newBooking.checkRequired(newBooking);
+                if(newBooking.reminder)
+                    if(newBooking.reminder>newBooking.publishTime)
+                        throw new Error("Publish time cannot be lower than reminder date");
+                database.addBooking(newBooking, {email: req.user.email, personId: req.user.personId}, (err, doc)=>{
                     if(err){
                         return respondError(err, res);
                     }
