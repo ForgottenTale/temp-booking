@@ -142,6 +142,10 @@ module.exports = {
             type VARCHAR(50),
             text VARCHAR(300),
             FOREIGN KEY(user_id) REFERENCES user(_id)
+        );`,
+        `CREATE TABLE IF NOT EXISTS reset_id(
+            _id VARCHAR(100) NOT NULL,
+            email VARCHAR(100) NOT NULL
         );`
     ]
 }

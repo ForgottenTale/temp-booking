@@ -46,6 +46,12 @@ module.exports = {
             })
         })
     },
+
+    generateUniqueString: function(key){
+        let hash = new Buffer.from(key+"something");
+        hash.toString('base64');   
+        return Date.now()+ "" + hash;
+    },
     
     generateHash: function(key){
         return new Promise((resolve, reject)=>{

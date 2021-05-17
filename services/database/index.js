@@ -480,6 +480,15 @@ module.exports = {
         })
     },
 
+	addResetId: async function(email, id, done){
+		try{
+			await executeQuery(`INSERT INTO reset_id(email, _id) VALUES('${email}', '${id}');`)
+			return done(null, "Success");
+		}catch(err){
+			return done(err);
+		}
+	},
+
     addUserAccount: function(person){
         return new Promise(async (resolve, reject)=>{
             try{
@@ -620,6 +629,15 @@ module.exports = {
         }
 	},
 
+	getResetId: async function(id, done){
+		try{
+			let result = await executeQuery(`SELECT * FROM reset_id WHERE _id='${id}'`);
+			return done(null, result);
+		}catch(err){
+			return done(err);
+		}
+	},
+
     getAllUsers: function(constraint, done){
 		let query = "SELECT *, user._id as id FROM user INNER JOIN person ON person_id=person._id INNER JOIN ou_map ON ou_map.person_id=person._id";
 		if(constraint.role == "admin")
@@ -750,6 +768,15 @@ module.exports = {
 			if(dataArray.length<1 && bltId)
 				return done(new Error("Booking not found"));
 			return done(null, dataArray);
+		}catch(err){
+			return done(err);
+		}
+	},
+
+	updatePassword: async function(email, password, done){
+		try{
+			await executeQuery(`UPDATE user INNER JOIN person ON person_id=person._id SET password='${password}' WHERE email='${email}'`);
+			return done(null, "successful");
 		}catch(err){
 			return done(err);
 		}
@@ -942,6 +969,10 @@ module.exports = {
 
     delFromNextToApprove: async function(bltId){
         return await executeQuery("DELETE FROM next_to_approve WHERE blt_id=" + bltId + ";"); 
-    }
+    },
+
+	delResetId: async function(email){
+		await executeQuery(`DELETE FROM reset_id WHERE email='${email}'`);
+	}
 
 }
