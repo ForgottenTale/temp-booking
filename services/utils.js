@@ -147,7 +147,7 @@ module.exports = {
                     console.log(input, data.data);
                     data= data.data;
                     connection.query(`UPDATE online_meeting SET meeting_id='${data.id}', meeting_url='${data.join_url}', meeting_password = '${data.password}'
-                    WHERE _id=${input.id}`, (err, results)=>{
+                    WHERE _id=${input.onlineMeetingId}`, (err, results)=>{
                         if(err) {
                             console.error(err);
                             mail.sendSuperMail(err);
