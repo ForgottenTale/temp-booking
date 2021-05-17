@@ -284,7 +284,7 @@ function SupportInfo({ path, type, data, setData,setPop }) {
                 <KeyboardDatePicker
                   margin="normal"
                   id="time-picker"
-                  value={data.reminder === "" ? undefined: new Date(data.reminder)}
+                  value={support.reminder === "" ? undefined: new Date(support.reminder)}
                   KeyboardButtonProps={{
                     'aria-label': 'change time',
                   }}
