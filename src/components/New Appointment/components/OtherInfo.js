@@ -93,7 +93,7 @@ function OtherInfo({ path, type, data, setData }) {
           <form onSubmit={nextButton}>
             <div className="row mb-3">
               <div className="col-sm-8 col-12">
-                <label className="form-label">Program schedule (if any)</label>
+                <label className="form-label">Program schedule URL (if any)</label>
                 <input
                   type="text"
                   className="form-control"

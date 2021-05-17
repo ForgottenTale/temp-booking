@@ -116,11 +116,13 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                     {list.map((item, key) =>
                         <Item readOnly title={item} value={data[resList[key]].replace('_', ' ')} key={key} />,
                     )}
-
+                    <Item title="Organisational Unit" value={data.ouName} key="1" name="title" setData={setData} readOnly />
+                    <Item title="Created at" value={new Date(data.createdAt).toLocaleString()} key="40" name="title" setData={setData} readOnly={readOnly} />
                     <ItemTextArea title="Description" readOnly={readOnly} value={data.description} name="description" />
-                    <Item title="Title" value={data.title} key="1" name="title" setData={setData} readOnly={readOnly} />
+                    <Item title="Title" value={data.title} key="41" name="title" setData={setData} readOnly={readOnly} />
 
-            {data.type === "online_meeting" && data.type === "intern_support" ? [
+
+                    {data.type === "online_meeting" && data.type === "intern_support" ? [
                         <ItemTime name="startTime" title="Start Time" value={data.startTime} key="3" readOnly={readOnly} setData={setData} />,
                         <ItemTime name="endTime" title="End Time" value={data.endTime} key="4" readOnly={readOnly} setData={setData} />,
                     ] : null
@@ -150,8 +152,8 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
 
                     {data.type === "intern_support" ? <Item title="Purpose" value={data.purpose} name="purpose" readOnly={readOnly} /> : null}
                     {data.serviceName === "content writing" ? <Item title="Word Count" value={data.wordsCount} name="wordCount" readOnly={readOnly} /> : null}
-                    {data.serviceName === "poster design" ? <Item title="Poster Diamensions" value={data.dimensions	} name="diamensions" readOnly={readOnly} /> : null}
-                    {data.serviceName === "website development" ? <Item title="URL"readOnly={readOnly} value={data.url} name="url" /> : null}
+                    {data.serviceName === "poster design" ? <Item title="Poster Diamensions" value={data.dimensions} name="diamensions" readOnly={readOnly} /> : null}
+                    {data.serviceName === "website development" ? <Item title="URL" readOnly={readOnly} value={data.url} name="url" /> : null}
                     {data.type === "e_notice" ? <Item title="Delivery Type" value={data.deliveryType} name="deliveryType" readOnly={readOnly} /> : null}
                     {data.type === "publicity" ? [
                         <Item title="Program Schedule" value={data.schedule} key="12" name="schedule" readOnly={readOnly} />,
@@ -172,7 +174,7 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
 
                     {data.otherResponses.length > 0 ?
                         data.otherResponses.map((approver, index) =>
-                            <ItemTextArea key={index} title={approver.name} value={approver.response === null ? "" : approver.response} readOnly />) :
+                            <ItemTextArea key={index} title={`${approver.name} @ ${new Date(approver.createdAt).toLocaleString()}`} value={approver.response === null ? "" : approver.response} readOnly />) :
                         <Item title="" value="No one has endorsed this request" key="14" readOnly />
                     }
 
@@ -210,30 +212,7 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                 }}>Save</button> </div> : null
 
                 }
-                {/* 
-                {showButton && data.status !== "APPROVED" ? <div className="requestView_button">
-                    <button onClick={() => setMessage(true)}>Approve</button>
-                    <button onClick={() => setMessage(true)}>Reject</button>
-
-                    {readOnly ? null : <button onClick={() => {
-                        setReadOnly(true);
-                        handleSave();
-                        history.push(`/requests/${params.id}`)
-                    }}>Save</button>}
-                </div> : data.status !== "APPROVED" ?
-                    <div className="requestView_button">
-
-                        {readOnly ?
-                            <>
-                                <button onClick={() => {
-                                    setReadOnly(false)
-                                    history.push(`${params.id}/edit`)
-                                }}>Edit</button>
-                                <button onClick={() => setReadOnly(true)}>Cancel</button>
-                            </>
-                            : <button onClick={() => { setReadOnly(false); }}>Save</button>}
-                    </div> : null
-                } */}
+              
                 {message ? <Message ouId={ou.ouId} msg2={msg} setMessage={setMessage} setRefresh={setRefresh} setSpinner={setSpinner} refresh={refresh} data={data} setErr={setErr} /> : null}
             </div >
             : null
