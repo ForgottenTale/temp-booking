@@ -20,7 +20,7 @@ function DateBody(props) {
         if (props.day.events !== null && props.day.events !== undefined) {
             console.log(props.day.events)
         }
-    },[])
+    },[props.day])
 
     return (
         <div className="daytime"
@@ -32,7 +32,7 @@ function DateBody(props) {
             <p style={{ color: "white", fontSize: 12 }}>{props.day.key}</p>
 
             {props.day.events !== null && props.day.events !== undefined && props.day.events.length >= 1 ? <Tile event={props.day.events[0]}  tileStyle={props.tileStyle}setEventList={setEventList}/>: null}
-            {props.day.events !== null && props.day.events !== undefined && props.day.events.length > 1 ? <Tile event={props.day.events[0]}  tileStyle={`${props.day.events.length -1} more`}setEventList={setEventList}/>: null}
+            {props.day.events !== null && props.day.events !== undefined && props.day.events.length > 1 ? <Tile event={{title:`${props.day.events.length -1} more`}}  tileStyle={props.tileStyle}setEventList={setEventList}/>: null}
             <div className="daytime_events">
                 {showEventList ? <EventsList day={props.day} setEventList={setEventList}/> : null}
             </div>

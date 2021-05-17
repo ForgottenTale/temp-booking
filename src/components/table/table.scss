@@ -51,6 +51,12 @@
                 }
                 & svg {
                     margin-right: 10px;
+                    cursor: pointer;
+                    stroke: black;
+
+                    &:hover{
+                        stroke: rgb(0, 110, 255);
+                    }
                 }
 
                 & .pending {
@@ -220,6 +226,7 @@
 
                     & svg{
                         padding: 20px;
+                        
                         &:hover{
                             background-color: rgb(233, 233, 233);
                         }

@@ -28,7 +28,6 @@ function DateTime({ path, type, setData, data, user, ou }) {
   const [equalTimeError, setequalTimeError] = useState(false);
   const [shortTimeError, setShortTimeError] = useState(false);
   const [ouError, setOuError] = useState(false);
-  const [publishTime, setPublishTime] = useState("");
   const [options, setOptions] = useState([])
   const [ouId, setOuID] = useState("")
 
@@ -52,7 +51,7 @@ function DateTime({ path, type, setData, data, user, ou }) {
     else if (data.startTime > data.endTime) {
       setShortTimeError(true);
     }
-    // console.log(data.ouId.length);
+
     if (data.startTime !== "" && data.endTime !== "" && data.startTime !== data.endTime && data.startTime < data.endTime && ouId !=="") {
       if (type === "online_meeting" || type === "publicity") {
         history.push(path + "/event-info");
@@ -96,7 +95,7 @@ function DateTime({ path, type, setData, data, user, ou }) {
       })
     })
 
-  }, [user.ou]);
+  }, [user.ou,minDate,setData]);
 
 
   const handleChange = (e) => {
@@ -210,7 +209,7 @@ function DateTime({ path, type, setData, data, user, ou }) {
               </div>
 
               <div className="col-sm-5 col-6">
-                <label className="form-label">From</label>
+                <label className="form-label">To</label>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <KeyboardTimePicker
                     error={shortTimeError || equalTimeError}
@@ -236,7 +235,7 @@ function DateTime({ path, type, setData, data, user, ou }) {
                   <KeyboardTimePicker
                     margin="normal"
                     id="time-picker"
-                    value={data.endTime === "" ? undefined : data.endTime}
+                    value={data.publishTime === "" ? undefined : data.publishTime}
                     onChange={(e) => handleTimeChange(e, "publishTime")}
                     required
                     KeyboardButtonProps={{

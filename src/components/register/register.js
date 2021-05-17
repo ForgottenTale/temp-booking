@@ -1,11 +1,11 @@
 import './register.scss';
-import pic from '../../images/coming.png';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from "@material-ui/core/styles";
 import Button from '@material-ui/core/Button';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect, useState, useRef } from 'react';
+import pic from '../../images/coming.png';
 const useStyles = makeStyles({
 
     underline: {
@@ -150,11 +150,10 @@ export default function Register({ setErr }) {
                         name="confirmPassword"
                         value={password.confirmPassword}
                         onChange={e => setConfirmPass(e.target.value)}
-                        error={equalPass || emptyPass1 || emptyPass2 || minLenPass}
+                        error={equalPass || emptyPass1 || emptyPass2}
                         helperText={
                             equalPass ? "Passwords not matching" :
-                                emptyPass1 ? "Empty field" :
-                                    minLenPass ? "The password length should be atleast 8 character" : ""
+                                emptyPass1 ? "Empty field" :""
                         }
 
                     />
@@ -173,7 +172,7 @@ export default function Register({ setErr }) {
 
             </div> */}
 
-            <img src={pic}/>
+            <img src={pic} alt="coming"/>
         </div>
     )
 }

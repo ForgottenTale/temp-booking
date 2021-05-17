@@ -20,6 +20,7 @@ export default function Request({ setErr, ou }) {
     const [refresh, setRefresh] = useState(true);
     const [requesttype, setRequestType] = useState('myrequests');
     const [requestNumber, setRequestNumber] = useState(0);
+ 
 
 
     useEffect(() => {
@@ -81,16 +82,16 @@ export default function Request({ setErr, ou }) {
                 </div>
             </Route>
             <Route path={path + '/:id'} >
-                <RequestView req={request} edit={false} setRefresh={setRefresh} refresh={refresh} showButton={true} setErr={setErr} readProtect={true} ou={ou} />
+                <RequestView req={request} key="1" edit={false} setRefresh={setRefresh} refresh={refresh} showButton={true} setErr={setErr} readProtect={true} ou={ou} />
             </Route>
             <Route path={path + '/:id/edit'} exact>
                 <RequestView2 req={request} edit={true} setRefresh={setRefresh} refresh={refresh} showButton={true} setErr={setErr} readProtect={`${false}`} ou={ou} />
             </Route>
             <Route path={path + '/history/:id'} exact>
-                <RequestView req={request} edit={false} setRefresh={setRefresh} refresh={refresh} showButton={false} setErr={setErr} readProtect={true} ou={ou} />
+                <RequestView req={request} key="2" edit={false} setRefresh={setRefresh} refresh={refresh} showButton={false} setErr={setErr} readProtect={true} ou={ou} />
             </Route>
             <Route path={path + '/all/:id'} exact>
-                <RequestView req={request} edit={false} setRefresh={setRefresh} refresh={refresh} showButton={false} setErr={setErr} readProtect={true} ou={ou} />
+                <RequestView req={request} key="3" edit={false} setRefresh={setRefresh} refresh={refresh} showButton={false} setErr={setErr} readProtect={true} ou={ou} />
             </Route>
         </Switch>
 

@@ -35,7 +35,7 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
         schedule: "",
         img: "",
     })
-    console.log(readProtect)
+
     const [message, setMessage] = useState(false);
     const [readOnly, setReadOnly] = useState(readProtect)
     const { params } = useRouteMatch();

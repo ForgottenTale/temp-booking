@@ -1,17 +1,19 @@
 import './table.scss';
 import pic from '../../images/pic3.jpg';
-import { NavLink} from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import SkeletonRowRequest from '../skeleton/skeletonRowRequest';
 import SkeletonRowUser from '../skeleton/skeletonRowUser';
-
+import { useState } from 'react';
+import Modal from '../modal/modal';
+import axios from 'axios';
 
 export default function Table({ headers, data, type, setUser, setRequest, searchTerm, path, edit, ouId }) {
 
-
-
     return (
         <div className="tableTag">
+
             <table>
+          
                 <tbody>
                     <tr>
                         {headers.map((header, key) => <th key={key}>{header}</th>)}
@@ -51,39 +53,47 @@ export default function Table({ headers, data, type, setUser, setRequest, search
 
 
 
-function Row({ data, type, setRequest, setUser, path, edit, ouId }) {
+function Row({ data, type, setRequest, setUser, path, edit,ouId}) {
     // const { path } = useRouteMatch();
+  
+    const [cancel, setCancel] = useState(false);
+    const [del, setDel] = useState(false);
 
 
     const handleCancel = () => {
-        // const url = `api/bookings/${data.id}?ouId=${ouId}&cancel=true`;
+        const url = `api/bookings/${data.id}?ouId=${ouId}&cancel=true`;
 
-        // axios.delete(url, { withCredentials: true })
-        //     .then((data) => {
-        //         if (data.status === 200) {
-        //             console.log(data.data)
-        //         }
-        //     }).catch((err) => {
-        //         console.log(err);
-        //     })
+        axios.delete(url, { withCredentials: true })
+            .then((data) => {
+                if (data.status === 200) {
+                    console.log(data.data)
+                }
+            }).catch((err) => {
+                console.log(err);
+            })
     }
+    
 
     const handleDelete = () => {
-        // const url = `api/bookings/${data.id}?ouId=${ouId}`;
+        const url = `api/bookings/${data.id}?ouId=${ouId}`;
 
-        // axios.delete(url, { withCredentials: true })
-        //     .then((data) => {
-        //         if (data.status === 200) {
-        //             console.log(data.data)
-        //         }
-        //     }).catch((err) => {
-        //         console.log(err);
-        //     })
+        axios.delete(url, { withCredentials: true })
+            .then((data) => {
+                if (data.status === 200) {
+                    console.log(data.data)
+                }
+            }).catch((err) => {
+                console.log(err);
+            })
     }
     return (
 
-        <tr className={data.encourages === 0 ? "discouraged-row" : (data.encourages === 1 ? "encouraged-row" : "")}>
-
+        [cancel ? <Modal key="1" title="Are you sure you want to cancel this request" setModal={setCancel} handleSubmit={handleCancel} /> : null,
+        del ? <Modal key="2" title="Are you sure you want to cancel this request" setModal={setDel} handleSubmit={handleDelete} /> : null,
+        
+        
+        <tr key="3" className={data.encourages === 0 ? "discouraged-row" : (data.encourages === 1 ? "encouraged-row" : "")}>
+             
             <td data-label="id">{data.id}</td>
             <td data-label="Name">
                 <div className="tableTag_user">
@@ -147,49 +157,49 @@ function Row({ data, type, setRequest, setUser, path, edit, ouId }) {
                                 <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                             </svg>
                         </NavLink> : null,
-                        
-                            <svg
-                                onClick={() => { handleCancel() }}
-                                key='4'
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="18"
-                                height="18"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                className="feather feather-x-circle"
-                                viewBox="0 0 24 24"
-                            >
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <path d="M15 9L9 15"></path>
-                                <path d="M9 9L15 15"></path>
-                            </svg>,
-                       
-                            <svg
-                                onClick={() => { handleDelete() }}
-                                key='5'
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="18"
-                                height="18"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                className="feather feather-trash-2"
-                                viewBox="0 0 24 24"
-                            >
-                                <path d="M3 6L5 6 21 6"></path>
-                                <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path>
-                                <path d="M10 11L10 17"></path>
-                                <path d="M14 11L14 17"></path>
-                            </svg>
-                        
+
+                        <svg
+                            onClick={() => { setCancel(true) }}
+                            key='4'
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="18"
+                            height="18"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="feather feather-x-circle"
+                            viewBox="0 0 24 24"
+                        >
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M15 9L9 15"></path>
+                            <path d="M9 9L15 15"></path>
+                        </svg>,
+
+                        <svg
+                            onClick={() => {setDel(true)}}
+                            key='5'
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="18"
+                            height="18"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="feather feather-trash-2"
+                            viewBox="0 0 24 24"
+                        >
+                            <path d="M3 6L5 6 21 6"></path>
+                            <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path>
+                            <path d="M10 11L10 17"></path>
+                            <path d="M14 11L14 17"></path>
+                        </svg>
+
                     ]
                     : <NavLink to={`users/${path}/${data.id}`} onClick={() => setUser(data)}>View</NavLink>}
 
             </td>
-        </tr>
+        </tr>]
 
 
     );

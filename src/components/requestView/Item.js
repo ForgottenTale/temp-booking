@@ -16,14 +16,10 @@ export default function Item({ title, value, readOnly, setData, name }) {
             {/* <input name={name} defaultValue={value} disabled={readOnly} onChange={e => handleChange(e)} /> */}
             <TextField
                     margin="normal"
-                    id="time-picker"
-            
+                    id="name"
                     value={value}
                     onChange={(e) => handleChange(e)}
                     name={name}
-                    KeyboardButtonProps={{
-                        'aria-label': 'change time',
-                    }}
                     disabled={readOnly}
                 />
         </div>

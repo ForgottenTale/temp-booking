@@ -78,7 +78,7 @@ export default function AdminDashboard({ role, setErr,user ,ou}) {
                     setErr(err.response.data.error);
                 });
         }
-    },[ou])
+    },[ou,setErr])
 
     return (
         <Switch>
@@ -114,7 +114,7 @@ export default function AdminDashboard({ role, setErr,user ,ou}) {
                         <button className="button" onClick={() => { setPop(true) }}>+ Book service</button>
                     </div>
 
-                    <Table headers={header} data={data} path="dashboard" type='request' setRequest={setRequest} searchTerm={searchTerm} edit={true} />
+                    <Table ouId={ou.ouId} headers={header} data={data} path="dashboard" type='request' setRequest={setRequest} searchTerm={searchTerm} edit={true} />
 
 
                 </div>

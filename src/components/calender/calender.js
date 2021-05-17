@@ -24,53 +24,18 @@ function Calender({ setErr }) {
     const [titleWidth, setTitleWidth] = useState({ display: "none" });
     const [dayBodyWidth, setdayBodyWidth] = useState({ display: "none" });
     // const [dayList, setDayList] = useState([]);
-    const [data, setData] = useState([
-        {
-
-            "id": 1,
-            "serviceName": "webex",
-            "title": "SpaceX",
-            "description": "This is a test",
-            "img": "1619278428240ms-homepage-desktop.jpg",
-            "comments": null,
-            "startTime": "2021-05-14T03:30:00.000Z",
-            "endTime": "2021-05-14T04:30:00.000Z",
-            "speakerName": "Elon musk",
-            "speakerEmail": "elonmusck@ieee.org",
-            "coHosts": "[[\"dsf\", \"sdfsd\"]]",
-            "type": "online_meeting"
-
-
-        },
-        {
-
-            "id": 2,
-            "serviceName": "zoom",
-            "title": "A very important job sadasdasdasdasdasdasdasda",
-            "description": "This is asking for intern support",
-            "img": "1619292671235ms-homepage-desktop.jpg",
-            "comments": "nothing to say",
-            "startTime": "2021-05-24T18:30:00.000Z",
-            "endTime": "2021-05-24T05:30:00.000Z",
-            "speakerName": "Arundhathi",
-            "speakerEmail": "arundhathi@gmail.com",
-            "coHosts": null,
-            "type": "online_meeting"
-
-
-        }
-    ]);
+    const [data, setData] = useState([]);
 
     useEffect(() => {
-        // const url = "/api/calendar?month=" + (value.clone().format('M')) + "&year=" + value.clone().format('Y');
-        // axios.get(url, { withCredentials: true })
-        //     .then((d) => {
-        //         setData(d.data);
-        //     })
-        //     .catch(err => {
-        //         console.error(err);
-        //         setErr(err.response.data.error||err);
-        //     });
+        const url = "/api/calendar?month=" + (value.clone().format('M')) + "&year=" + value.clone().format('Y');
+        axios.get(url, { withCredentials: true })
+            .then((d) => {
+                setData(d.data);
+            })
+            .catch(err => {
+                console.error(err);
+                setErr(err.response.data.error||err);
+            });
         // eslint-disable-next-line
     }, [value])
 
