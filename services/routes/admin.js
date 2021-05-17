@@ -7,7 +7,7 @@ module.exports = function(app){
 
     app.route('/api/users')
     .get(auth.ensureAuthenticated, auth.ensureOuAdmin, (req, res)=>{
-        database.getAllUsers({role: req.query.role, ouId: req.user.activeOu.id}, (err, results)=>{
+        database.getAllUsers({role: req.query.role, user: req.user}, (err, results)=>{
             if(err) return respondError(err, res);
             res.status(200).json(results);
         });

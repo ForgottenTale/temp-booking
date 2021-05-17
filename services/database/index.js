@@ -640,15 +640,28 @@ module.exports = {
 	},
 
     getAllUsers: function(constraint, done){
-		let query = "SELECT *, user._id as id FROM user INNER JOIN person ON person_id=person._id INNER JOIN ou_map ON ou_map.person_id=person._id";
-		if(constraint.role == "admin")
-			query+=` WHERE ou_map.admin=1 AND ou_map.ou_id=${constraint.ouId}`;
-		else if(constraint.role == "user")
-			query+=` WHERE ou_map.admin=0 AND ou_map.ou_id=${constraint.ouId}`;
-		else if(!constraint.role)
-			query+=";";
+		let query;
+		if(constraint.user.activeOu.id==1 && constraint.user.activeOu.admin==1){
+			query = "SELECT *, user._id as id FROM user INNER JOIN person ON person_id=person._id INNER JOIN ou_map ON ou_map.person_id=person._id";
+			if(constraint.role == "admin")
+				query+=` WHERE ou_map.admin=1`;
+			else if(constraint.role == "user")
+				query+=` WHERE ou_map.admin=0`;
+			else if(!constraint.role)
+				query+=";";
 		else
 			query+="WHERE role is null;";
+		}else{
+			query = "SELECT *, user._id as id FROM user INNER JOIN person ON person_id=person._id INNER JOIN ou_map ON ou_map.person_id=person._id";
+			if(constraint.role == "admin")
+				query+=` WHERE ou_map.admin=1 AND ou_map.ou_id=${constraint.user.activeOu.id}`;
+			else if(constraint.role == "user")
+				query+=` WHERE ou_map.admin=0 AND ou_map.ou_id=${constraint.user.activeOu.id}`;
+			else if(!constraint.role)
+				query+=";";
+			else
+				query+="WHERE role is null;";
+		}
 		executeQuery(query)
 		.then(results=>{
 			results = results.map(result=>transmuteSnakeToCamel(result))
@@ -693,7 +706,7 @@ module.exports = {
 					bookingsOfAllTypes[mainIdx][idx] = transmuteSnakeToCamel(bookingsOfAllTypes[mainIdx][idx]);
 					bookingsOfAllTypes[mainIdx][idx].otherResponses = await executeQuery("SELECT name, email, encourages, response, created_at as createdAt FROM response INNER JOIN person on person._id=response.person_id WHERE blt_id=" + bookingsOfAllTypes[mainIdx][idx].id + ";");
 					bookingsOfAllTypes[mainIdx][idx].otherResponses.map(response=>{
-						response.createdAt = convertSqlTimesToDate(response.createdAt);
+						response.createdAt = Service.convertSqlTimesToDate(response.createdAt);
 					})
 					bookingsOfAllTypes[mainIdx][idx].type = types[mainIdx].type;
 					dataArray.push(bookingsOfAllTypes[mainIdx][idx])
@@ -767,7 +780,7 @@ module.exports = {
 					bookingsOfAllTypes[mainIdx][idx] = transmuteSnakeToCamel(bookingsOfAllTypes[mainIdx][idx]);
 					bookingsOfAllTypes[mainIdx][idx].otherResponses = await executeQuery("SELECT name, email, encourages, response, created_at as createdAt FROM response INNER JOIN person on person._id=response.person_id WHERE blt_id=" + bookingsOfAllTypes[mainIdx][idx].id + ";");
 					bookingsOfAllTypes[mainIdx][idx].otherResponses.map(response=>{
-						response.createdAt = convertSqlTimesToDate(response.createdAt);
+						response.createdAt = ServiceClass.convertSqlTimesToDate(response.createdAt);
 					})
 					bookingsOfAllTypes[mainIdx][idx].type = types[mainIdx].type;
 					delete(bookingsOfAllTypes[mainIdx][idx].password);
