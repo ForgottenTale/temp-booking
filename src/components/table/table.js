@@ -93,7 +93,7 @@ function Row({ setRefresh, data, type, setRequest, setUser, path, edit, ouId, ro
     return (
 
         [cancel ? <Modal key="1" title="Are you sure you want to cancel this request" setModal={setCancel} handleSubmit={handleCancel} /> : null,
-        del ? <Modal key="2" title="Are you sure you want to cancel this request" setModal={setDel} handleSubmit={handleDelete} /> : null,
+        del ? <Modal key="2" title="Are you sure you want to delete this request" setModal={setDel} handleSubmit={handleDelete} /> : null,
 
 
         <tr key="3" className={data.encourages === 0 ? "discouraged-row" : (data.encourages === 1 ? "encouraged-row" : "")}>

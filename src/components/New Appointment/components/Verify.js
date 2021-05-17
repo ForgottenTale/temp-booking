@@ -72,14 +72,14 @@ function Verify({ path, type, data, setId, setErr,setPop }) {
             </div>
             <div className="mb-4">
               <p className="label">Service:</p>
-              <p>{data.type}</p>
+              <p>{data.type.replace("_"," ")}</p>
             </div>
           </div>
           <div className="col">
             <div className="mb-2">
               <p className="label">Time:</p>
               <p>
-                {data.type==="online_meeting"&&data.type==="intern_support"? <>{new Date(data.startTime).toLocaleTimeString()}
+                {data.type==="online_meeting"||data.type==="intern_support"? <>{new Date(data.startTime).toLocaleTimeString()}
                 {data.endTime !== ""
                   ? "-" + new Date(data.endTime).toLocaleTimeString()
                   : null}</>:

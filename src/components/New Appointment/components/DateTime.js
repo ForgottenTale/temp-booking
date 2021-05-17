@@ -41,18 +41,20 @@ function DateTime({ path, type, setData, data, user, ou ,setPop}) {
       ...data,
       ouId: ouId
     });
+    var start = Date.parse(new Date(data.startTime).toISOString())
+    var end = Date.parse(new Date(data.endTime).toISOString())
 
     if (data.ouid === "") {
       setOuError(true);
     }
-    else if (data.startTime === data.endTime) {
+    else if (start === end) {
       setequalTimeError(true);
     }
-    else if (data.startTime > data.endTime) {
+    else if (start  >end) {
       setShortTimeError(true);
     }
 
-    if (data.startTime !== "" && data.endTime !== "" && data.startTime !== data.endTime && data.startTime < data.endTime && ouId !== "") {
+    if (start !== "" && end !== "" && start  !== end && start < end && ouId !== "") {
       if (type === "online_meeting" || type === "publicity") {
         history.push(path + "/event-info");
       } else if (type === "intern_support" || type === "e_notice") {

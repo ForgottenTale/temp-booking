@@ -37,9 +37,9 @@
 @media only screen and (max-width: 1000px) {
     .adminDashboard {
         &_con {
-            grid-template-columns: repeat(2, auto);  
-            gap:10px;
-            &_box{
+            grid-template-columns: repeat(2, auto);
+            gap: 10px;
+            &_box {
                 width: 100%;
             }
         }
@@ -47,11 +47,9 @@
 }
 @media only screen and (max-width: 500px) {
     .adminDashboard {
-
+        margin-bottom: 30px;
         &_con {
-            grid-template-columns: repeat(1, 1fr);  
-          
-           
+            grid-template-columns: repeat(1, 1fr);
         }
     }
 }
