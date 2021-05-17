@@ -4,6 +4,7 @@ const finalDeclined = require('./templates/finalDeclined.js');
 const reviewRequest = require('./templates/reviewRequest.js');
 const createAccount = require('./templates/createAccount.js');
 const newBooking = require('./templates/newBooking.js');
+const resetPassword = require('./templates/resetPassword.js');
 
 let transporterData;
 if(process.env.NODE_ENV=="testing"){

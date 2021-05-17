@@ -60,7 +60,7 @@ module.exports = function(app){
             return respondError(new Error("Required Fields missing"), res);
         database.getUser({email: req.body.email}, (err, result)=>{
             if(err) return respondError(err, res);
-            if(result.length<1)
+            if(!result)
                 return respondError(new Error("User does not exist"), res);
             let uniqueString = utils.generateUniqueString(req.body.email);
             database.addResetId(req.body.email, uniqueString, (err, message)=>{
