@@ -642,7 +642,7 @@ module.exports = {
     getAllUsers: function(constraint, done){
 		let query;
 		if(constraint.user.activeOu.id==1 && constraint.user.activeOu.admin==1){
-			query = "SELECT *, user._id as id, ou.name as ouName FROM user INNER JOIN person ON person_id=person._id INNER JOIN ou_map ON ou_map.person_id=person._id INNER JOIN ou ON ou._id=ou_map.ou_id ";
+			query = "SELECT *,user.name AS name, user._id as id, ou.name as ouName FROM user INNER JOIN person ON person_id=person._id INNER JOIN ou_map ON ou_map.person_id=person._id INNER JOIN ou ON ou._id=ou_map.ou_id ";
 			if(constraint.role == "admin")
 				query+=` WHERE ou_map.admin=1`;
 			else if(constraint.role == "user")
