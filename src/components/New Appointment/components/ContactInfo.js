@@ -37,7 +37,7 @@ function ContactInfo({ type, setData, data }) {
           you a confirmation and other info.
         </p>
         <h3>Questions?</h3>
-        <p>Call (858) 939-3746 for help.</p>
+        <p>Reach us at mintsupport@ieeekerala.org</p>
       </div>
       <div className="info col">
         <h2>Contact Information</h2>

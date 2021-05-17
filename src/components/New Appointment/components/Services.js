@@ -34,7 +34,7 @@ function Services({ path, type, data, setData }) {
           Please select a service for which you want to schedule an appointment.
         </p>
         <h3>Questions?</h3>
-        <p>Call (858) 939-3746 for help.</p>
+        <p>Reach us at mintsupport@ieeekerala.org</p>
       </div>
       <div className="service-list col">
         <h2>Service Selection</h2>

@@ -149,7 +149,7 @@ function DateTime({ path, type, setData, data, user, ou }) {
         <h2>Select Date & Time</h2>
         <p>Please select the date and time for your appointment.</p>
         <h3>Questions?</h3>
-        <p>Call (858) 939-3746 for help.</p>
+        <p>Reach us at mintsupport@ieeekerala.org</p>
       </div>
       <div className="date col">
         <h2>Select Date & Time</h2>
