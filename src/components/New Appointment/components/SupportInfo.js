@@ -191,7 +191,6 @@ function SupportInfo({ path, type, data, setData,setPop }) {
                   <textarea
                     placeholder="Comments"
                     rows="3"
-                    required
                     className="form-control"
                     defaultValue={data.comments}
                     name="comments"
@@ -308,7 +307,6 @@ function SupportInfo({ path, type, data, setData,setPop }) {
                   <textarea
                     placeholder="Comments"
                     rows="3"
-                    required
                     defaultValue={data.comments}
                     className="form-control"
                     name="comments"

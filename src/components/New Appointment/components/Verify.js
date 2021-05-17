@@ -2,10 +2,36 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import confirmIcon from "../../../images/info.png";
+import { CircularProgress, Button } from '@material-ui/core';
+import { makeStyles } from "@material-ui/core/styles";
 
-function Verify({ path, type, data, setId, setErr,setPop }) {
+const useStyles = makeStyles({
+
+  underline: {
+      "&&&:before": {
+          borderBottom: "none"
+      },
+      "&&:after": {
+          borderBottom: "none"
+      }
+  },
+  root: {
+      background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+      border: 0,
+      borderRadius: 3,
+      boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+      color: 'white',
+      height: 48,
+      width:60,
+      padding: '0 30px',
+  },
+});
+
+function Verify({ path, type, data, setId, setErr, setPop }) {
+  const classes = useStyles();
   const history = useHistory();
   const [proceed, setProceed] = useState(false);
+  const [loading,setLoading] = useState(false)
 
   useEffect(() => {
     if (proceed) history.push(path + "/confirmation");
@@ -28,6 +54,7 @@ function Verify({ path, type, data, setId, setErr,setPop }) {
 
   const handleUpload = async (data) => {
     try {
+      setLoading(true);
       const url = "/api/book/";
       const res = await axios.post(url, data, {
         headers: {
@@ -39,6 +66,7 @@ function Verify({ path, type, data, setId, setErr,setPop }) {
       setProceed(true);
     } catch (err) {
       console.error(err);
+      setLoading(false);
       setErr(err.response.data.error);
     }
   };
@@ -57,10 +85,10 @@ function Verify({ path, type, data, setId, setErr,setPop }) {
       </div>
       <div className="verify col">
         <h2>Verify Booking Details</h2>
-        <div className="close"  onClick={() => {
+        <div className="close" onClick={() => {
           history.push("/dashboard");
-          setPop((prevState)=>{
-            return!prevState
+          setPop((prevState) => {
+            return !prevState
           });
         }}>Close</div>
         <h3>Appointment Info</h3>
@@ -72,25 +100,25 @@ function Verify({ path, type, data, setId, setErr,setPop }) {
             </div>
             <div className="mb-4">
               <p className="label">Service:</p>
-              <p>{data.type.replace("_"," ")}</p>
+              <p>{data.type.replace("_", " ")}</p>
             </div>
           </div>
           <div className="col">
             <div className="mb-2">
               <p className="label">Time:</p>
               <p>
-                {data.type==="online_meeting"||data.type==="intern_support"? <>{new Date(data.startTime).toLocaleTimeString()}
-                {data.endTime !== ""
-                  ? "-" + new Date(data.endTime).toLocaleTimeString()
-                  : null}</>:
+                {data.type === "online_meeting" || data.type === "intern_support" ? <>{new Date(data.startTime).toLocaleTimeString()}
+                  {data.endTime !== ""
+                    ? "-" + new Date(data.endTime).toLocaleTimeString()
+                    : null}</> :
                   <>
-                  {data.publishTime !== ""
-                  ?  new Date(data.publishTime).toLocaleTimeString()
-                  : null}
+                    {data.publishTime !== ""
+                      ? new Date(data.publishTime).toLocaleTimeString()
+                      : null}
                   </>
-                  }
+                }
 
-             
+
               </p>
             </div>
           </div>
@@ -115,13 +143,14 @@ function Verify({ path, type, data, setId, setErr,setPop }) {
           </button>
         ) : null}
 
-        <button
-          type="button"
-          className="btn btn-primary submit-btn"
-          onClick={() => handleSubmit()}
+        <Button
+          className={classes.root}
+          style={{ width: "100%", marginBottom: 30 }}
+          onClick={() => { handleSubmit() }}
+          disabled={loading}
         >
-          Submit
-        </button>
+          {loading ? <CircularProgress size={14} /> : "Submit"}
+        </Button>
       </div>
     </div>
   );
