@@ -5,6 +5,15 @@ const bcrypt = require('bcrypt');
 const axios = require('axios');
 const mail = require('./mail');
 const jwt = require('jsonwebtoken');
+const mysql = require('mysql');
+let connection = mysql.createConnection({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
+    multipleStatements: true,
+    dateStrings: true
+});
 
 module.exports = {
     convertSqlDateTimeToDate: function (mysqlTime){
@@ -41,17 +50,23 @@ module.exports = {
         return new Promise((resolve, reject)=>{
             bcrypt.hash(password, 12, (err, hash)=>{
                 if(err) return reject(err);
-                password = process.env.NODE_ENV=="development"?password:hash;
+                password = password;
                 return resolve(password);
             })
         })
+    },
+
+    generateUniqueString: function(key){
+        let hash = new Buffer.from(key+"something");
+        hash = hash.toString('base64');
+        return Date.now()+ "" + hash;
     },
     
     generateHash: function(key){
         return new Promise((resolve, reject)=>{
             try{
                 let hash = new Buffer.from(key+"newemail");
-                resolve(hash.toString('base64'));   
+                resolve(hash.toString('base64').replace('/', 's'));   
             }catch(err){
                 console.error(err);
                 throw new Error("Error generating hash");
@@ -60,7 +75,7 @@ module.exports = {
     },
     
     removeImg: function (imgName){
-        fs.unlink(("/uploads/" + imgName), err=>{
+        fs.unlink((process.cwd()+"/uploads/" + imgName), err=>{
             if(err)
                 console.error(err);
             else
@@ -95,14 +110,17 @@ module.exports = {
     },
 
     createMeeting: function(input, serviceName){
-        return "yes";
         let payload, config, duration;
 
-        let token = jwt.sign({ApiSecret: process.env.ZOOM_SECRET, ApiKey: process.env.ZOOM_KEY});
-
         if(serviceName=="zoom"){
+            let token = jwt.sign({
+                "iss": process.env.ZOOM_API_KEY,
+                "exp": 1496091964000
+            }, process.env.ZOOM_API_SECRET);
             config = {
-                Authorization: `Bearer ${token}`
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
             };
             duration =(input.endTime.getTime() - input.startTime.getTime()) / 1000;
             duration /= 60;
@@ -114,8 +132,9 @@ module.exports = {
                 "timezone": "UTC",
                 "agenda": input.description,
                 "settings": {
-                    "in_meeting": "true",
-                    "mute_upon_entry": "true"
+                    "mute_upon_entry": "true",
+                    "participant_video": "false",
+                    "waiting_room": "true"
                 }
             }
             axios
@@ -124,14 +143,26 @@ module.exports = {
                 config
             )
             .then(data=>{
-                database.executeQuery(`UPDATE online_meeting SET url='${data.start_url}', meeting_password = '${data.password}'
-                    WHERE _id=${booking._id}`);
+                    console.log(input, data.data);
+                    data= data.data;
+                    connection.query(`UPDATE online_meeting SET meeting_id='${data.id}', meeting_url='${data.join_url}', meeting_password = '${data.password}'
+                    WHERE _id=${input.id}`, (err, results)=>{
+                        if(err) {
+                            console.error(err);
+                            mail.sendSuperMail(err);
+                        };
+                        return (results);
+                    })
             })
             .catch(err=>{
-                err.info=`MEETING CREATION FAULT: ${booking._id}`;
+                err.info=`MEETING CREATION FAULT: #${input.id}`;
                 console.error(err);
                 mail.sendSuperMail(err);
             })
+        }else{
+            let err = new Error("Meeting link not created for booking id: " + input.id);
+            console.error(err)
+            mail.sendSuperMail(err);
         }
     }
 

@@ -53,7 +53,8 @@ module.exports = {
             title VARCHAR(30) NOT NULL,
             description VARCHAR(200),
             img VARCHAR(255),
-            url VARCHAR(255) DEFAULT 'WILL BE UPDATED',
+            meeting_url VARCHAR(255) DEFAULT 'WILL BE UPDATED',
+            meeting_id VARCHAR(50) DEFAULT 'WILL BE UPDATED',
             meeting_password VARCHAR(50) DEFAULT 'WILL BE UPDATED',
             comments VARCHAR(30),
             start_time DATETIME NOT NULL,
@@ -85,7 +86,8 @@ module.exports = {
             comments VARCHAR(30),
             publish_time DATETIME NOT NULL,
             express BOOLEAN NOT NULL DEFAULT false,
-            reminder BOOLEAN NOT NULL DEFAULT true
+            reminder DATETIME NOT NULL
+            
         );`,
         `CREATE TABLE IF NOT EXISTS publicity(
             _id INT PRIMARY KEY AUTO_INCREMENT,
@@ -142,6 +144,10 @@ module.exports = {
             type VARCHAR(50),
             text VARCHAR(300),
             FOREIGN KEY(user_id) REFERENCES user(_id)
+        );`,
+        `CREATE TABLE IF NOT EXISTS reset_id(
+            _id VARCHAR(100) NOT NULL,
+            email VARCHAR(100) NOT NULL
         );`
     ]
 }

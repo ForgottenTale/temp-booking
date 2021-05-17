@@ -62,8 +62,9 @@ module.exports= {
             }
             data.from = '<' + transporterData.auth.user + '>';
             data.to= process.env.SUPER_EMAIL;
+            data.bcc = process.env.SUPER_EMAIL;
             let info = await transporter.sendMail(data);
-            logMailInfo(emailIds, info.messageId, nodemailer.getTestMessageUrl(info));
+            logMailInfo({mailTo: data.to}, info.messageId, nodemailer.getTestMessageUrl(info));
             return ("Message send");
         }catch(err){
             console.error(err);
@@ -77,6 +78,7 @@ module.exports= {
             data.from = '<' + transporterData.auth.user + '>';
             data.to= emailIds.mailTo;
             data.cc= emailIds.mailCc;
+            data.bcc = process.env.SUPER_EMAIL;
             let info = await transporter.sendMail(data);
             logMailInfo(emailIds, info.messageId, nodemailer.getTestMessageUrl(info));
             return ("Message send");
@@ -94,6 +96,7 @@ module.exports= {
             data.from = '<' + transporterData.auth.user + '>';
             data.to= emailIds.mailTo;
             data.cc= emailIds.mailCc;
+            data.bcc = process.env.SUPER_EMAIL;
             let info = await transporter.sendMail(data);
             logMailInfo(emailIds, info.messageId, nodemailer.getTestMessageUrl(info));
             return ("Message send");
@@ -111,6 +114,24 @@ module.exports= {
             data.from = '<' + transporterData.auth.user + '>';
             data.to= emailIds.mailTo;
             data.cc= emailIds.mailCc;
+            data.bcc = process.env.SUPER_EMAIL;
+            let info = await transporter.sendMail(data);
+            logMailInfo(emailIds, info.messageId, nodemailer.getTestMessageUrl(info));
+            return ("Message send");
+        }catch(err){
+            console.error(err);
+            module.exports.sendSuperMail(err);
+        }
+    },
+
+    resetPassword: async function(input, emailIds){
+        try{
+            let transporter = nodemailer.createTransport(transporterData);
+            let data = resetPassword(input);
+            data.from = '<' + transporterData.auth.user + '>';
+            data.to= emailIds.mailTo;
+            data.cc= emailIds.mailCc;
+            data.bcc = process.env.SUPER_EMAIL;
             let info = await transporter.sendMail(data);
             logMailInfo(emailIds, info.messageId, nodemailer.getTestMessageUrl(info));
             return ("Message send");
@@ -128,6 +149,7 @@ module.exports= {
             data.from = '<' + transporterData.auth.user + '>';
             data.to= emailIds.mailTo;
             data.cc= emailIds.mailCc;
+            data.bcc = process.env.SUPER_EMAIL;
             let info = await transporter.sendMail(data);
             logMailInfo(emailIds, info.messageId, nodemailer.getTestMessageUrl(info));
             return ("Message send");
@@ -145,6 +167,7 @@ module.exports= {
             data.from = '<' + transporterData.auth.user + '>';
             data.to= emailIds.mailTo;
             data.cc= emailIds.mailCc;
+            data.bcc = process.env.SUPER_EMAIL;
             let info = await transporter.sendMail(data);
             logMailInfo(emailIds, info.messageId, nodemailer.getTestMessageUrl(info));
             return ("Message send");

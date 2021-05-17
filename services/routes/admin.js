@@ -25,6 +25,9 @@ module.exports = function(app){
         if(!req.body.action){
             return respondError("Required Fields missing", res);
         }
+        if(req.body.action=="decline")
+            if(!req.body.response || req.body.response.trim().length<1)
+                return respondError("Declination requires reason");
         if(!req.body.response)
             req.body.response=="null";
         database.updateBookingStatus({
