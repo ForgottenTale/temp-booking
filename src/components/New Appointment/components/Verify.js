@@ -53,7 +53,7 @@ function Verify({ path, type, data, setId, setErr }) {
           everything is correct.
         </p>
         <h3>Questions?</h3>
-        <p>Call (858) 939-3746 for help.</p>
+        <p>Reach us at mintsupport@ieeekerala.org</p>
       </div>
       <div className="verify col">
         <h2>Verify Booking Details</h2>

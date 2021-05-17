@@ -14,7 +14,7 @@ function Confirmation({ id }) {
           confirmation for your record.
         </p>
         <h3>Questions?</h3>
-        <p>Call (858) 939-3746 for help.</p>
+        <p>Reach us at mintsupport@ieeekerala.org</p>
       </div>
       <div className="verify col">
         <h2>Appointment Confirmation</h2>
