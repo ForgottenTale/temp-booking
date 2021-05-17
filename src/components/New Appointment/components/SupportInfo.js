@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import infoIcon from "../../../images/info.png";
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 
 function SupportInfo({ path, type, data, setData }) {
   const history = useHistory();
@@ -17,6 +19,15 @@ function SupportInfo({ path, type, data, setData }) {
     url: data.url,
     img: data.img,
   });
+  const handleDateChange = (e, name) => {
+    setData(prevState => {
+      return ({
+        ...prevState,
+        [name]: e.toISOString(),
+        date: e.toISOString(),
+      })
+    })
+  }
 
   function nextButton(event) {
     event.preventDefault();
@@ -25,7 +36,7 @@ function SupportInfo({ path, type, data, setData }) {
       ...data,
       title: support.title,
       description: support.description,
-      express: support.express,
+      express: support.express.toLowerCase(),
       reminder: support.reminder,
       comments: support.comments,
       purpose: support.purpose,
@@ -261,31 +272,19 @@ function SupportInfo({ path, type, data, setData }) {
                   />
                 </div>
                 <div className="mb-4">
-                  <p className="remainder-enotice-label">Remainder e-notice:</p>
-                  <div className="form-check form-check-inline">
-                    <input
-                      defaultValue={data.reminder}
-                      className="form-check-input"
-                      type="radio"
-                      name="remainderEnotice"
-                      onChange={() => {
-                        setSupport({ ...support, reminder: "yes" });
-                      }}
-                    />
-                    <label className="form-check-label">Yes</label>
-                  </div>
-                  <div className="form-check form-check-inline">
-                    <input
-                      defaultValue={data.reminder}
-                      className="form-check-input"
-                      type="radio"
-                      name="remainderEnotice"
-                      onChange={(e) => {
-                        setSupport({ ...support, reminder: "no" });
-                      }}
-                    />
-                    <label className="form-check-label">No</label>
-                  </div>
+            
+                <label className="form-label">Reminder</label>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <KeyboardDatePicker
+                  margin="normal"
+                  id="time-picker"
+                  value={data.reminder === "" ? undefined: new Date(data.reminder)}
+                  KeyboardButtonProps={{
+                    'aria-label': 'change time',
+                  }}
+                  onChange={(e) => handleDateChange(e)}
+                />
+              </MuiPickersUtilsProvider>
                 </div>
                 <div className="mb-5">
                   <textarea

@@ -11,6 +11,7 @@ import HomePage from './components/Homepage/homepage';
 import Register from './components/register/register';
 import ProtectedRoute from './components/protectedRoute/protectedRoute';
 import ProtectedLogin from './components/protectedLogin/protectedLogin';
+import ForgotPass from './components/forgotPass/forgotPass';
 
 function App() {
   const [user, setUser] = useState({ name: null, ou: null, email: null });
@@ -35,7 +36,7 @@ function App() {
             name: userInfo.data.name,
             ou: userInfo.data.ous,
             email: userInfo.data.email,
-            phone:userInfo.phone
+            phone: userInfo.phone
           })
           setOU(userInfo.data.ous[0]);
 
@@ -63,27 +64,22 @@ function App() {
       {err && <Error msg={err} setErr={setErr} />}
       <Router>
         <Switch>
-          {/* <Route path='/login'>
-                    <Login setErr={setErr} setAuth={setAuth} isAuth={isAuth} />
-                </Route> */}
+          <Route path='/forgotpassword'>
+            <ForgotPass setErr={setErr} />
+          </Route>
           <Route path="/" exact>
             <HomePage setErr={setErr} isAuth={isAuth} />
           </Route>
           <Route path="/create-account/:id" exact>
-            <Register setErr={setErr}/>
+            <Register key="1" reset={false} setErr={setErr} />
           </Route>
-          <Route path="/create-account/:id" exact>
-            <Register setErr={setErr}/>
+          <Route path="/reset-password/:id" exact>
+            <Register key="2" reset={true} setErr={setErr} />
           </Route>
-          {/* <Route path="/login">
-            <Login setErr={setErr} setAuth={setAuth} isAuth={isAuth} setOU={setOU} csetUser={setUser} />
-          </Route>
-          <Route path="/*" >
-            <Content ou={ou} setAuth={setAuth} user={user} role={role} setOU={setOU} setErr={setErr} isAuth={isAuth} setUser={setUser}/>
-          </Route> */}
+
           <ProtectedLogin path="/login" setErr={setErr} setAuth={setAuth} isAuth={isAuth} setOU={setOU} component={Login} setUser={setUser} />
           <ProtectedRoute path="/*" ou={ou} setAuth={setAuth} user={user} role={role} setOU={setOU} setErr={setErr} isAuth={isAuth} setUser={setUser} component={Content} />
-          
+
 
         </Switch>
       </Router>

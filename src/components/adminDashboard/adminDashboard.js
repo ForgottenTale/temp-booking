@@ -114,16 +114,16 @@ export default function AdminDashboard({ role, setErr,user ,ou}) {
                         <button className="button" onClick={() => { setPop(true) }}>+ Book service</button>
                     </div>
 
-                    <Table ouId={ou.ouId} headers={header} data={data} path="dashboard" type='request' setRequest={setRequest} searchTerm={searchTerm} edit={true} />
+                    <Table ouId={ou.ouId} headers={header} data={data} path="dashboard" type='request' setRequest={setRequest} searchTerm={searchTerm} edit={false} />
 
 
                 </div>
             </Route>
             <Route path={"/dashboard/:id"} exact>
-                <RequestView req={request} edit={true} setRefresh={setRefresh} refresh={refresh} showButton={true} setErr={setErr} readProtect={true}/>
+                <RequestView req={request} edit={true} ou={ou} setRefresh={setRefresh} refresh={refresh} showButton={true} setErr={setErr} readProtect={true}/>
             </Route>
             <Route path={"/dashboard/:id/edit"} exact>
-                <RequestView2 req={request} edit={true} setRefresh={setRefresh} refresh={refresh} showButton={true} setErr={setErr} readProtect={false}/>
+                <RequestView2 req={request} edit={false} ou={ou} setRefresh={setRefresh} refresh={refresh} showButton={true} setErr={setErr} readProtect={false}/>
             </Route>
         </Switch>
     );

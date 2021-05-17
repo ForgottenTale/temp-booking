@@ -49,6 +49,7 @@ function EventInfo({ path, type, data, setData }) {
                 className="form-control"
                 defaultValue={data.description}
                 name="eventDesc"
+                required
                 onChange={(e) =>
                   setContent({ ...content, description: e.target.value })
                 }
@@ -73,6 +74,7 @@ function EventInfo({ path, type, data, setData }) {
                   type="text"
                   className="form-control"
                   name="speakerName"
+                  required
                   defaultValue={data.speakerName}
                   onChange={(e) =>
                     setContent({ ...content, speaker: e.target.value })
@@ -85,6 +87,7 @@ function EventInfo({ path, type, data, setData }) {
                   type="email"
                   className="form-control"
                   name="speakerMail"
+                  required
                   defaultValue={data.speakerEmail}
                   onChange={(e) =>
                     setContent({ ...content, speakerEmail: e.target.value })
@@ -128,6 +131,7 @@ function EventInfo({ path, type, data, setData }) {
                   type="text"
                   className="form-control"
                   name="title"
+                  required
                   defaultValue={data.title}
                   onChange={(e) => {
                     setContent({ ...content, title: e.target.value });
@@ -140,6 +144,7 @@ function EventInfo({ path, type, data, setData }) {
                   type="file"
                   className="form-control"
                   name="poster"
+                  required
                   // defaultValue={data.img}
                   onChange={(e) => {
                     setContent({ ...content, img: e.target.files[0] });

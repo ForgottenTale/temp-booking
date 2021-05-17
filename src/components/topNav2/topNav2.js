@@ -10,10 +10,10 @@ export default function TopNav2({ isAuth }) {
                 <h3>Calandar</h3>
             </div>
             <div className="topNav2_right">
-                {isAuth === "" || isAuth === false ?
+                {isAuth === "" || isAuth === true ?
                     <button
                         onClick={() => history.push("/dashboard")}
-                    >Goto Dasboard</button> :
+                    >Goto Dashboard</button> :
                     <button
                         onClick={() => history.push("/login")}
                     >Login</button>}

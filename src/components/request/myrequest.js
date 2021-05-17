@@ -29,7 +29,7 @@ export default function MyRequests({ setErr, ouid, setRequest, searchTerm, setRe
 
     return (
         <div className="history">
-            <Table ouId={ouid} headers={header} data={data} type='request' setRequest={setRequest} searchTerm={searchTerm} path="/requests"/>
+            <Table ouId={ouid} headers={header} data={data} edit={false} type='request' setRequest={setRequest} searchTerm={searchTerm} path="/requests"/>
 
         </div>
     );

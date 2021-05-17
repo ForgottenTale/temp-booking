@@ -30,11 +30,12 @@ function DateTime({ path, type, setData, data, user, ou }) {
   const [ouError, setOuError] = useState(false);
   const [options, setOptions] = useState([])
   const [ouId, setOuID] = useState("")
+  const [ouName, setOuName] = useState("")
 
   const history = useHistory();
 
   let minDate = minDay();
-
+  console.log(ouName);
   const next = (event) => {
     event.preventDefault();
     setData({
@@ -52,7 +53,7 @@ function DateTime({ path, type, setData, data, user, ou }) {
       setShortTimeError(true);
     }
 
-    if (data.startTime !== "" && data.endTime !== "" && data.startTime !== data.endTime && data.startTime < data.endTime && ouId !=="") {
+    if (data.startTime !== "" && data.endTime !== "" && data.startTime !== data.endTime && data.startTime < data.endTime && ouId !== "") {
       if (type === "online_meeting" || type === "publicity") {
         history.push(path + "/event-info");
       } else if (type === "intern_support" || type === "e_notice") {
@@ -60,7 +61,7 @@ function DateTime({ path, type, setData, data, user, ou }) {
       }
     }
     if (type === "e_notice" || type === "publicity") {
-      if (data.startTime !== "" &&  ouId !=="") {
+      if (data.startTime !== "" && ouId !== "") {
         if (type === "online_meeting" || type === "publicity") {
           history.push(path + "/event-info");
         } else if (type === "intern_support" || type === "e_notice") {
@@ -83,17 +84,34 @@ function DateTime({ path, type, setData, data, user, ou }) {
 
       setOptions(temp)
     }
+    var ouName = [];
     setData(prevState => {
+
+      ouName = user.ou.filter((ouData) => {
+        if (ouData.ouId === prevState.ouId) {
+          return ouData
+        }
+        else {
+          return null
+        }
+
+      })
+      console.log(prevState.ouId)
 
 
       return ({
         ...prevState,
-        ouId:prevState.ouId,
-        startTime: minDate.toISOString(),
-        endTime: minDate.toISOString(),
-        publishTime: minDate.toISOString(),
+        
+        startTime: prevState.startTime !== "" ? prevState.startTime : minDate.toISOString(),
+        endTime: prevState.endTime !== "" ? prevState.endTime : minDate.toISOString(),
+        publishTime: prevState.publishTime !== "" ? prevState.publishTime : minDate.toISOString(),
       })
     })
+    console.log(ouName)
+    if (ouName.length > 0) {
+      setOuName({ value: ouName[0].ouName, label: ouName[0].ouName });
+    }
+
 
   }, []);
 
@@ -105,8 +123,9 @@ function DateTime({ path, type, setData, data, user, ou }) {
       return item.ouName === e.value ? item : null
     })
 
-    console.log(temp[0].ouId)
+
     setOuID(temp[0].ouId)
+    setOuName({ value: temp[0].ouName, label: temp[0].ouName })
   }
 
   const handleDateChange = (e) => {
@@ -123,7 +142,7 @@ function DateTime({ path, type, setData, data, user, ou }) {
 
       return ({
         ...prevState,
-        ouId:prevState.ouId,
+        ouId: prevState.ouId,
         startTime: new Date(d.setHours(start.getHours(), start.getMinutes(), 0, 0)).toISOString(),
         endTime: new Date(d.setHours(end.getHours(), end.getMinutes(), 0, 0)).toISOString(),
         publishTime: new Date(d.setHours(publishTime.getHours(), publishTime.getMinutes(), 0, 0)).toISOString(),
@@ -142,6 +161,7 @@ function DateTime({ path, type, setData, data, user, ou }) {
       })
     })
   }
+
   return (
     <div className="service-container row">
       <div className="select-service col-5">

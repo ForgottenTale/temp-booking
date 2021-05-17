@@ -50,22 +50,22 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
     }, [readProtect])
 
     useEffect(() => {
-        // if (ou.id !== undefined) {
-        if (req !== undefined && req !== null) {
-            setData(req);
+        if (ou !== undefined && ou.ouId !== undefined) {
+            if (req !== undefined && req !== null) {
+                setData(req);
+            }
+            else {
+                const url = `/api/approvals/${params.id}?ouId=${ou.ouId}`;
+                axios.get(url, { withCredentials: true })
+                    .then((d) => {
+                        setData(d.data[0]);
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        setErr(err.response.data.error);
+                    });
+            }
         }
-        else {
-            const url = `/api/approvals/${params.id}?ouId=${ou.ouId}`;
-            axios.get(url, { withCredentials: true })
-                .then((d) => {
-                    setData(d.data[0]);
-                })
-                .catch(err => {
-                    console.error(err);
-                    setErr(err.response.data.error);
-                });
-        }
-        // }
 
         // eslint-disable-next-line
     }, [req, ou])
@@ -87,10 +87,10 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
         console.log(Array.from(formData));
     };
 
-    const handleUpload = async (data) => {
+    const handleUpload = async (uploadData) => {
         try {
             const url = `/api/bookings/${data.id}?ouId=${ou.ouId}`;
-            const res = await axios.patch(url, data, {
+            const res = await axios.patch(url, uploadData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
@@ -179,7 +179,7 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                     history.push(`/requests/${params.id}`)
                 }}>Save</button> </div>
 
-                {showButton && data.status !== "APPROVED" ?
+                {showButton && data.status !== "APPROVED" && data.status !== "DECLINED" ?
                     <div className="requestView_button">
                         <button onClick={() => {
                             setMessage(true)
@@ -187,14 +187,15 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                         }}>Approve</button>
                         <button onClick={() => {
                             setMessage(true)
-                            setMsg("decline")}
+                            setMsg("decline")
+                        }
                         }>Reject</button>
                     </div> : null
 
                 }
-                
 
-                
+
+
                 {/* 
                 {showButton && data.status !== "APPROVED" ? <div className="requestView_button">
                     <button onClick={() => setMessage(true)}>Approve</button>

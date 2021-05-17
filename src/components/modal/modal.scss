@@ -22,4 +22,19 @@
         padding: 20px;
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
     }
+
+    & button{
+        padding: 5px 15px 5px 15px;
+        margin-top: 10px;
+        margin-right: 10px;
+        border: none;
+        outline: none;
+        background-color: rgb(175, 175, 175);
+        &:nth-child(1){
+            background-color: rgb(73, 255, 73);
+        }
+        &:nth-child(2){
+            background-color: rgb(255, 92, 100);
+        }
+    }
 }

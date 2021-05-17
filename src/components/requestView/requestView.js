@@ -50,22 +50,22 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
     }, [readProtect])
 
     useEffect(() => {
-        // if (ou.id !== undefined) {
-        if (req !== undefined && req !== null) {
-            setData(req);
+        if (ou !== undefined && ou.ouId!==undefined) {
+            if (req !== undefined && req !== null) {
+                setData(req);
+            }
+            else {
+                const url = `/api/approvals/${params.id}?ouId=${ou.ouId}`;
+                axios.get(url, { withCredentials: true })
+                    .then((d) => {
+                        setData(d.data[0]);
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        setErr(err.response.data.error);
+                    });
+            }
         }
-        else {
-            const url = `/api/approvals/${params.id}?ouId=${ou.ouId}`;
-            axios.get(url, { withCredentials: true })
-                .then((d) => {
-                    setData(d.data[0]);
-                })
-                .catch(err => {
-                    console.error(err);
-                    setErr(err.response.data.error);
-                });
-        }
-        // }
 
         // eslint-disable-next-line
     }, [req, ou])
@@ -117,7 +117,7 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                         <Item readOnly title={item} value={data[resList[key]].replace('_', ' ')} key={key} />,
                     )}
 
-                    <ItemTextArea title="Description" value={data.description} name="description" />
+                    <ItemTextArea title="Description" readOnly={readOnly} value={data.description} name="description" />
 
 
                     {data.type === "online_meeting" ?
@@ -155,7 +155,7 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                         <Item title="Program Schedule" value={data.schedule} key="12" name="schedule" readOnly={readOnly} />,
                         <Item title="Publish Time" value={new Date(data.publishTime).toLocaleTimeString()} key="13" name="publishTime" readOnly={readOnly} />] : null
                     }
-                    
+
                     <div className="requestView_con_item">
                         <h4>Endorsements</h4>
                     </div>
@@ -174,9 +174,9 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                 {data.img !== null ? <img src={"/image/" + data.img} alt='poster' /> : null}
 
 
-               
 
-                {showButton && data.status !== "APPROVED" ?
+
+                {showButton && data.status !== "APPROVED" && data.status !== "DECLINED" ?
                     <div className="requestView_button">
                         <button onClick={() => {
                             setMessage(true)

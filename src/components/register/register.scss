@@ -3,9 +3,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    text-align: center;
 
   img{
-        width: 80%;
+        width: 300px;
         // height:100%;
         // object-fit: cover;
     }
@@ -53,12 +54,4 @@
         }
     }
 }
-@media only screen and (max-width: 1039px) {
-    .register {
-    
-       & img{
-           width: 80%;
-          
-       }
-    }
-}
+

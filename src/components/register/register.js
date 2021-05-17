@@ -5,7 +5,7 @@ import Button from '@material-ui/core/Button';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect, useState, useRef } from 'react';
-import pic from '../../images/coming.png';
+
 const useStyles = makeStyles({
 
     underline: {
@@ -26,7 +26,7 @@ const useStyles = makeStyles({
         padding: '0 30px',
     },
 });
-export default function Register({ setErr }) {
+export default function Register({ setErr,reset }) {
     const { params } = useRouteMatch()
     const initialRender = useRef(true);
     const initialRender2 = useRef(true);
@@ -96,7 +96,14 @@ export default function Register({ setErr }) {
         }
 
         if (password.password === password.confirmPassword && password.password !== "" & password.confirmPassword !== "") {
-            const url = '/api/create-account/' + params.id;
+            var url=""
+            if(!reset){
+                url = '/api/create-account/' + params.id;
+            }
+            else{
+                url = '/api/reset-password/' + params.id;
+            }
+           
             const formData = new URLSearchParams();
             formData.append('password', password);
             formData.append('confirmPassword', confirmPassword);
@@ -119,7 +126,7 @@ export default function Register({ setErr }) {
         <div className="register">
 
 
-            {/* <div className="register_con2">
+            <div className="register_con2">
                 <h4>Enter a password</h4>
                 <div className="register_con2_inputs">
                     <TextField
@@ -170,9 +177,8 @@ export default function Register({ setErr }) {
 
 
 
-            </div> */}
+            </div>
 
-            <img src={pic} alt="coming"/>
         </div>
     )
 }
