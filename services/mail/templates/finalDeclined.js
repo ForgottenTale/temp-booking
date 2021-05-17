@@ -1,7 +1,7 @@
 
 module.exports = function (input){
   return ({
-      subject: `BOOKING #${input.id}: SERVICE REQUEST: DECLINED`,
+      subject: `BOOKING #${input.id}: New update for your service-IKS MinT`,
       html: `<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
       <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
       <head>
@@ -301,7 +301,7 @@ module.exports = function (input){
             <td style="overflow-wrap:break-word;word-break:break-word;padding:40px 40px 30px;font-family:'Lato',sans-serif;" align="left">
               
         <div style="color: #000000; line-height: 140%; text-align: left; word-wrap: break-word;">
-          <p style="font-size: 14px; line-height: 140%;"><span style="color: #888888; font-size: 14px; line-height: 19.6px;"><em><span style="font-size: 16px; line-height: 22.4px;">P.S. Need help? Contact us anytime with your questions and/or feedback.
+          <p style="font-size: 14px; line-height: 140%;"><span style="color: #888888; font-size: 14px; line-height: 19.6px;"><em><span style="font-size: 16px; line-height: 22.4px;">P.S. Need help? Contact us anytime with your queries and / or feedback.
 
           </span></em></span><br /><span style="color: #888888; font-size: 14px; line-height: 19.6px;"><em><span style="font-size: 16px; line-height: 22.4px;">&nbsp;</span></em></span></p>
         </div>
@@ -340,7 +340,7 @@ module.exports = function (input){
             <div style="color: #000000; line-height: 140%; text-align: left; word-wrap: break-word;">
             <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 16px; line-height: 22.4px; color: #ecf0f1;">Contact Us</span></p><br>
         <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 14px; line-height: 19.6px; color: #ecf0f1;">HarmonIEEE, 1st Floor, </span></p>
-        <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 14px; line-height: 19.6px; color: #ecf0f1;"> Cherian’s Square, Ambujavilasam Rd, PB77, GPO, Thiruvananthapuram, Kerala 695001 | info@ieeekerala.org</span></p>
+        <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 14px; line-height: 19.6px; color: #ecf0f1;"> Cherian’s Square, Ambujavilasam Rd, PB77, GPO, Thiruvananthapuram, Kerala 695001  mintsupport@ieeekerala.org</span></p>
           </div>
       
             </td>
