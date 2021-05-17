@@ -162,7 +162,7 @@ function Row({ setRefresh, data, type, setRequest, setUser, path, edit, ouId, ro
                             </svg>
                         </NavLink> : null,
 
-                        role === true ? <svg
+                       <svg
                             onClick={() => { setCancel(true) }}
                             key='4'
                             xmlns="http://www.w3.org/2000/svg"
@@ -178,7 +178,7 @@ function Row({ setRefresh, data, type, setRequest, setUser, path, edit, ouId, ro
                             <circle cx="12" cy="12" r="10"></circle>
                             <path d="M15 9L9 15"></path>
                             <path d="M9 9L15 15"></path>
-                        </svg> : null,
+                        </svg>,
 
                         ouId === 1 && role === true ? <svg
                             onClick={() => { setDel(true) }}
