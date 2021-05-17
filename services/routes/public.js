@@ -66,7 +66,7 @@ module.exports = function(app){
             database.addResetId(req.body.email, uniqueString, (err, message)=>{
                 if(err) return respondError(err, res);
                 let link = `${process.env.DOMAIN_NAME}/reset-password/${uniqueString}`;
-                mail.forgotPassword({link}, {mailTo: req.body.email});
+                mail.resetPassword({link}, {mailTo: req.body.email});
                 res.status(200).json({message: "Reset link sent to mail"});
             })
         })
