@@ -58,7 +58,7 @@ module.exports = {
 
     generateUniqueString: function(key){
         let hash = new Buffer.from(key+"something");
-        hash.toString('base64');   
+        hash = hash.toString('base64');
         return Date.now()+ "" + hash;
     },
     
