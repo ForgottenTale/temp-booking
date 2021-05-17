@@ -7,7 +7,7 @@ import Table from '../table/table';
 export default function MyRequests({ setErr, ouid, setRequest, searchTerm, setRequestNumber,role,setRefresh }) {
 
     const [data, setData] = useState([]);
-    const header = ['Id', "Name", "Service", "Type", "Time", "Status", "Action"];
+    const header = ['Id', "Name", "OU", "Type", "Time", "Status", "Action"];
 
 
     useEffect(() => {

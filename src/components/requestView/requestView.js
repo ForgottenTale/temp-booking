@@ -184,11 +184,11 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                 {data.status === "APPROVED" && data.type === "online_meeting" ?
 
                     <div className="requestView_con2">
-                        <h5>
+                        <h6>
                             <span>Meeting URL : </span>
-                            <a href={data.meetingUrl}>{data.meetingUrl}</a></h5>
-                        <h5><span>Meeting Id : </span>{data.meetingId}</h5>
-                        <h5><span>Meeting Password : </span>{data.meetingPassword}</h5>
+                            {data.meetingUrl==="WILL BE UPDATED"?data.meetingUrl:<a href={data.meetingUrl}>{data.meetingUrl}</a>}</h6>
+                        <h6><span>Meeting Id : </span>{data.meetingId}</h6>
+                        <h6><span>Meeting Password : </span>{data.meetingPassword}</h6>
                     </div>
                     : null}
 

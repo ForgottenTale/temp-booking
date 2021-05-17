@@ -10,7 +10,7 @@ import ServiceSelection from '../New Appointment/App';
 
 export default function AdminDashboard({ role, setErr,user ,ou}) {
     const [data, setData] = useState(null);
-    const header = ['Id', "Name", "Service", "Type", "Time", "Status", "Action"];
+    const header = ['Id', "Name", "OU", "Type", "Time", "Status", "Action"];
     const { path } = useRouteMatch();
     const [request, setRequest] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");

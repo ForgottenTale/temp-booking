@@ -193,7 +193,6 @@ function SupportInfo({ path, type, data, setData,setPop }) {
                     <input
                       placeholder="URL"
                       type="text"
-                      required
                       defaultValue={data.url}
                       className="form-control"
                       name="mockup"
