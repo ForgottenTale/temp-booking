@@ -78,7 +78,7 @@ export default function AdminDashboard({ role, setErr,user ,ou}) {
                     setErr(err.response.data.error);
                 });
         }
-    },[ou,setErr])
+    },[ou,setErr,refresh])
 
     return (
         <Switch>
