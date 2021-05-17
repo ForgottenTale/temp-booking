@@ -132,8 +132,9 @@ module.exports = {
                 "timezone": "UTC",
                 "agenda": input.description,
                 "settings": {
-                    "in_meeting": "true",
-                    "mute_upon_entry": "true"
+                    "mute_upon_entry": "true",
+                    "participant_video": "false",
+                    "waiting_room": "true"
                 }
             }
             axios
