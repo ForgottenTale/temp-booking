@@ -34,7 +34,7 @@ function ServiceList({ path, setType, setData, data }) {
               to={path + "/services"}
               className="btn btn-outline-primary btn-sm"
             >
-              <i class="fas fa-arrow-right"></i>
+              <i className="fas fa-arrow-right"></i>
             </Link>
           </div>
           <div className="service-name">
@@ -50,7 +50,7 @@ function ServiceList({ path, setType, setData, data }) {
               to={path + "/services"}
               className="btn btn-outline-primary btn-sm"
             >
-              <i class="fas fa-arrow-right"></i>
+              <i className="fas fa-arrow-right"></i>
             </Link>
           </div>
           <div className="service-name">
@@ -66,7 +66,7 @@ function ServiceList({ path, setType, setData, data }) {
               to={path + "/services"}
               className="btn btn-outline-primary btn-sm"
             >
-              <i class="fas fa-arrow-right"></i>
+              <i className="fas fa-arrow-right"></i>
             </Link>
           </div>
           <div className="service-name">
@@ -82,7 +82,7 @@ function ServiceList({ path, setType, setData, data }) {
               to={path + "/services"}
               className="btn btn-outline-primary btn-sm"
             >
-              <i class="fas fa-arrow-right"></i>
+              <i className="fas fa-arrow-right"></i>
             </Link>
           </div>
           <div className="service-name">

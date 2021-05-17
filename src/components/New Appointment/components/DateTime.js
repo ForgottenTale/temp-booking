@@ -95,7 +95,7 @@ function DateTime({ path, type, setData, data, user, ou }) {
       })
     })
 
-  }, [user.ou,minDate,setData]);
+  }, []);
 
 
   const handleChange = (e) => {
@@ -133,6 +133,7 @@ function DateTime({ path, type, setData, data, user, ou }) {
 
   }
   const handleTimeChange = (e, name) => {
+    console.log("Hi")
     setData(prevState => {
       return ({
         ...prevState,
