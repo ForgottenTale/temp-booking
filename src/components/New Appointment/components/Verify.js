@@ -72,7 +72,7 @@ function Verify({ path, type, data, setId, setErr,setPop }) {
             </div>
             <div className="mb-4">
               <p className="label">Service:</p>
-              <p>{data.type}</p>
+              <p>{data.type.replace("_"," ")}</p>
             </div>
           </div>
           <div className="col">
