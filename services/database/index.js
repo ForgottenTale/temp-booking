@@ -704,9 +704,9 @@ module.exports = {
 					ServiceClass = getClass(types[mainIdx].type);
 					bookingsOfAllTypes[mainIdx][idx] = ServiceClass.convertSqlTimesToDate(bookingsOfAllTypes[mainIdx][idx]);
 					bookingsOfAllTypes[mainIdx][idx] = transmuteSnakeToCamel(bookingsOfAllTypes[mainIdx][idx]);
-					bookingsOfAllTypes[mainIdx][idx].otherResponses = await executeQuery("SELECT name, email, encourages, response, created_at as createdAt FROM response INNER JOIN person on person._id=response.person_id WHERE blt_id=" + bookingsOfAllTypes[mainIdx][idx].id + ";");
+					bookingsOfAllTypes[mainIdx][idx].otherResponses = await executeQuery("SELECT name, email, encourages, response, created_at FROM response INNER JOIN person on person._id=response.person_id WHERE blt_id=" + bookingsOfAllTypes[mainIdx][idx].id + ";");
 					bookingsOfAllTypes[mainIdx][idx].otherResponses.map(response=>{
-						response.createdAt = Service.convertSqlTimesToDate(response.createdAt);
+						response.createdAt = ServiceClass.convertSqlTimesToDate(response.created_at);
 					})
 					bookingsOfAllTypes[mainIdx][idx].type = types[mainIdx].type;
 					dataArray.push(bookingsOfAllTypes[mainIdx][idx])
@@ -778,9 +778,9 @@ module.exports = {
 					bookingsOfAllTypes[mainIdx][idx].encourageMode = !config.follow_hierarchy;
 					bookingsOfAllTypes[mainIdx][idx] = ServiceClass.convertSqlTimesToDate(bookingsOfAllTypes[mainIdx][idx]);
 					bookingsOfAllTypes[mainIdx][idx] = transmuteSnakeToCamel(bookingsOfAllTypes[mainIdx][idx]);
-					bookingsOfAllTypes[mainIdx][idx].otherResponses = await executeQuery("SELECT name, email, encourages, response, created_at as createdAt FROM response INNER JOIN person on person._id=response.person_id WHERE blt_id=" + bookingsOfAllTypes[mainIdx][idx].id + ";");
+					bookingsOfAllTypes[mainIdx][idx].otherResponses = await executeQuery("SELECT name, email, encourages, response, created_at FROM response INNER JOIN person on person._id=response.person_id WHERE blt_id=" + bookingsOfAllTypes[mainIdx][idx].id + ";");
 					bookingsOfAllTypes[mainIdx][idx].otherResponses.map(response=>{
-						response.createdAt = ServiceClass.convertSqlTimesToDate(response.createdAt);
+						response.createdAt = ServiceClass.convertSqlTimesToDate(response.created_at);
 					})
 					bookingsOfAllTypes[mainIdx][idx].type = types[mainIdx].type;
 					delete(bookingsOfAllTypes[mainIdx][idx].password);
