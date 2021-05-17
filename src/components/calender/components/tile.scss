@@ -17,13 +17,13 @@
         white-space:nowrap;
         display: flex;
         align-items: center;
-        word-wrap: break-word;
-        overflow:hidden;
+      
         margin: 0 5px;
         font-weight: 600;
         font-size: 14px;
         
-      
+        word-wrap: break-word;
+        overflow:hidden;
         text-overflow:ellipsis;
         
     }

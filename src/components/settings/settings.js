@@ -123,9 +123,9 @@ export default function Setting({ setErr }) {
                 <h5>User Profile</h5>
                 <div className="settings_con_img">
                     <img src={pic} alt="user" />
-                    <button>
+                    {/* <button>
                         Change
-                   </button>
+                   </button> */}
                 </div>
 
 

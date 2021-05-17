@@ -47,6 +47,11 @@
   top:0;
   right:0;
   padding: 15px;
+  cursor: pointer;
+
+}
+.close:hover{
+  background-color: rgb(238, 238, 238);
 }
 /* .row{
   position: relative;
