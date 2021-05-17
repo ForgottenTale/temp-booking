@@ -117,6 +117,9 @@ class User extends Person{
         let values = super.getValuesForEdit(params);
         for(let key in params){
             switch(key){
+                case 'password'  : values.push("password='" + params.password + "'");
+                                    delete params[key];
+                                    break;
                 default     :   throw(new Error(key + " is not editable"));
             }
         }
