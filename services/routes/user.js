@@ -20,7 +20,7 @@ module.exports = function(app){
                 if(newBooking.reminder)
                     if(newBooking.reminder>newBooking.publishTime)
                         throw new Error("Publish time cannot be lower than reminder date");
-                database.addBooking(newBooking, {email: req.user.email, personId: req.user.personId}, (err, doc)=>{
+                database.addBooking(newBooking, req.user, (err, doc)=>{
                     if(err){
                         return respondError(err, res);
                     }
