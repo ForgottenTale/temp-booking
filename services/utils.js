@@ -97,9 +97,13 @@ module.exports = {
     createMeeting: function(input, serviceName){
         let payload, config, duration;
 
-        let token = jwt.sign({ApiSecret: process.env.ZOOM_SECRET, ApiKey: process.env.ZOOM_KEY});
+        
 
         if(serviceName=="zoom"){
+            let token = jwt.sign({
+                "iss": process.env.ZOOM_API_KEY,
+                "exp": 1496091964000
+            }, process.env.ZOOM_API_SECRET);
             config = {
                 Authorization: `Bearer ${token}`
             };
