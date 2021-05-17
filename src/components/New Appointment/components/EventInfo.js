@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import infoIcon from "../../../images/info.png";
 
-function EventInfo({ path, type, data, setData }) {
+function EventInfo({ path, type, data, setData,setPop }) {
   const history = useHistory();
 
   const [content, setContent] = useState({
@@ -37,7 +37,12 @@ function EventInfo({ path, type, data, setData }) {
       </div>
       <div className="info col">
         <h2>Event Details</h2>
-
+        <div className="close"  onClick={() => {
+          history.push("/dashboard");
+          setPop((prevState)=>{
+            return!prevState
+          });
+        }}>Close</div>
         <form onSubmit={next}>
           <div className="row">
             <div className="col-sm-6 col-12 mb-3">
@@ -116,6 +121,7 @@ function EventInfo({ path, type, data, setData }) {
                   type="file"
                   className="form-control"
                   name="poster"
+                  accept="image/png, image/jpeg"
                   // defaultValue={data.img}
                   onChange={(e) => {
                     setContent({ ...content, img: e.target.files[0] });
@@ -145,6 +151,7 @@ function EventInfo({ path, type, data, setData }) {
                   className="form-control"
                   name="poster"
                   required
+                  accept="image/png, image/jpeg"
                   // defaultValue={data.img}
                   onChange={(e) => {
                     setContent({ ...content, img: e.target.files[0] });

@@ -2,7 +2,7 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import serviceIcon from "../../../images/select.png";
 
-function Services({ path, type, data, setData }) {
+function Services({ path, type, data, setData,setPop }) {
   const history = useHistory();
 
   const next = (item) => {
@@ -38,6 +38,12 @@ function Services({ path, type, data, setData }) {
       </div>
       <div className="service-list col">
         <h2>Service Selection</h2>
+        <div className="close"  onClick={() => {
+          history.push("/dashboard");
+          setPop((prevState)=>{
+            return!prevState
+          });
+        }}>Close</div>
         {items.map((item, index) => (
           <div key={index} className="service-box-x" onClick={() => next(item)}>
             <p>{item}</p>

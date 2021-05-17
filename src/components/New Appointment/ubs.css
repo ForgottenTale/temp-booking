@@ -42,7 +42,17 @@
     scroll-behavior: smooth;
   }
 }
+.close{
+  position: absolute;
+  top:0;
+  right:0;
+  padding: 15px;
+}
+/* .row{
+  position: relative;
+} */
 .ub {
+ 
   z-index: 6;
   margin: 0;
   font-family: var(--bs-font-sans-serif);

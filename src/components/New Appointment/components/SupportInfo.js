@@ -4,7 +4,7 @@ import infoIcon from "../../../images/info.png";
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 
-function SupportInfo({ path, type, data, setData }) {
+function SupportInfo({ path, type, data, setData,setPop }) {
   const history = useHistory();
 
   const [support, setSupport] = useState({
@@ -59,7 +59,13 @@ function SupportInfo({ path, type, data, setData }) {
         <p>Reach us at mintsupport@ieeekerala.org</p>
       </div>
       <div className="info col">
-        <h2>Support Details</h2>
+        <h2>Support Details </h2>
+        <div className="close"  onClick={() => {
+          history.push("/dashboard");
+          setPop((prevState)=>{
+            return!prevState
+          });
+        }}>Close</div>
         {type === "intern_support" ? (
           <form onSubmit={nextButton}>
             <div className="row">

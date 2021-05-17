@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import axios from "axios";
 import confirmIcon from "../../../images/info.png";
 
-function Verify({ path, type, data, setId, setErr }) {
+function Verify({ path, type, data, setId, setErr,setPop }) {
   const history = useHistory();
   const [proceed, setProceed] = useState(false);
 
@@ -57,6 +57,12 @@ function Verify({ path, type, data, setId, setErr }) {
       </div>
       <div className="verify col">
         <h2>Verify Booking Details</h2>
+        <div className="close"  onClick={() => {
+          history.push("/dashboard");
+          setPop((prevState)=>{
+            return!prevState
+          });
+        }}>Close</div>
         <h3>Appointment Info</h3>
         <div className="row">
           <div className="col">

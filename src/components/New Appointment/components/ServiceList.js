@@ -5,8 +5,10 @@ import internIcon from "../../../images/internsupport.png";
 import enoticeIcon from "../../../images/enotice.png";
 import serviceIcon from "../../../images/select.png";
 import publicity from "../../../images/publicity.png";
-
-function ServiceList({ path, setType, setData, data }) {
+import{useHistory,
+} from "react-router-dom";
+function ServiceList({ path, setType, setData, data,setPop }) {
+  const history = useHistory();
   const clickHander = (type) => {
     setType(type);
     setData({ ...data, type: type });
@@ -25,7 +27,13 @@ function ServiceList({ path, setType, setData, data }) {
       </div>
 
       <div className="service-list col">
-        <h2>Service Selection</h2>
+        <h2>Service Selection </h2>
+        <div className="close"  onClick={() => {
+          history.push("/dashboard");
+          setPop((prevState)=>{
+            return!prevState
+          });
+        }}>Close</div>
         <div className="service-box">
           <div className="sub-services">
             <p>2 services</p>

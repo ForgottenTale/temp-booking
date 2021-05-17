@@ -24,7 +24,7 @@ function minDay() {
   return min;
 }
 
-function DateTime({ path, type, setData, data, user, ou }) {
+function DateTime({ path, type, setData, data, user, ou ,setPop}) {
   const [equalTimeError, setequalTimeError] = useState(false);
   const [shortTimeError, setShortTimeError] = useState(false);
   const [ouError, setOuError] = useState(false);
@@ -173,7 +173,12 @@ function DateTime({ path, type, setData, data, user, ou }) {
       </div>
       <div className="date col">
         <h2>Select Date & Time</h2>
-
+        <div className="close"  onClick={() => {
+          history.push("/dashboard");
+          setPop((prevState)=>{
+            return!prevState
+          });
+        }}>Close</div>
         <form onSubmit={next}>
           <div className="row mb-4">
 

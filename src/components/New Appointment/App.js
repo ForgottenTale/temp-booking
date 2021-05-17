@@ -58,6 +58,10 @@ function App(props) {
           props.setPop(!props.pop);
         }}
       ></div>
+      <div className="close"  onClick={() => {
+          history.push("/dashboard");
+          props.setPop(!props.pop);
+        }}>Close</div>
       <Router>
         <Switch>
           <Route path={path} exact>
@@ -66,25 +70,27 @@ function App(props) {
               setType={setType}
               data={data}
               setData={setData}
+              setPop={props.setPop}
             />
           </Route>
           <Route path={path + "/services"}>
-            <Services path={path} type={type} data={data} setData={setData} />
+            <Services path={path} type={type} data={data} setData={setData}  setPop={props.setPop}/>
           </Route>
           <Route path={path + "/date-time"}>
-            <DateTime path={path} type={type} data={data} setData={setData} user={props.user}/>
+            <DateTime path={path} type={type} data={data} setData={setData} user={props.user}  setPop={props.setPop}/>
           </Route>
           <Route path={path + "/event-info"}>
-            <EventInfo path={path} type={type} data={data} setData={setData} />
+            <EventInfo path={path} type={type} data={data} setData={setData}  setPop={props.setPop}/>
           </Route>
           <Route path={path + "/other-info"}>
-            <OtherInfo path={path} type={type} data={data} setData={setData} />
+            <OtherInfo path={path} type={type} data={data} setData={setData}  setPop={props.setPop}/>
           </Route>
           <Route path={path + "/support-info"}>
             <SupportInfo
               path={path}
               type={type}
               data={data}
+              setPop={props.setPop}
               setData={setData}
             />
           </Route>
@@ -93,12 +99,13 @@ function App(props) {
               path={path}
               type={type}
               data={data}
+              setPop={props.setPop}
               setId={setId}
               setErr={props.setErr}
             />
           </Route>
           <Route path={path + "/confirmation"}>
-            <Confirmation path={path} type={type} data={data} id={id} />
+            <Confirmation path={path} type={type} data={data} id={id}  setPop={props.setPop}/>
           </Route>
         </Switch>
       </Router>
