@@ -352,9 +352,9 @@ module.exports = {
 			endTime = convertDateToSqlDateTime(constraint.endTime);
 			let query = "SELECT * FROM blt INNER JOIN online_meeting ON online_meeting_id=online_meeting._id WHERE"
 				+ " status='APPROVED'"
-				+ " AND (start_time>'" + startTime + "' AND start_time<'" + endTime + "') OR "
+				+ " AND ((start_time>'" + startTime + "' AND start_time<'" + endTime + "') OR "
 				+ " (end_time>'" + startTime +"' AND end_time<'" + endTime + "') OR "
-				+ " (start_time='" + startTime +"' AND end_time='" + endTime + "');"
+				+ " (start_time='" + startTime +"' AND end_time='" + endTime + "'));"
 			// query += query.replace(/online_meeting/g, "intern_support");
 			let dataArray = [];
 			let eventsOfAllTypes = await executeQuery(query);
