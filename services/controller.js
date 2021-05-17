@@ -195,7 +195,7 @@ class Service{
 
     checkRequired(input){
         this.required.forEach(param=>{
-            if(param=="express" || param=="reminder")
+            if(param=="express")
                 if(input[param]===false)
                     return ;
             if(!input[param])
@@ -393,7 +393,7 @@ class ENotice extends Service{
         this.required = ["express", "reminder", "publishTime"];
         this.editable = ["express"];
         this.express = input.express.toLowerCase()=="express"||(input.express+"")=="1"?true:false;
-        this.reminder = input.reminder=="yes"||(input.reminder+"")=="1"?true:false;
+        this.reminder = new Date(input.reminder);
         this.publishTime = new Date(input.publishTime);
     }
 
@@ -421,7 +421,7 @@ class ENotice extends Service{
         namesAndValues.names.push('publish_time', 'express', 'reminder');
         namesAndValues.values.push(this.publishTime?("'" + convertDateToSqlDateTime(this.publishTime) + "'"):"null");
         namesAndValues.values.push(this.express);
-        namesAndValues.values.push(this.reminder);
+        namesAndValues.values.push(this.reminder?("'" + convertDateToSqlDateTime(this.reminder) + "'"):"null");
         return(namesAndValues);
     }
 

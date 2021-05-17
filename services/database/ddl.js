@@ -85,7 +85,8 @@ module.exports = {
             comments VARCHAR(30),
             publish_time DATETIME NOT NULL,
             express BOOLEAN NOT NULL DEFAULT false,
-            reminder BOOLEAN NOT NULL DEFAULT true
+            reminder DATETIME NOT NULL
+            
         );`,
         `CREATE TABLE IF NOT EXISTS publicity(
             _id INT PRIMARY KEY AUTO_INCREMENT,
