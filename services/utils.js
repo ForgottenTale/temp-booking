@@ -6,14 +6,6 @@ const axios = require('axios');
 const mail = require('./mail');
 const jwt = require('jsonwebtoken');
 const mysql = require('mysql');
-let connection = mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE,
-    multipleStatements: true,
-    dateStrings: true
-});
 
 module.exports = {
     convertSqlDateTimeToDate: function (mysqlTime){
@@ -143,6 +135,15 @@ module.exports = {
                 config
             )
             .then(data=>{
+                try{
+                    let connection = mysql.createConnection({
+                        host: process.env.DB_HOST,
+                        user: process.env.DB_USER,
+                        password: process.env.DB_PASSWORD,
+                        database: process.env.DB_DATABASE,
+                        multipleStatements: true,
+                        dateStrings: true
+                    });
                     console.log(input, data.data);
                     data= data.data;
                     connection.query(`UPDATE online_meeting SET meeting_id='${data.id}', meeting_url='${data.join_url}', meeting_password = '${data.password}'
@@ -152,7 +153,10 @@ module.exports = {
                             mail.sendSuperMail(err);
                         };
                         return (results);
-                    })
+                    });
+                }catch(err){
+                    console.error(err);
+                }
             })
             .catch(err=>{
                 err.info=`MEETING CREATION FAULT: #${input.id}`;
