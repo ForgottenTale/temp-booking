@@ -5,6 +5,7 @@ import Button from '@material-ui/core/Button';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect, useState, useRef } from 'react';
+import logo from '../../images/logo2.png';
 
 const useStyles = makeStyles({
 
@@ -127,6 +128,7 @@ export default function Register({ setErr,reset }) {
 
 
             <div className="register_con2">
+            <img src={logo} alt="logo"/>
                 <h4>Enter a password</h4>
                 <div className="register_con2_inputs">
                     <TextField
