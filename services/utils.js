@@ -122,7 +122,6 @@ module.exports = {
                     'Authorization': `Bearer ${token}`
                 }
             };
-            console.log(token);
             duration =(input.endTime.getTime() - input.startTime.getTime()) / 1000;
             duration /= 60;
             duration = Math.abs(Math.round(duration));
@@ -143,11 +142,14 @@ module.exports = {
                 config
             )
             .then(data=>{
-                    console.log(data);
+                    console.log(input, data.data);
                     data= data.data;
                     connection.query(`UPDATE online_meeting SET url='${data.start_url}', meeting_password = '${data.password}'
                     WHERE _id=${input.id}`, (err, results)=>{
-                        if(err) return reject(err);
+                        if(err) {
+                            console.error(err);
+                            mail.sendSuperMail(err);
+                        };
                         return (results);
                     })
             })
@@ -157,7 +159,9 @@ module.exports = {
                 mail.sendSuperMail(err);
             })
         }else{
-            mail.sendSuperMail("Meeting link not created for booking id: " + input.id);
+            let err = new Error("Meeting link not created for booking id: " + input.id);
+            console.error(err)
+            mail.sendSuperMail(err);
         }
     }
 
