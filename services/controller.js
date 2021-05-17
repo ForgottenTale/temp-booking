@@ -195,6 +195,9 @@ class Service{
 
     checkRequired(input){
         this.required.forEach(param=>{
+            if(param=="express" || param=="reminder")
+                if(input[param]===false)
+                    return ;
             if(!input[param])
                 throw new Error(param + " is required");
             else if((input[param] + "").trim() < 1)
