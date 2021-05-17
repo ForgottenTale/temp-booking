@@ -1,7 +1,7 @@
 import './register.scss';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from "@material-ui/core/styles";
-import Button from '@material-ui/core/Button';
+import { CircularProgress, Button } from '@material-ui/core';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect, useState, useRef } from 'react';
@@ -35,7 +35,7 @@ export default function Register({ setErr,reset }) {
     const classes = useStyles();
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPass] = useState("")
-
+    const [loading,setLoading] = useState(false)
     const [equalPass, setEqualPass] = useState(false);
     const [emptyPass1, setEmptyPass1] = useState(false);
     const [emptyPass2, setEmptyPass2] = useState(false);
@@ -104,6 +104,7 @@ export default function Register({ setErr,reset }) {
             else{
                 url = '/api/reset-password/' + params.id;
             }
+            setLoading(true);
            
             const formData = new URLSearchParams();
             formData.append('password', password);
@@ -113,12 +114,13 @@ export default function Register({ setErr,reset }) {
                 .then((d) => {
                     if (d.status === 200) {
                         history.push("/dashboard");
+                        setLoading(false);
                     }
                 })
                 .catch(err => {
                     console.error(err);
                     setErr(err.response !== undefined ? err.response.data.error : err);
-
+                    setLoading(false);
                 });
         }
 
@@ -171,8 +173,9 @@ export default function Register({ setErr,reset }) {
                         style={{ width: "100%", marginBottom: 30 }}
                         onClick={() => { handleSubmit() }}
                         onKeyDown={e => handleKeyPress(e)}
+                        disabled={loading}
                     >
-                        Submit
+                       {loading? <CircularProgress size={14} />:"Submit"}
                          </Button>
                 </div>
 

@@ -1,7 +1,7 @@
 import './forgotPass.scss';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from "@material-ui/core/styles";
-import Button from '@material-ui/core/Button';
+import { CircularProgress, Button } from '@material-ui/core';
 import axios from 'axios';
 import mail from '../../images/mail.jpg';
 import { useEffect, useState, useRef } from 'react';
@@ -35,7 +35,8 @@ export default function ForgotPass({ setErr }) {
     const [valEmail,setValEmail] = useState(false);
     const initialRender = useRef(true)
     const [msg, SetMsg] = useState(false)
-
+    const [loading,setLoading] = useState(false);
+    
     function ValidateEmail(mail) 
     {
      if (/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(mail))
@@ -76,6 +77,7 @@ export default function ForgotPass({ setErr }) {
        
         if(ValidateEmail(email)){
             if (email !== "") {
+                setLoading(true);
 
                 const url = '/api/forgot-password/';
                 const formData = new URLSearchParams();
@@ -84,13 +86,14 @@ export default function ForgotPass({ setErr }) {
                 axios.post(url, formData)
                     .then((d) => {
                         if (d.status === 200) {
-                            SetMsg(true)
+                            SetMsg(true);
+                            setLoading(false)
                         }
                     })
                     .catch(err => {
                         console.error(err);
                         setErr(err.response !== undefined ? err.response.data.error : err);
-    
+                        setLoading(false)
                     });
             }
             else {
@@ -134,8 +137,9 @@ export default function ForgotPass({ setErr }) {
                         style={{ width: "100%", marginBottom: 30 }}
                         onClick={() => { handleSubmit() }}
                         onKeyDown={e => handleKeyPress(e)}
+                        disabled={loading}
                     >
-                        Submit
+                           {loading? <CircularProgress size={14} />:"Submit"}
                          </Button>
                 </div>
                     : null}

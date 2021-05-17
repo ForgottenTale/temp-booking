@@ -109,6 +109,7 @@ function EventInfo({ path, type, data, setData,setPop }) {
                   type="text"
                   className="form-control"
                   name="title"
+                  required
                   defaultValue={data.title}
                   onChange={(e) => {
                     setContent({ ...content, title: e.target.value });
