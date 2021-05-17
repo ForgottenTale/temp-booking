@@ -35,7 +35,7 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
         schedule: "",
         img: "",
     })
-    console.log(readProtect)
+
     const [message, setMessage] = useState(false);
     const [readOnly, setReadOnly] = useState(readProtect)
     const { params } = useRouteMatch();
@@ -50,7 +50,7 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
     }, [readProtect])
 
     useEffect(() => {
-        if (ou !== undefined && ou.ouId!==undefined) {
+        if (ou !== undefined && ou.ouId !== undefined) {
             if (req !== undefined && req !== null) {
                 setData(req);
             }
@@ -71,7 +71,7 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
     }, [req, ou])
 
     const handleSave = () => {
-        console.log(data);
+
         const keys = Object.keys(data);
         const values = Object.values(data);
         const formData = new FormData();
@@ -90,14 +90,14 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
     const handleUpload = async (data) => {
         try {
             const url = `/api/bookings/${data.id}?ouId=${ou.ouId}`;
-            const res = await axios.patch(url, data, {
+            await axios.patch(url, data, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
                 withCredentials: true
 
             });
-            console.log(res)
+
         } catch (err) {
             console.error(err);
             setErr(err.response.data.error);
@@ -118,20 +118,21 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                     )}
 
                     <ItemTextArea title="Description" readOnly={readOnly} value={data.description} name="description" />
+                    <Item title="Title" value={data.title} key="1" name="title" setData={setData} readOnly={readOnly} />
 
-
+            {data.type === "online_meeting" && data.type === "intern_support" ? [
+                        <ItemTime name="startTime" title="Start Time" value={data.startTime} key="3" readOnly={readOnly} setData={setData} />,
+                        <ItemTime name="endTime" title="End Time" value={data.endTime} key="4" readOnly={readOnly} setData={setData} />,
+                    ] : null
+                    }
                     {data.type === "online_meeting" ?
                         [
-                            <Item title="Title" value={data.title} key="1" name="title" setData={setData} readOnly={readOnly} />,
                             <ItemDate title="Date" value={data.startTime} key="2" readOnly={readOnly} setData={setData} />,
-                            <ItemTime name="startTime" title="Start Time" value={data.startTime} key="3" readOnly={readOnly} setData={setData} />,
-                            <ItemTime name="endTime" title="End Time" value={data.endTime} key="4" readOnly={readOnly} setData={setData} />,
-
                             data.coHosts !== null ? JSON.parse(data.coHosts).map((cohost, index) =>
 
                                 [
                                     <Item title={`Co-host ${String(index + 1)}`} value={cohost[0]} key="5" readOnly={readOnly} setData={setData} />,
-                                    <Item title={`Co-host ${String(index + 1)} email`} value={cohost[1]} key="6" readOnly={readOnly} setData={setData} />,
+                                    <Item title={`Co-host ${String(index + 1)} email`} value={cohost[1]} key="6" readOnly={readOnly} setData={setData} />
                                 ]
                             ) : null,
                             <Item title="Speaker" value={data.speakerName} name="speakerName" key="7" readOnly={readOnly} setData={setData} />,
@@ -140,10 +141,11 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
 
                         ] : [
                             <ItemDate title="Date" value={data.startTime} key="9" readOnly={readOnly} setData={setData} />,
-                            <ItemTime title="Time" value={data.startTime} key="10" readOnly={readOnly} setData={setData} />,
                             <Item title="Comments" value={data.comments} key="11" name="comments" readOnly={readOnly} setData={setData} />
                         ]
                     }
+
+
 
 
                     {data.type === "intern_support" ? <Item title="Purpose" value={data.purpose} name="purpose" readOnly={readOnly} /> : null}
@@ -155,6 +157,11 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                         <Item title="Program Schedule" value={data.schedule} key="12" name="schedule" readOnly={readOnly} />,
                         <Item title="Publish Time" value={new Date(data.publishTime).toLocaleTimeString()} key="13" name="publishTime" readOnly={readOnly} />] : null
                     }
+
+
+
+                </div >
+                <div className="requestView_con">
 
                     <div className="requestView_con_item">
                         <h4>Endorsements</h4>
@@ -169,13 +176,19 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                         <Item title="" value="No one has endorsed this request" key="14" readOnly />
                     }
 
-                </div >
-                {data.status === "APPROVED" & data.type === "online_meeting" ? <Item title="Url" value={data.url} name="deliveryType" readOnly={readOnly} /> : null}
+
+
+                </div>
+                {data.status === "APPROVED" && data.type === "online_meeting" ?
+
+                    <div className="requestView_con2">
+                        <h5><strong>Meeting URL :</strong>{data.meetingUrl}</h5>
+                        <h5><strong>Meeting Id :</strong>{data.meetingId}</h5>
+                        <h5><strong>Meeting Password :</strong>{data.meetingPassword}</h5>
+                    </div>
+                    : null}
+
                 {data.img !== null ? <img src={"/image/" + data.img} alt='poster' /> : null}
-
-
-
-
                 {showButton && data.status !== "APPROVED" && data.status !== "DECLINED" ?
                     <div className="requestView_button">
                         <button onClick={() => {

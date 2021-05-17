@@ -4,7 +4,7 @@ import Table from '../table/table';
 
 
 
-export default function History({ setErr, ouid,setRequest,searchTerm,setRequestNumber }) {
+export default function History({ setErr, ouid,setRequest,searchTerm,setRequestNumber,role,setRefresh }) {
 
     const [data, setData] = useState([]);
     const header = ['Id', "Name", "Service", "Type", "Time", "Status", "Action"];
@@ -29,7 +29,7 @@ if(ouid!==undefined&&ouid!==null)
 
     return (
         <div className="history">
-           <Table ouId={ouid}  headers={header} edit={false} data={data} type='request' setRequest={setRequest} searchTerm={searchTerm} path="requests/history"/>
+           <Table setRefresh={setRefresh} role={role} setErr={setErr} ouId={ouid}  headers={header} edit={false} data={data} type='request' setRequest={setRequest} searchTerm={searchTerm} path="requests/history"/>
 
         </div>
     );

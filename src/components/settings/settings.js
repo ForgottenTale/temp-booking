@@ -80,7 +80,6 @@ export default function Setting({ setErr }) {
         const url = "/api/user ";
         axios.patch(url, formData, { headers: headers, withCredentials: true })
             .then((data) => {
-                console.log(data);
                 setRefresh(!refresh);
                 window.location.replace('/dashboard')
             })
@@ -100,7 +99,6 @@ export default function Setting({ setErr }) {
             const url = "/api/user ";
             axios.patch(url, formData, { headers: headers, withCredentials: true })
                 .then((data) => {
-                    console.log(data);
                     setRefresh(!refresh);
                 })
                 .catch(err => {

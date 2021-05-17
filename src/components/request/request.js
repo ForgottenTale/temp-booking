@@ -11,7 +11,7 @@ import History from './history';
 import All from './all'
 
 
-export default function Request({ setErr, ou }) {
+export default function Request({ setErr, ou,role }) {
 
     const [data, setData] = useState(null);
     const { path } = useRouteMatch();
@@ -73,9 +73,9 @@ export default function Request({ setErr, ou }) {
                         <Input2 className="request_sub_input" placeholder="Search for requests" onChange={(e) => setSearchTerm(e.target.value)} />
 
                     </div>
-                    {requesttype === "history" ? <History data={data} setRequestNumber={setRequestNumber} setRequest={setRequest} searchTerm={searchTerm} setErr={setErr} ouid={ou.ouId} /> : null}
-                    {requesttype === "myrequests" ? <MyRequests data={data} setRequestNumber={setRequestNumber} setRequest={setRequest} searchTerm={searchTerm} setErr={setErr} ouid={ou.ouId} /> : null}
-                    {requesttype === "all" ? <All data={data} setRequestNumber={setRequestNumber} setRequest={setRequest} searchTerm={searchTerm} setErr={setErr} ouid={ou.ouId} /> : null}
+                    {requesttype === "history" ? <History data={data} setRefresh={setRefresh} role={role} setRequestNumber={setRequestNumber} setRequest={setRequest} searchTerm={searchTerm} setErr={setErr} ouid={ou.ouId} /> : null}
+                    {requesttype === "myrequests" ? <MyRequests setRefresh={setRefresh} data={data} role={role} setRequestNumber={setRequestNumber} setRequest={setRequest} searchTerm={searchTerm} setErr={setErr} ouid={ou.ouId} /> : null}
+                    {requesttype === "all" ? <All data={data} setRefresh={setRefresh} setRequestNumber={setRequestNumber} role={role} setRequest={setRequest} searchTerm={searchTerm} setErr={setErr} ouid={ou.ouId} /> : null}
                     {/* <Table headers={header} data={data} type='request' setRequest={setRequest} searchTerm={searchTerm} /> */}
 
 

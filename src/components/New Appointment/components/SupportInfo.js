@@ -20,10 +20,10 @@ function SupportInfo({ path, type, data, setData,setPop }) {
     img: data.img,
   });
   const handleDateChange = (e, name) => {
-    setData(prevState => {
+    setSupport(prevState => {
       return ({
         ...prevState,
-        [name]: e.toISOString(),
+        reminder: e.toISOString(),
         date: e.toISOString(),
       })
     })

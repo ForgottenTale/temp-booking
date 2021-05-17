@@ -5,7 +5,7 @@ import axios from 'axios';
 import Select from 'react-select'
 
 
-export default function TopNav({ activeComponent, setUser, setOU, ou, user,setAuth }) {
+export default function TopNav({ activeComponent, setUser, setOU, ou, user,setAuth,setErr }) {
 
 
     const [options, setOptions] = useState([])
@@ -47,6 +47,7 @@ export default function TopNav({ activeComponent, setUser, setOU, ou, user,setAu
                 setAuth(false)
             } catch (error) {
                 console.log(error)
+                setErr(error)
             }
         }
 
@@ -71,8 +72,6 @@ export default function TopNav({ activeComponent, setUser, setOU, ou, user,setAu
 
     const handleChange = (e) => {
         var temp = user.ou.filter((item) => {
-            console.log()
-            
                 return item.ouName === e.value?item:null
         })
 
@@ -131,7 +130,6 @@ export default function TopNav({ activeComponent, setUser, setOU, ou, user,setAu
                         value={selectedOU}
                         options={options}
                         onChange={(e) => {
-                            console.log(e.value)
                             handleChange(e)
                         }}
                         styles={customStyles} />

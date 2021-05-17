@@ -83,7 +83,7 @@ function Calender({ setErr }) {
 
 
         if (dayView) {
-            console.log(currentDay)
+           
             var tem = data.filter((Obj) => {
                 if (new Date(Obj.startTime).toDateString() === currentDay._d.toDateString()) {
                     return Obj
@@ -111,7 +111,6 @@ function Calender({ setErr }) {
 
     useEffect(() => {
         var width = ref.current.clientWidth - (7 * 4)
-        console.log(window.outerHeight)
         var height = window.outerHeight - 177.2
         setTitleWidth({ maxWidth: width / 7 })
         setdayBodyWidth({ maxWidth: width / 7, height: height / 6 })
@@ -195,8 +194,6 @@ function Calender({ setErr }) {
 
     const monthList = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "Novemeber", "December"];
     const yearList = ["2021", "2022", "2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030", "2031"];
-
-    console.log(calender)
 
 
     return (

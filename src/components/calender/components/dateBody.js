@@ -8,9 +8,6 @@ import {useEffect} from 'react';
 
 function DateBody(props) {
 
-   
-
-
     const [showEventList, setEventList] = useState(false);
 
     var d = new Date();

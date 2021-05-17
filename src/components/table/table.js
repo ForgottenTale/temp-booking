@@ -8,7 +8,7 @@ import Modal from '../modal/modal';
 import axios from 'axios';
 
 
-export default function Table({ headers, data, type, setUser, setRequest, searchTerm, path, edit, ouId }) {
+export default function Table({ setRefresh, setErr, headers, data, type, setUser, setRequest, searchTerm, path, edit, ouId, role }) {
 
     return (
         <div className="tableTag">
@@ -39,7 +39,7 @@ export default function Table({ headers, data, type, setUser, setRequest, search
                                 else {
                                     return null
                                 }
-                            }).map((data, key) => <Row ouId={ouId} edit={edit} path={path} key={key} data={data} type={type} setUser={setUser} setRequest={setRequest} />
+                            }).map((data, key) => <Row setRefresh={setRefresh} setErr={setErr} role={role} ouId={ouId} edit={edit} path={path} key={key} data={data} type={type} setUser={setUser} setRequest={setRequest} />
                             )
 
                             : (type === "user" || type === "admin" ? [1, 2, 3, 5, 6, 7, 8].map((key) => <SkeletonRowUser key={key} />) :
@@ -54,8 +54,7 @@ export default function Table({ headers, data, type, setUser, setRequest, search
 
 
 
-function Row({ data, type, setRequest, setUser, path, edit, ouId }) {
-    // const { path } = useRouteMatch();
+function Row({ setRefresh, data, type, setRequest, setUser, path, edit, ouId, role, setErr }) {
 
     const [cancel, setCancel] = useState(false);
     const [del, setDel] = useState(false);
@@ -67,10 +66,12 @@ function Row({ data, type, setRequest, setUser, path, edit, ouId }) {
         axios.delete(url, { withCredentials: true })
             .then((data) => {
                 if (data.status === 200) {
-                    console.log(data.data)
+                    setCancel(false)
+                    setRefresh((prevState) => !prevState);
                 }
             }).catch((err) => {
                 console.log(err);
+                setErr(err.response !== undefined ? err.response.data : err)
             })
     }
 
@@ -81,10 +82,12 @@ function Row({ data, type, setRequest, setUser, path, edit, ouId }) {
         axios.delete(url, { withCredentials: true })
             .then((data) => {
                 if (data.status === 200) {
-                    console.log(data.data)
+                    setRefresh((prevState) => !prevState);
+                    setDel(false)
                 }
             }).catch((err) => {
                 console.log(err);
+                setErr(err.response !== undefined ? err.response.data : err)
             })
     }
     return (
@@ -159,7 +162,7 @@ function Row({ data, type, setRequest, setUser, path, edit, ouId }) {
                             </svg>
                         </NavLink> : null,
 
-                        data.status !== "APPROVED" ? <svg
+                        role === true ? <svg
                             onClick={() => { setCancel(true) }}
                             key='4'
                             xmlns="http://www.w3.org/2000/svg"
@@ -177,7 +180,7 @@ function Row({ data, type, setRequest, setUser, path, edit, ouId }) {
                             <path d="M9 9L15 15"></path>
                         </svg> : null,
 
-                        data.status !== "APPROVED" ? <svg
+                        ouId === 1 && role === true ? <svg
                             onClick={() => { setDel(true) }}
                             key='5'
                             xmlns="http://www.w3.org/2000/svg"
