@@ -5,6 +5,7 @@ import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import mail from '../../images/mail.jpg';
 import { useEffect, useState, useRef } from 'react';
+import logo from '../../images/logo2.png'
 
 const useStyles = makeStyles({
 
@@ -34,23 +35,24 @@ export default function ForgotPass({ setErr }) {
     const [valEmail,setValEmail] = useState(false);
     const initialRender = useRef(true)
     const [msg, SetMsg] = useState(false)
-    // function ValidateEmail(mail) 
-    // {
-    //  if (/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(mail))
-    //   {
-    //     // return (true)
-    //     setValEmail(true)
-    //   }
-    //   else{
-    //     console.log("false")
-    //   }
-    //     // alert("You have entered an invalid email address!")
-       
-    // }
-   
-    // ValidateEmail("abhijithkannan@ieee")
 
+    function ValidateEmail(mail) 
+    {
+     if (/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(mail))
+      {
+        return (true)
+        
+      }
+      else{
+        return (false)
+      }
+        
+       
+    }
+   
+   
     useEffect(() => {
+        setValEmail(false);
         if (initialRender.current === true) {
             initialRender.current = false
         }
@@ -62,7 +64,7 @@ export default function ForgotPass({ setErr }) {
     }, [email])
 
     const handleKeyPress = (event) => {
-        console.log("hi")
+
         event.preventDefault();
         if (event.key === 'Enter') {
             console.log("hi")
@@ -71,29 +73,33 @@ export default function ForgotPass({ setErr }) {
 
 
     const handleSubmit = () => {
+       
+        if(ValidateEmail(email)){
+            if (email !== "") {
 
-        if (email !== "") {
-
-            const url = '/api/forgot-password/';
-            const formData = new URLSearchParams();
-            formData.append('email', email);
-
-            axios.post(url, formData)
-                .then((d) => {
-                    if (d.status === 200) {
-                        SetMsg(true)
-                    }
-                })
-                .catch(err => {
-                    console.error(err);
-                    setErr(err.response !== undefined ? err.response.data.error : err);
-
-                });
+                const url = '/api/forgot-password/';
+                const formData = new URLSearchParams();
+                formData.append('email', email);
+    
+                axios.post(url, formData)
+                    .then((d) => {
+                        if (d.status === 200) {
+                            SetMsg(true)
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        setErr(err.response !== undefined ? err.response.data.error : err);
+    
+                    });
+            }
+            else {
+                setEmpty(true)
+            }
         }
-        else {
-            setEmpty(true)
+        else{
+            setValEmail(true)
         }
-        // SetMsg(true)
 
 
     }
@@ -102,7 +108,8 @@ export default function ForgotPass({ setErr }) {
 
 
             <div className="register_con2">
-                {msg?<img src={mail} alt="mail"/>:null}
+
+                {msg?<img src={mail} alt="mail"/>:<img src={logo} alt="logo"/>}
                 {!msg?<h4>Enter your Email</h4>:<h4>A reset link has been sent to your email if you have an account </h4>}
                 {!msg ? <div className="register_con2_inputs">
                     <TextField
@@ -116,8 +123,8 @@ export default function ForgotPass({ setErr }) {
                         variant="filled"
                         value={email}
                         onChange={e => setEmail(e.target.value)}
-                        error={empty}
-                        helperText={empty ? "Empty field" : ""}
+                        error={empty||valEmail}
+                        helperText={empty ? "Empty field" :valEmail?"Invalid Email" :""}
 
 
                     />

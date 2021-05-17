@@ -78,14 +78,19 @@ function Verify({ path, type, data, setId, setErr,setPop }) {
           <div className="col">
             <div className="mb-2">
               <p className="label">Time:</p>
-              {console.log(data.endTime)}
-
-              {/* Temporary fix */}
               <p>
-                {new Date(data.startTime).toLocaleTimeString()}
-                {data.endTime !== "2021-05-07T18:30:00.000Z"
+                {data.type==="online_meeting"&&data.type==="intern_support"? <>{new Date(data.startTime).toLocaleTimeString()}
+                {data.endTime !== ""
                   ? "-" + new Date(data.endTime).toLocaleTimeString()
+                  : null}</>:
+                  <>
+                  {data.publishTime !== ""
+                  ?  new Date(data.publishTime).toLocaleTimeString()
                   : null}
+                  </>
+                  }
+
+             
               </p>
             </div>
           </div>

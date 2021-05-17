@@ -25,12 +25,7 @@
         width: 100%;
         border-spacing: 0;
         border-collapse: collapse;
-        & .encouraged-row {
-            color: green;
-        }
-        & .discouraged-row {
-            color: red;
-        }
+    
         & tr {
             border-bottom: 0.5px rgb(224, 224, 224) solid;
             height: 60px;

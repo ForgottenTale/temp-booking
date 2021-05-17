@@ -35,7 +35,6 @@ function DateTime({ path, type, setData, data, user, ou ,setPop}) {
   const history = useHistory();
 
   let minDate = minDay();
-  console.log(ouName);
   const next = (event) => {
     event.preventDefault();
     setData({
@@ -96,7 +95,7 @@ function DateTime({ path, type, setData, data, user, ou ,setPop}) {
         }
 
       })
-      console.log(prevState.ouId)
+  
 
 
       return ({
@@ -107,7 +106,7 @@ function DateTime({ path, type, setData, data, user, ou ,setPop}) {
         publishTime: prevState.publishTime !== "" ? prevState.publishTime : minDate.toISOString(),
       })
     })
-    console.log(ouName)
+ 
     if (ouName.length > 0) {
       setOuName({ value: ouName[0].ouName, label: ouName[0].ouName });
     }
@@ -118,8 +117,6 @@ function DateTime({ path, type, setData, data, user, ou ,setPop}) {
 
   const handleChange = (e) => {
     var temp = user.ou.filter((item) => {
-      console.log()
-
       return item.ouName === e.value ? item : null
     })
 
@@ -137,8 +134,6 @@ function DateTime({ path, type, setData, data, user, ou ,setPop}) {
       var start = new Date(prevState.startTime === "" ? new Date() : prevState.startTime);
       var end = new Date(prevState.endTime === "" ? new Date() : prevState.endTime);
       var publishTime = new Date(prevState.publishTime === "" ? new Date() : prevState.publishTime);
-      console.log(e);
-
 
       return ({
         ...prevState,
@@ -152,7 +147,7 @@ function DateTime({ path, type, setData, data, user, ou ,setPop}) {
 
   }
   const handleTimeChange = (e, name) => {
-    console.log("Hi")
+
     setData(prevState => {
       return ({
         ...prevState,
@@ -189,7 +184,6 @@ function DateTime({ path, type, setData, data, user, ou ,setPop}) {
                 options={options}
                 required
                 onChange={(e) => {
-                  console.log(e.value)
                   handleChange(e)
                 }}
               />

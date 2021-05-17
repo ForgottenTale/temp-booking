@@ -82,7 +82,7 @@ export default function Register({ setErr,reset }) {
 
     }, [confirmPassword])
     const handleKeyPress = (event) => {
-        console.log("hi")
+
         event.preventDefault();
         if (event.key === 'Enter') {
             // handleSubmit();

@@ -63,7 +63,7 @@ export default function AdminDashboard({ role, setErr,user ,ou}) {
                 setErr(err.response.data.err);
             });
 
-    }, [role,setErr]);
+    }, [role,setErr,refresh]);
 
     useEffect(()=>{
         if(ou.ouId!==undefined){
@@ -114,16 +114,16 @@ export default function AdminDashboard({ role, setErr,user ,ou}) {
                         <button className="button" onClick={() => { setPop(true) }}>+ Book service</button>
                     </div>
 
-                    <Table ouId={ou.ouId} headers={header} data={data} path="dashboard" type='request' setRequest={setRequest} searchTerm={searchTerm} edit={false} />
+                    <Table  setRefresh={setRefresh} setErr={setErr} ouId={ou.ouId} headers={header} data={data} path="dashboard" type='request' setRequest={setRequest} searchTerm={searchTerm} edit={false}role={role} />
 
 
                 </div>
             </Route>
             <Route path={"/dashboard/:id"} exact>
-                <RequestView req={request} edit={true} ou={ou} setRefresh={setRefresh} refresh={refresh} showButton={true} setErr={setErr} readProtect={true}/>
+                <RequestView req={request} edit={false} ou={ou} setRefresh={setRefresh} refresh={refresh} showButton={false} setErr={setErr} readProtect={true} />
             </Route>
             <Route path={"/dashboard/:id/edit"} exact>
-                <RequestView2 req={request} edit={false} ou={ou} setRefresh={setRefresh} refresh={refresh} showButton={true} setErr={setErr} readProtect={false}/>
+                <RequestView2 req={request} edit={false} ou={ou} setRefresh={setRefresh} refresh={refresh} showButton={false} setErr={setErr} readProtect={false}/>
             </Route>
         </Switch>
     );

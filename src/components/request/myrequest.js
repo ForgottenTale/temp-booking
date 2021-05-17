@@ -4,7 +4,7 @@ import Table from '../table/table';
 
 
 
-export default function MyRequests({ setErr, ouid, setRequest, searchTerm, setRequestNumber }) {
+export default function MyRequests({ setErr, ouid, setRequest, searchTerm, setRequestNumber,role,setRefresh }) {
 
     const [data, setData] = useState([]);
     const header = ['Id', "Name", "Service", "Type", "Time", "Status", "Action"];
@@ -29,7 +29,7 @@ export default function MyRequests({ setErr, ouid, setRequest, searchTerm, setRe
 
     return (
         <div className="history">
-            <Table ouId={ouid} headers={header} data={data} edit={false} type='request' setRequest={setRequest} searchTerm={searchTerm} path="/requests"/>
+            <Table setRefresh={setRefresh} role={role} setErr={setErr} ouId={ouid} headers={header} data={data} edit={false} type='request' setRequest={setRequest} searchTerm={searchTerm} path="/requests"/>
 
         </div>
     );

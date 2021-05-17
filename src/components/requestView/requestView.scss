@@ -1,5 +1,6 @@
 .requestView {
   padding: 30px;
+  margin-bottom: 30px;
 
   & img {
     margin: 30px 0 30px 0;
@@ -31,6 +32,14 @@
           background-color: rgb(255, 67, 67);
         }
       }
+    }
+  }
+
+  &_con2{
+    margin: 60px 0;
+    & h5{
+      font-size: 16px;
+      margin-bottom: 30px;
     }
   }
 

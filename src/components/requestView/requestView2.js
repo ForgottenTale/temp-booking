@@ -71,7 +71,6 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
     }, [req, ou])
 
     const handleSave = () => {
-        console.log(data);
         const keys = Object.keys(data);
         const values = Object.values(data);
         const formData = new FormData();
@@ -82,8 +81,6 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
         }
 
         handleUpload(formData);
-
-
         console.log(Array.from(formData));
     };
 
@@ -97,7 +94,7 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                 withCredentials: true
 
             });
-            console.log(res)
+            console.log(res);
         } catch (err) {
             console.error(err);
             setErr(err.response.data.error);

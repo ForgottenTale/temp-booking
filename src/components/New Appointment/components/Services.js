@@ -23,7 +23,7 @@ function Services({ path, type, data, setData,setPop }) {
   } else if (type === "publicity") {
     items = ["Social Media", "Website Posting"];
   }
-  console.log(items);
+
 
   return (
     <div className="service-container row">
