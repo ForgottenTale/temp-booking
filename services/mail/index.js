@@ -120,6 +120,22 @@ module.exports= {
         }
     },
 
+    forgotPassword: async function(input, emailIds){
+        try{
+            let transporter = nodemailer.createTransport(transporterData);
+            let data = {subject: "forgot password", html: `<span>${input.link}</span>`};
+            data.from = '<' + transporterData.auth.user + '>';
+            data.to= emailIds.mailTo;
+            data.cc= emailIds.mailCc;
+            let info = await transporter.sendMail(data);
+            logMailInfo(emailIds, info.messageId, nodemailer.getTestMessageUrl(info));
+            return ("Message send");
+        }catch(err){
+            console.error(err);
+            module.exports.sendSuperMail(err);
+        }
+    },
+
     newBooking: async function(input, emailIds){
         try{
             emailIds = removeRepeated(emailIds);

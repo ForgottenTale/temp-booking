@@ -41,10 +41,16 @@ module.exports = {
         return new Promise((resolve, reject)=>{
             bcrypt.hash(password, 12, (err, hash)=>{
                 if(err) return reject(err);
-                password = process.env.NODE_ENV=="development"?password:hash;
+                password = password;
                 return resolve(password);
             })
         })
+    },
+
+    generateUniqueString: function(key){
+        let hash = new Buffer.from(key+"something");
+        hash.toString('base64');   
+        return Date.now()+ "" + hash;
     },
     
     generateHash: function(key){
@@ -60,7 +66,7 @@ module.exports = {
     },
     
     removeImg: function (imgName){
-        fs.unlink(("/uploads/" + imgName), err=>{
+        fs.unlink((process.cwd()+"/uploads/" + imgName), err=>{
             if(err)
                 console.error(err);
             else

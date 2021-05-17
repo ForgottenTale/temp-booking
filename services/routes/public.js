@@ -1,6 +1,8 @@
 const bcrypt = require('bcrypt');
 const passport = require('passport');
 const database = require('../database/index.js');
+const mail = require('../mail/index.js');
+const utils = require('../utils.js');
 const {respondError} = require('../utils.js');
 
 module.exports = function(app){
@@ -21,7 +23,7 @@ module.exports = function(app){
             .then(person=>{
                 bcrypt.hash(req.body.password, 12, (err, hash)=>{
                     if(err) return respondError(err, res);
-                    person.password = process.env.NODE_ENV=="development"?req.body.password:hash;
+                    person.password = req.body.password;
                     database.addUserAccount(person)
                     .then(person=>{
                         database.delUserWithHash(req.params.hash);
@@ -50,6 +52,44 @@ module.exports = function(app){
         }catch(err){
             respondError(err, res);
         }
+    })
+
+    app.route('/api/forgot-password')
+    .post((req, res)=>{
+        if(!req.body.email)
+            return respondError(new Error("Required Fields missing"), res);
+        database.getUser({email: req.body.email}, (err, result)=>{
+            if(err) return respondError(err, res);
+            if(result.length<1)
+                return respondError(new Error("User does not exist"), res);
+            let uniqueString = utils.generateUniqueString(req.body.email);
+            database.addResetId(req.body.email, uniqueString, (err, message)=>{
+                if(err) return respondError(err, res);
+                let link = `${process.env.DOMAIN_NAME}/reset-password/${uniqueString}`;
+                mail.forgotPassword({link}, {mailTo: req.body.email});
+                res.status(200).json({message: "Reset link sent to mail"});
+            })
+        })
+    })
+
+    app.route('/api/reset-password/:hash')
+    .post((req, res)=>{
+        database.getResetId(req.params.hash, (err, result)=>{
+            if(err) return respondError(err, res);
+            if(result.length<1)
+                return respondError(new Error("User not found"), res);
+            if(!req.body.password || !req.body.confirmPassword)
+                return respondError(new Error("Required field(s) missing"), res);
+            if(req.body.password != req.body.confirmPassword)
+                return respondError(new Error("Passwords not matching"), res);
+            if(req.body.password.length<8)
+                return respondError(new Error("Passwords need to be more than 8 characters"), res);
+            database.updatePassword(result[0].email, req.body.password, (err, message)=>{
+                if(err) return respondError(err, res);
+                database.delResetId(result[0].email);
+                return res.status(200).json({message: "Password reset successful"});
+            })
+        })
     })
 
     app.route('/failure')
