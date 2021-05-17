@@ -704,7 +704,7 @@ module.exports = {
 					ServiceClass = getClass(types[mainIdx].type);
 					bookingsOfAllTypes[mainIdx][idx] = ServiceClass.convertSqlTimesToDate(bookingsOfAllTypes[mainIdx][idx]);
 					bookingsOfAllTypes[mainIdx][idx] = transmuteSnakeToCamel(bookingsOfAllTypes[mainIdx][idx]);
-					bookingsOfAllTypes[mainIdx][idx].createdAt = convertSqlDateTimeToDate(bookingsOfAllTypes[mainIdx][idx].created_at);
+					bookingsOfAllTypes[mainIdx][idx].createdAt = convertSqlDateTimeToDate(bookingsOfAllTypes[mainIdx][idx].createdAt);
 					bookingsOfAllTypes[mainIdx][idx].otherResponses = await executeQuery("SELECT name, email, encourages, response, created_at FROM response INNER JOIN person on person._id=response.person_id WHERE blt_id=" + bookingsOfAllTypes[mainIdx][idx].id + ";");
 					bookingsOfAllTypes[mainIdx][idx].otherResponses.map(response=>{
 						response.createdAt = convertSqlDateTimeToDate(response.created_at);
@@ -779,7 +779,7 @@ module.exports = {
 					bookingsOfAllTypes[mainIdx][idx].encourageMode = !config.follow_hierarchy;
 					bookingsOfAllTypes[mainIdx][idx] = ServiceClass.convertSqlTimesToDate(bookingsOfAllTypes[mainIdx][idx]);
 					bookingsOfAllTypes[mainIdx][idx] = transmuteSnakeToCamel(bookingsOfAllTypes[mainIdx][idx]);
-					bookingsOfAllTypes[mainIdx][idx].createdAt = convertSqlDateTimeToDate(bookingsOfAllTypes[mainIdx][idx].created_at);
+					bookingsOfAllTypes[mainIdx][idx].createdAt = convertSqlDateTimeToDate(bookingsOfAllTypes[mainIdx][idx].createdAt);
 					bookingsOfAllTypes[mainIdx][idx].otherResponses = await executeQuery("SELECT name, email, encourages, response, created_at FROM response INNER JOIN person on person._id=response.person_id WHERE blt_id=" + bookingsOfAllTypes[mainIdx][idx].id + ";");
 					bookingsOfAllTypes[mainIdx][idx].otherResponses.map(response=>{
 						response.createdAt = convertSqlDateTimeToDate(response.created_at);
