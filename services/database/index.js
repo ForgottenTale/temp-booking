@@ -671,7 +671,8 @@ module.exports = {
 			let types = await getServiceTypes();
 			let query = "";
 			types.forEach(serviceType=>{
-				query+="SELECT *, blt._id as _id FROM blt INNER JOIN " + serviceType.type + " ON blt." + serviceType.type + "_id=" + serviceType.type +"._id"  
+				query+="SELECT *,ou.name AS ouName, blt._id as _id FROM blt INNER JOIN " + serviceType.type + " ON blt." + serviceType.type + "_id=" + serviceType.type +"._id"  
+					+ " INNER JOIN ou ON ou._id=blt.ou_id"
 					+ " INNER JOIN user ON user._id=creator_id"
                     + " INNER JOIN person on person._id=user.person_id"
 					+ " WHERE " + serviceType.type + "_id IS NOT NULL AND creator_id=" + constraint.userId 
@@ -723,9 +724,10 @@ module.exports = {
 			let types = await getServiceTypes();
 			let query = "";
 			types.forEach(type=>{
-				query += "SELECT *, blt._id as _id FROM blt"
+				query += "SELECT *,ou.name AS ouName, blt._id AS _id FROM blt"
 					+ " INNER JOIN " + type.type + " ON " + type.type + "_id=" + type.type + "._id"
 					+ " INNER JOIN user ON creator_id=user._id"
+					+ " INNER JOIN ou ON blt.ou_id=ou._id"
 					+ " INNER JOIN person ON user.person_id=person._id"
 				if(constraint.filter == "pending"){
 					query+= " INNER JOIN next_to_approve AS n ON n.blt_id=blt._id"
