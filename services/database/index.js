@@ -674,7 +674,7 @@ module.exports = {
 					+ " INNER JOIN user ON user._id=creator_id"
                     + " INNER JOIN person on person._id=user.person_id"
 					+ " WHERE " + serviceType.type + "_id IS NOT NULL AND creator_id=" + constraint.userId 
-                  	+ " AND blt.ou_id="+constraint.ouId;
+                  	+ " AND level<4 AND blt.ou_id="+constraint.ouId;
 				if(constraint.bookingId)
 					query += " AND blt._id=" + constraint.bookingId;
                 query += " ORDER BY blt._id DESC;";
