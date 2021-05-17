@@ -35,7 +35,6 @@ class Person{
                                 values.push("phone='" + params.phone.trim() + "'");
                                 delete params.phone;
                                 break;
-                default     :   throw(new Error(key + " is not editable"));
             }
         }
         return values;
