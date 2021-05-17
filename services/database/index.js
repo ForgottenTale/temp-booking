@@ -547,6 +547,7 @@ module.exports = {
 			let temp = await executeQuery(`SELECT name FROM ou INNER JOIN blt ON blt.ou_id=ou._id WHERE ou_id=${newBooking.ouId}`)
 			newBooking.ouName = temp[0].name;
 			mail.newBooking(newBooking, {mailTo: user.email});
+			newBooking.userName = user.name;
 			mail.reviewRequest(newBooking, emailIds);
 			return done(null, newBooking);
 		}	
@@ -884,6 +885,7 @@ module.exports = {
 				booking = await executeQuery(`SELECT *,blt._id as _id, ou.name as ou_name FROM blt INNER JOIN ${type} ON ${type}_id=${type}._id INNER JOIN ou ON ou_id=ou._id WHERE blt._id=${bookingId}`);
 				booking=transmuteSnakeToCamel(booking[0]);
 				booking.type = type;
+				booking.userName = user.name;
 				mail.reviewRequest(booking, emailIds);
 				return done(null, "APPROVED");
 			}else{
