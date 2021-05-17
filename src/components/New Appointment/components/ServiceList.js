@@ -5,8 +5,8 @@ import internIcon from "../../../images/internsupport.png";
 import enoticeIcon from "../../../images/enotice.png";
 import serviceIcon from "../../../images/select.png";
 import publicity from "../../../images/publicity.png";
-import{useHistory,
-} from "react-router-dom";
+import{useHistory,} from "react-router-dom";
+
 function ServiceList({ path, setType, setData, data,setPop }) {
   const history = useHistory();
   const clickHander = (type) => {
