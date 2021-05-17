@@ -1,7 +1,7 @@
 
 import './modal.scss';
 
-export default function Modal({ title,setModal,handleSubmit }) {
+export default function Modal({ title,setModal,handleSubmit,loading }) {
 
   return (
     <div className="modal ">
@@ -11,8 +11,8 @@ export default function Modal({ title,setModal,handleSubmit }) {
       <div className="modal_con">
         <h4>{title} ?</h4>
         <div className="modal_con_buttons">
-            <button onClick={()=>handleSubmit()}>Yes</button>
-            <button onClick={()=>setModal(false)}>No</button>
+            <button disabled={loading} onClick={()=>handleSubmit()}>Yes</button>
+            <button disabled={loading} onClick={()=>setModal(false)}>No</button>
         </div>
       </div>
 

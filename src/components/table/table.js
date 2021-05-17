@@ -58,42 +58,47 @@ function Row({ setRefresh, data, type, setRequest, setUser, path, edit, ouId, ro
 
     const [cancel, setCancel] = useState(false);
     const [del, setDel] = useState(false);
+    const [loading,setLoading] = useState(false);
 
 
     const handleCancel = () => {
         const url = `api/bookings/${data.id}?ouId=${ouId}&cancel=true`;
-
+        setLoading(true);
         axios.delete(url, { withCredentials: true })
             .then((data) => {
                 if (data.status === 200) {
                     setCancel(false)
                     setRefresh((prevState) => !prevState);
+                    setLoading(false);
                 }
             }).catch((err) => {
                 console.log(err);
                 setErr(err.response !== undefined ? err.response.data : err)
+                setLoading(false);
             })
     }
 
 
     const handleDelete = () => {
         const url = `api/bookings/${data.id}?ouId=${ouId}`;
-
+        setLoading(true);
         axios.delete(url, { withCredentials: true })
             .then((data) => {
                 if (data.status === 200) {
                     setRefresh((prevState) => !prevState);
                     setDel(false)
+                    setLoading(false);
                 }
             }).catch((err) => {
+                setLoading(false);
                 console.log(err);
                 setErr(err.response !== undefined ? err.response.data : err)
             })
     }
     return (
 
-        [cancel ? <Modal key="1" title="Are you sure you want to cancel this request" setModal={setCancel} handleSubmit={handleCancel} /> : null,
-        del ? <Modal key="2" title="Are you sure you want to delete this request" setModal={setDel} handleSubmit={handleDelete} /> : null,
+        [cancel ? <Modal loading={loading} key="1" title="Are you sure you want to cancel this request" setModal={setCancel} handleSubmit={handleCancel} /> : null,
+        del ? <Modal loading={loading} key="2" title="Are you sure you want to delete this request" setModal={setDel} handleSubmit={handleDelete} /> : null,
 
 
         <tr key="3" className={data.encourages === 0 ? "discouraged-row" : (data.encourages === 1 ? "encouraged-row" : "")}>
