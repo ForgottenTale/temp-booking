@@ -389,7 +389,7 @@ class ENotice extends Service{
         super(input);
         this.required = ["express", "reminder", "publishTime"];
         this.editable = ["express"];
-        this.express = input.express=="express"||(input.express+"")=="1"?true:false;
+        this.express = input.express.toLowerCase()=="express"||(input.express+"")=="1"?true:false;
         this.reminder = input.reminder=="yes"||(input.reminder+"")=="1"?true:false;
         this.publishTime = new Date(input.publishTime);
     }
