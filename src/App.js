@@ -64,7 +64,7 @@ function App() {
       {err && <Error msg={err} setErr={setErr} />}
       <Router>
         <Switch>
-          <Route path='/forgotpassword'>
+          <Route path='/forgot-password'>
             <ForgotPass setErr={setErr} />
           </Route>
           <Route path="/" exact>

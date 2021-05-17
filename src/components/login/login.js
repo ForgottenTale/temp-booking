@@ -2,9 +2,10 @@ import './login.scss';
 import pic from '../../images/Welcome.png';
 import { useState } from 'react';
 import axios from 'axios';
+import {useHistory} from 'react-router-dom';
 
 export default function Login({setUser,setAuth,setErr,setOU}) {
-
+const history = useHistory();
     const [details, setDetails] = useState({
         username: null,
         password: null
@@ -73,7 +74,7 @@ export default function Login({setUser,setAuth,setErr,setOU}) {
 
 
                         </div>
-                        <p>Forgot password ?</p>
+                        <p onClick={()=>history.push("/forgot-password")}>Forgot password ?</p>
                     </div>
                     <button className="login_container_box_button" onClick={() => handleLogin()} onKeyPress={(e)=>handleKeyPress(e)}>Login</button>
                 </div>

@@ -31,10 +31,24 @@ export default function ForgotPass({ setErr }) {
     const classes = useStyles();
     const [email, setEmail] = useState("")
     const [empty, setEmpty] = useState(false);
+    const [valEmail,setValEmail] = useState(false);
     const initialRender = useRef(true)
     const [msg, SetMsg] = useState(false)
-
-
+    // function ValidateEmail(mail) 
+    // {
+    //  if (/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(mail))
+    //   {
+    //     // return (true)
+    //     setValEmail(true)
+    //   }
+    //   else{
+    //     console.log("false")
+    //   }
+    //     // alert("You have entered an invalid email address!")
+       
+    // }
+   
+    // ValidateEmail("abhijithkannan@ieee")
 
     useEffect(() => {
         if (initialRender.current === true) {
