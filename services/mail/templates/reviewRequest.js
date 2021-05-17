@@ -1,6 +1,6 @@
 module.exports = function (input){
   return({
-        subject: `BOOKING #${input.id}: New request received from ${input.userName} -IKS MinT`,
+        subject: `BOOKING #${input.id}: SERVICE STATUS UPDATE`,
         html: `<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
         <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
         <head>
@@ -262,7 +262,7 @@ module.exports = function (input){
           <div style="color: #000000; line-height: 140%; text-align: left; word-wrap: break-word;">
             <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 18px; line-height: 25.2px; color: #666666;">Hello,</span></p>
         <p style="font-size: 14px; line-height: 140%;">&nbsp;</p>
-        <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 18px; line-height: 25.2px; color: #666666;">Please review the service requested by ${input.ouName} </span></p>
+        <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 18px; line-height: 25.2px; color: #666666;">Please review the service requested by ${input.userName} </span></p>
         <br> <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 18px; line-height: 25.2px; color: #666666;">Kindly review the request by clicking the below link and confirm the approval at your earliest. Thank you!</span></p>
   
         <p style="font-size: 14px; line-height: 140%;">&nbsp;</p>
