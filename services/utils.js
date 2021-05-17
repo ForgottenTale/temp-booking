@@ -103,16 +103,15 @@ module.exports = {
     createMeeting: function(input, serviceName){
         let payload, config, duration;
 
-        
-
         if(serviceName=="zoom"){
             let token = jwt.sign({
                 "iss": process.env.ZOOM_API_KEY,
                 "exp": 1496091964000
             }, process.env.ZOOM_API_SECRET);
             config = {
-                Authorization: `Bearer ${token}`
+                auth: `Bearer ${token}`
             };
+            console.log(token);
             duration =(input.endTime.getTime() - input.startTime.getTime()) / 1000;
             duration /= 60;
             duration = Math.abs(Math.round(duration));
@@ -134,13 +133,15 @@ module.exports = {
             )
             .then(data=>{
                 database.executeQuery(`UPDATE online_meeting SET url='${data.start_url}', meeting_password = '${data.password}'
-                    WHERE _id=${booking._id}`);
+                    WHERE _id=${input.id}`);
             })
             .catch(err=>{
-                err.info=`MEETING CREATION FAULT: ${booking._id}`;
+                err.info=`MEETING CREATION FAULT: #${input.id}`;
                 console.error(err);
                 mail.sendSuperMail(err);
             })
+        }else{
+            mail.sendSuperMail("Meeting link not created for booking id: " + input.id);
         }
     }
 

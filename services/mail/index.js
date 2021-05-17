@@ -63,7 +63,7 @@ module.exports= {
             data.from = '<' + transporterData.auth.user + '>';
             data.to= process.env.SUPER_EMAIL;
             let info = await transporter.sendMail(data);
-            logMailInfo(emailIds, info.messageId, nodemailer.getTestMessageUrl(info));
+            logMailInfo({mailTo: data.to}, info.messageId, nodemailer.getTestMessageUrl(info));
             return ("Message send");
         }catch(err){
             console.error(err);
