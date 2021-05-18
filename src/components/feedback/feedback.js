@@ -96,7 +96,7 @@ export default function Feedback({ setErr }) {
         try {
             setLoading(true);
             const url = "/api/feedback";
-            const res = await axios.post(url, data, {
+            const res = await axios.put(url, data, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
@@ -104,6 +104,7 @@ export default function Feedback({ setErr }) {
             });
             if (res.status === 200) {
                 setLoading(false);
+                setDone(true);
             }
         } catch (err) {
             console.error(err);

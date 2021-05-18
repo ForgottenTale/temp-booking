@@ -82,12 +82,10 @@ function DateTime({ path, type, setData, data, user, ou ,setPop}) {
       var temp = user.ou.map((item) => {
         return { "value": item.ouName, "label": item.ouName }
       })
-
       setOptions(temp)
     }
     var ouName = [];
     setData(prevState => {
-
       ouName = user.ou.filter((ouData) => {
         if (ouData.ouId === prevState.ouId) {
           return ouData
@@ -98,11 +96,8 @@ function DateTime({ path, type, setData, data, user, ou ,setPop}) {
 
       })
   
-
-
       return ({
         ...prevState,
-        
         startTime: prevState.startTime !== "" ? prevState.startTime : minDate.toISOString(),
         endTime: prevState.endTime !== "" ? prevState.endTime : minDate.toISOString(),
         publishTime: prevState.publishTime !== "" ? prevState.publishTime : minDate.toISOString(),

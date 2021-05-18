@@ -19,7 +19,6 @@ const useStyles = makeStyles({
     background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
     border: 0,
     borderRadius: 3,
-    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
     color: 'white',
     height: 48,
     width: 60,
@@ -144,7 +143,6 @@ function Verify({ path, type, data, setId, setErr, setPop }) {
         ) : null}
 
         <Button
-          className="button"
           className={classes.root}
           style={{ width: "100%", marginBottom: 30 }}
           onClick={() => { handleSubmit() }}
