@@ -309,6 +309,7 @@ function SupportInfo({ path, type, data, setData,setPop }) {
                 <KeyboardDatePicker
                   margin="normal"
                   required
+                  minDate={new Date()}
                   id="time-picker"
                   value={support.reminder === "" ? undefined: new Date(support.reminder)}
                   KeyboardButtonProps={{

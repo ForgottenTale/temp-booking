@@ -11,7 +11,7 @@ import ItemDate from './ItemDate';
 
 
 
-export default function RequestView({ req, setRefresh, refresh, showButton, setErr, readProtect, ou, edit }) {
+export default function RequestView({ req, setRefresh, refresh, showButton, setErr, readProtect, ou, edit,switchUrl }) {
 
     const [spinner, setSpinner] = useState(false);
     const [data, setData] = useState({
@@ -55,7 +55,14 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                 setData(req);
             }
             else {
-                const url = `/api/approvals?filter=${params.id}&ouId=${ou.ouId}`;
+                var url=""
+                if(switchUrl){
+                    url = "/api/bookings?ouId="+ou.ouId;
+                }
+                else{
+                    url = `/api/approvals?filter=${params.id}&ouId=${ou.ouId}`;
+                }
+                
                 axios.get(url, { withCredentials: true })
                     .then((d) => {
                         setData(d.data[0]);

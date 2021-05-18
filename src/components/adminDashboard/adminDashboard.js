@@ -84,7 +84,7 @@ export default function AdminDashboard({ role, setErr,user ,ou}) {
         <Switch>
 
             <Route exact path={path}>
-                {pop ? <ServiceSelection setErr={setErr} setPop={setPop} pop={pop} user={user} /> : null}
+                {pop ? <ServiceSelection setErr={setErr} setRefresh={setRefresh} setPop={setPop} pop={pop} user={user} /> : null}
                 <div className="request">
                     <div className="adminDashboard">
                         <div className="adminDashboard_con">
@@ -120,7 +120,7 @@ export default function AdminDashboard({ role, setErr,user ,ou}) {
                 </div>
             </Route>
             <Route path={"/dashboard/:id"} exact>
-                <RequestView req={request} edit={false} ou={ou} setRefresh={setRefresh} refresh={refresh} showButton={false} setErr={setErr} readProtect={true} />
+                <RequestView switchUrl={true} req={request} edit={false} ou={ou} setRefresh={setRefresh} refresh={refresh} showButton={false} setErr={setErr} readProtect={true} />
             </Route>
             <Route path={"/dashboard/:id/edit"} exact>
                 <RequestView2 req={request} edit={false} ou={ou} setRefresh={setRefresh} refresh={refresh} showButton={false} setErr={setErr} readProtect={false}/>

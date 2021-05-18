@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useHistory } from "react-router-dom";
 import confirmIcon from "../../../images/info.png";
 
-function Confirmation({ id,setPop }) {
+function Confirmation({ id,setPop,setRefresh }) {
   const history = useHistory();
   return (
     <div className="service-container row">
@@ -34,7 +34,11 @@ function Confirmation({ id,setPop }) {
           onClick={() =>{ history.push("/dashboard")
           setPop((prevState)=>{
             return!prevState
-          });}}
+          });
+          setRefresh((prevState)=>{
+            return!prevState
+          });
+        }}
           className="btn btn-success mt-5 submit-btn"
         >
           Back Home

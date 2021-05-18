@@ -8,22 +8,22 @@ import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles({
 
   underline: {
-      "&&&:before": {
-          borderBottom: "none"
-      },
-      "&&:after": {
-          borderBottom: "none"
-      }
+    "&&&:before": {
+      borderBottom: "none"
+    },
+    "&&:after": {
+      borderBottom: "none"
+    }
   },
   root: {
-      background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
-      border: 0,
-      borderRadius: 3,
-      boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-      color: 'white',
-      height: 48,
-      width:60,
-      padding: '0 30px',
+    background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+    border: 0,
+    borderRadius: 3,
+    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+    color: 'white',
+    height: 48,
+    width: 60,
+    padding: '0 30px',
   },
 });
 
@@ -31,7 +31,7 @@ function Verify({ path, type, data, setId, setErr, setPop }) {
   const classes = useStyles();
   const history = useHistory();
   const [proceed, setProceed] = useState(false);
-  const [loading,setLoading] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     if (proceed) history.push(path + "/confirmation");
@@ -144,6 +144,7 @@ function Verify({ path, type, data, setId, setErr, setPop }) {
         ) : null}
 
         <Button
+          className="button"
           className={classes.root}
           style={{ width: "100%", marginBottom: 30 }}
           onClick={() => { handleSubmit() }}
