@@ -85,6 +85,7 @@ function DateTime({ path, type, setData, data, user, ou, setPop }) {
       setOptions(temp)
     }
     var ouName = [];
+    setOuID(data.ouId)
     setData(prevState => {
       ouName = user.ou.filter((ouData) => {
         if (ouData.ouId === prevState.ouId) {
@@ -95,7 +96,7 @@ function DateTime({ path, type, setData, data, user, ou, setPop }) {
         }
 
       })
-      setOuID(prevState.ouId)
+     
       return ({
         ...prevState,
         startTime: prevState.startTime !== "" ? prevState.startTime : minDate.toISOString(),
