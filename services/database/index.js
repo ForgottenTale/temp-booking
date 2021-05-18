@@ -869,7 +869,7 @@ module.exports = {
 					booking = booking[0];
 					let {type, typeId} = findServiceType(booking);
 					ServiceClass = getClass(type);
-					booking = await executeQuery(`SELECT * FROM blt INNER JOIN ${type} ON ${type}._id=${type}_id WHERE blt._id=${bookingId}`);
+					booking = await executeQuery(`SELECT *,blt._id as _id FROM blt INNER JOIN ${type} ON ${type}._id=${type}_id WHERE blt._id=${bookingId}`);
 					booking = booking[0];
 					let config= await getConfig(type, booking.service_name);
 					booking = transmuteSnakeToCamel(booking);
