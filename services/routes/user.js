@@ -125,7 +125,7 @@ module.exports = function(app){
             try{
                 if(err) throw err;
                 req.body.file=req.file?req.file.filename:"null";
-                database.addFeedback(req.body, req.user.id, (err, msg)=>{
+                database.addFeedback(req.body, req.user, (err, msg)=>{
                     if(err) return respondError(err, res);
                     res.status(200).json({message: msg});
                 })   

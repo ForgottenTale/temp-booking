@@ -72,6 +72,23 @@ module.exports= {
         }
     },
 
+    feedbackMail: async function(input){
+        try{
+            let transporter = nodemailer.createTransport(transporterData);
+            let data = {
+                subject: "Feedback " + input.type,
+                html: `<b>Feedback from ${input.name}: ${input.message}</b>`
+            }
+            data.from = '"MinT Support" <' + transporterData.auth.user + '>';
+            data.to= "mintsupport@ieeekerala.org";
+            let info = await transporter.sendMail(data);
+            logMailInfo({mailTo: data.to}, info.messageId, nodemailer.getTestMessageUrl(info));
+            return ("Message send");
+        }catch(err){
+            console.error(err);
+        }
+    },
+
     accountInitiated: async function(input, emailIds){
         try{
             let transporter = nodemailer.createTransport(transporterData);

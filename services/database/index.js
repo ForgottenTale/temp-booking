@@ -580,11 +580,12 @@ module.exports = {
 		})
 	},
 
-	addFeedback: async function(body, userId, done){
+	addFeedback: async function(body, user, done){
 		try{
 			if(!body.type)
 				body.type=null;
-			await executeQuery(`INSERT INTO feedback (user_id, type, message, file) VALUES (${userId}, '${body.type}', '${body.message}', '${body.file}')`);
+			await executeQuery(`INSERT INTO feedback (user_id, type, message, file) VALUES (${user.id}, '${body.type}', '${body.message}', '${body.file}')`);
+			mail.feedbackMail({name: user.name, type: body.type, message: body.message});
 			return done(null, "Feedback added successfully");
 		}catch(err){
 			return done(err);
