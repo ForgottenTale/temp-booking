@@ -143,7 +143,9 @@ export default function Feedback({ setErr }) {
                     })
                 }}></textarea>
                 <p>Upload a screenshot (if any)</p>
-                <input type="file" />
+                <input type="file" onChange={(e) => {
+                    setData({ ...data, file: e.target.files[0] });
+                  }}/>
                 <Button
                     className={classes.root}
                     style={{ width: "100%", marginBottom: 30 }}
@@ -154,7 +156,7 @@ export default function Feedback({ setErr }) {
                 </Button></div> :
                 <>
                     <img src={send} alt="support" />
-                    <h4>Feedback recieved.Our team will be looking into it</h4>
+                    <h4>Feedback received. Our team will be looking into it</h4>
                 </>
             }
 

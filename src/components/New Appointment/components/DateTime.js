@@ -24,7 +24,7 @@ function minDay() {
   return min;
 }
 
-function DateTime({ path, type, setData, data, user, ou ,setPop}) {
+function DateTime({ path, type, setData, data, user, ou, setPop }) {
   const [equalTimeError, setequalTimeError] = useState(false);
   const [shortTimeError, setShortTimeError] = useState(false);
   const [ouError, setOuError] = useState(false);
@@ -50,11 +50,11 @@ function DateTime({ path, type, setData, data, user, ou ,setPop}) {
     else if (start === end) {
       setequalTimeError(true);
     }
-    else if (start  >end) {
+    else if (start > end) {
       setShortTimeError(true);
     }
 
-    if (start !== "" && end !== "" && start  !== end && start < end && ouId !== "") {
+    if (start !== "" && end !== "" && start !== end && start < end && ouId !== "") {
       if (type === "online_meeting" || type === "publicity") {
         history.push(path + "/event-info");
       } else if (type === "intern_support" || type === "e_notice") {
@@ -95,7 +95,7 @@ function DateTime({ path, type, setData, data, user, ou ,setPop}) {
         }
 
       })
-  
+      setOuID(prevState.ouId)
       return ({
         ...prevState,
         startTime: prevState.startTime !== "" ? prevState.startTime : minDate.toISOString(),
@@ -103,7 +103,7 @@ function DateTime({ path, type, setData, data, user, ou ,setPop}) {
         publishTime: prevState.publishTime !== "" ? prevState.publishTime : minDate.toISOString(),
       })
     })
- 
+
     if (ouName.length > 0) {
       setOuName({ value: ouName[0].ouName, label: ouName[0].ouName });
     }
@@ -165,10 +165,10 @@ function DateTime({ path, type, setData, data, user, ou ,setPop}) {
       </div>
       <div className="date col">
         <h2>Select Date & Time</h2>
-        <div className="close"  onClick={() => {
+        <div className="close" onClick={() => {
           history.push("/dashboard");
-          setPop((prevState)=>{
-            return!prevState
+          setPop((prevState) => {
+            return !prevState
           });
         }}>Close</div>
         <form onSubmit={next}>
@@ -177,6 +177,7 @@ function DateTime({ path, type, setData, data, user, ou ,setPop}) {
             <div className="col-sm-5 col-6">
               <label className="form-label">Select OU</label>
               <Select
+                value={ouName}
                 error={ouError}
                 options={options}
                 required
