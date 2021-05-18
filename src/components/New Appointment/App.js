@@ -101,7 +101,7 @@ function App(props) {
             />
           </Route>
           <Route path={path + "/confirmation"}>
-            <Confirmation path={path} type={type} data={data} id={id}  setPop={props.setPop}/>
+            <Confirmation path={path} type={type} data={data} id={id}  setPop={props.setPop} setRefresh={props.setRefresh}/>
           </Route>
         </Switch>
       </Router>

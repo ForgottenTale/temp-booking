@@ -9,13 +9,13 @@ export default function Menu({ toggle, state, setActiveComponent, role, user, ou
     const ref = useRef();
     const [open, setOpen] = useState(true);
 
-   
+
     return (
         <div className={open ? "menu open" : "menu"} ref={ref}>
             <div className="menu_item">
-                <img  src={logo} alt="logo" className={open ? "" : "smImg"}/>
+                <img src={logo} alt="logo" className={open ? "" : "smImg"} />
             </div>
-    
+
 
             <NavLink to="/dashboard" className="menu_item" activeClassName="active" onClick={() => setActiveComponent("Dashboard")} exact >
                 <div className="menu_item_deo"></div>
@@ -56,7 +56,7 @@ export default function Menu({ toggle, state, setActiveComponent, role, user, ou
                 </svg>
                 <p className={open ? "menu_item_name open" : "menu_item_name"}>Calendar</p>
             </NavLink>
-            {role  ? [<NavLink key="1" to="/requests" className="menu_item" activeClassName="active" onClick={() => setActiveComponent("Requests")}>
+            {role ? [<NavLink key="1" to="/requests" className="menu_item" activeClassName="active" onClick={() => setActiveComponent("Requests")}>
                 <div className="menu_item_deo"></div>
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -112,6 +112,26 @@ export default function Menu({ toggle, state, setActiveComponent, role, user, ou
                     <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"></path>
                 </svg>
                 <p className={open ? "menu_item_name open" : "menu_item_name"}>Settings</p>
+            </NavLink>
+
+            <NavLink to="/support" className="menu_item" activeClassName="active" onClick={() => setActiveComponent("Settings")}>
+            <div className="menu_item_deo"></div>
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="feather feather-help-circle"
+                    viewBox="0 0 24 24"
+                >
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"></path>
+                    <path d="M12 17L12.01 17"></path>
+                </svg>
+                <p className={open ? "menu_item_name open" : "menu_item_name"}>Support</p>
             </NavLink>
             <div className="menu_item" onClick={() => {
                 toggle(!state)

@@ -143,7 +143,8 @@ module.exports = {
         `CREATE TABLE IF NOT EXISTS feedback(
             user_id INT NOT NULL,
             type VARCHAR(50),
-            text VARCHAR(300),
+            message VARCHAR(255),
+            file VARCHAR(255),
             FOREIGN KEY(user_id) REFERENCES user(_id)
         );`,
         `CREATE TABLE IF NOT EXISTS reset_id(

@@ -11,7 +11,7 @@ import ItemDate from './ItemDate';
 
 
 
-export default function RequestView({ req, setRefresh, refresh, showButton, setErr, readProtect, ou, edit }) {
+export default function RequestView({ req, setRefresh, refresh, showButton, setErr, readProtect, ou, edit,switchUrl }) {
 
     const [spinner, setSpinner] = useState(false);
     const [data, setData] = useState({
@@ -55,7 +55,14 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                 setData(req);
             }
             else {
-                const url = `/api/approvals?filter=${params.id}&ouId=${ou.ouId}`;
+                var url=""
+                if(switchUrl){
+                    url = "/api/bookings?ouId="+ou.ouId;
+                }
+                else{
+                    url = `/api/approvals?filter=${params.id}&ouId=${ou.ouId}`;
+                }
+                
                 axios.get(url, { withCredentials: true })
                     .then((d) => {
                         setData(d.data[0]);
@@ -122,11 +129,10 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                     <Item title="Title" value={data.title} key="41" name="title" setData={setData} readOnly={readOnly} />
 
 
-                    {data.type === "online_meeting" && data.type === "intern_support" ? [
+                    {data.type === "online_meeting" || data.type === "intern_support" ? [
                         <ItemTime name="startTime" title="Start Time" value={data.startTime} key="3" readOnly={readOnly} setData={setData} />,
                         <ItemTime name="endTime" title="End Time" value={data.endTime} key="4" readOnly={readOnly} setData={setData} />,
-                    ] : null
-                    }
+                    ] : null}
                     {data.type === "online_meeting" ?
                         [
                             <ItemDate title="Date" value={data.startTime} key="2" readOnly={readOnly} setData={setData} />,
