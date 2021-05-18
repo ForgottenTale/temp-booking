@@ -19,9 +19,9 @@ function findAndSetOuInfo(userOus, ouId, userId){
                 return resolve({id: ouId, name: userOus[i].ouName, admin: userOus[i].ouAdmin});
         }
         if(result){
-            if(!result.groupAdmin){
-                let result = await database.executeQuery("SELECT user_id FROM reviewer_map WHERE user_id=" + userId);
-                if(result.length>0){
+            if(!result.groupAdmin && ouId==1){
+                let temp = await database.executeQuery("SELECT user_id FROM reviewer_map WHERE user_id=" + userId);
+                if(temp.length>0){
                     result.reviewer = true;
                     return resolve(result) ;
                 }
