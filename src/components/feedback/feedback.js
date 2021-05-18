@@ -113,7 +113,7 @@ export default function Feedback({ setErr }) {
     };
     return (
         <div className="feedback">
-            {!done ? <div>
+            {!done ? <div className="feedback_con">
                 <img src={support} alt="support" />
                 <h4>Your opinion matters to us!</h4>
                 <p>Type *</p>
