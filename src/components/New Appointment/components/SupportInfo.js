@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState} from "react";
 import { useHistory } from "react-router-dom";
 import infoIcon from "../../../images/info.png";
 import DateFnsUtils from '@date-io/date-fns';
@@ -11,7 +11,7 @@ function SupportInfo({ path, type, data, setData,setPop }) {
     title: data.title,
     description: data.description,
     express: data.express,
-    reminder: data.reminder,
+    reminder: data.reminder===""?new Date():data.reminder,
     comments: data.comments,
     purpose: data.purpose,
     dimensions: data.dimensions,
@@ -49,20 +49,20 @@ function SupportInfo({ path, type, data, setData,setPop }) {
     history.push(path + "/verify");
   }
 
-  useEffect(()=>{
-    setData((prevState)=>{
-      return{
-        ...prevState,
-        reminder:prevState.reminder===""?new Date().toISOString():prevState.reminder
-      }
-    })
-    setSupport(prevState => {
-      return ({
-        ...prevState,
-        reminder: new Date().toISOString()
-      })
-    })
-  },[])
+  // useEffect(()=>{
+  //   setData((prevState)=>{
+  //     return{
+  //       ...prevState,
+  //       reminder:prevState.reminder===""?new Date().toISOString():prevState.reminder
+  //     }
+  //   })
+  //   setSupport(prevState => {
+  //     return ({
+  //       ...prevState,
+  //       reminder: new Date().toISOString()
+  //     })
+  //   })
+  // },[])
 
 
   return (
