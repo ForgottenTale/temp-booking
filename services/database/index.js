@@ -580,11 +580,12 @@ module.exports = {
 		})
 	},
 
-	addFeedback: async function(body, userId, done){
+	addFeedback: async function(body, user, done){
 		try{
 			if(!body.type)
 				body.type=null;
-			await executeQuery(`INSERT INTO feedback (user_id, type, message, file) VALUES (${userId}, '${body.type}', '${body.message}', '${body.file}')`);
+			await executeQuery(`INSERT INTO feedback (user_id, type, message, file) VALUES (${user.id}, '${body.type}', '${body.message}', '${body.file}')`);
+			mail.feedbackMail({name: user.name, type: body.type, message: body.message});
 			return done(null, "Feedback added successfully");
 		}catch(err){
 			return done(err);
@@ -741,7 +742,7 @@ module.exports = {
 			let types = await getServiceTypes();
 			let query = "";
 			types.forEach(type=>{
-				query += "SELECT *,ou.name AS ouName, blt._id AS _id FROM blt"
+				query += "SELECT DISTINCT *,ou.name AS ouName, blt._id AS _id FROM blt"
 					+ " INNER JOIN " + type.type + " ON " + type.type + "_id=" + type.type + "._id"
 					+ " INNER JOIN user ON creator_id=user._id"
 					+ " INNER JOIN ou ON blt.ou_id=ou._id"
