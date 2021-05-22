@@ -855,7 +855,7 @@ module.exports = {
 					booking.startTime = convertSqlDateTimeToDate(booking.startTime);
 					booking.endTime = convertSqlDateTimeToDate(booking.endTime);
 				}else{
-					booking.publishTime = convertSqlDateTimeToDate(booking.publishTime).toISOString();
+					booking.publishTime = convertSqlDateTimeToDate(booking.publishTime);
 				}
 				await checkAvailability(booking);
 				await addResponse(user.personId, bookingId, input.encourages, input.response);
