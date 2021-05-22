@@ -38,9 +38,10 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
 
     const [message, setMessage] = useState(false);
     const [readOnly, setReadOnly] = useState(readProtect)
-    const { params } = useRouteMatch();
+    const { params,path } = useRouteMatch();
     const history = useHistory();
     const [msg, setMsg] = useState("");
+    console.log(path)
 
 
     useEffect(() => {
@@ -60,7 +61,7 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                     url = "/api/bookings?ouId=" + ou.ouId;
                 }
                 else {
-                    url = `/api/approvals?filter=${params.id}&ouId=${ou.ouId}`;
+                    url = `/api/approvals/${params.id}?ouId=${ou.ouId}`;
                 }
 
                 axios.get(url, { withCredentials: true })
@@ -134,7 +135,7 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                         <ItemTime name="endTime" title="End Time" value={data.endTime} key="4" readOnly={readOnly} setData={setData} />,
                     ] : [
                         <ItemDate title="Date" value={data.publishTime} key="52" readOnly={readOnly} setData={setData} />,
-                        <ItemDate title="Remainder" value={data.remainder} key="51" readOnly={readOnly} setData={setData} />,]}
+                        <ItemDate title="Remainder" value={data.reminder} key="51" readOnly={readOnly} setData={setData} />,]}
                    
                     {data.type === "online_meeting" ?
                         [
