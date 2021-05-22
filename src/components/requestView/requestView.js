@@ -11,7 +11,7 @@ import ItemDate from './ItemDate';
 
 
 
-export default function RequestView({ req, setRefresh, refresh, showButton, setErr, readProtect, ou, edit,switchUrl }) {
+export default function RequestView({ req, setRefresh, refresh, showButton, setErr, readProtect, ou, edit, switchUrl }) {
 
     const [spinner, setSpinner] = useState(false);
     const [data, setData] = useState({
@@ -55,14 +55,14 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                 setData(req);
             }
             else {
-                var url=""
-                if(switchUrl){
-                    url = "/api/bookings?ouId="+ou.ouId;
+                var url = ""
+                if (switchUrl) {
+                    url = "/api/bookings?ouId=" + ou.ouId;
                 }
-                else{
+                else {
                     url = `/api/approvals?filter=${params.id}&ouId=${ou.ouId}`;
                 }
-                
+
                 axios.get(url, { withCredentials: true })
                     .then((d) => {
                         setData(d.data[0]);
@@ -132,7 +132,10 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                     {data.type === "online_meeting" || data.type === "intern_support" ? [
                         <ItemTime name="startTime" title="Start Time" value={data.startTime} key="3" readOnly={readOnly} setData={setData} />,
                         <ItemTime name="endTime" title="End Time" value={data.endTime} key="4" readOnly={readOnly} setData={setData} />,
-                    ] : null}
+                    ] : [
+                        <ItemDate title="Date" value={data.publishTime} key="52" readOnly={readOnly} setData={setData} />,
+                        <ItemDate title="Remainder" value={data.remainder} key="51" readOnly={readOnly} setData={setData} />,]}
+                   
                     {data.type === "online_meeting" ?
                         [
                             <ItemDate title="Date" value={data.startTime} key="2" readOnly={readOnly} setData={setData} />,
@@ -148,7 +151,7 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
 
 
                         ] : [
-                            <ItemDate title="Date" value={data.startTime} key="9" readOnly={readOnly} setData={setData} />,
+
                             <Item title="Comments" value={data.comments} key="11" name="comments" readOnly={readOnly} setData={setData} />
                         ]
                     }
@@ -160,7 +163,7 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                     {data.serviceName === "content writing" ? <Item title="Word Count" value={data.wordsCount} name="wordCount" readOnly={readOnly} /> : null}
                     {data.serviceName === "poster design" ? <Item title="Poster Diamensions" value={data.dimensions} name="diamensions" readOnly={readOnly} /> : null}
                     {data.serviceName === "website development" ? <Item title="URL" readOnly={readOnly} value={data.url} name="url" /> : null}
-                    {data.type === "e_notice" ? <Item title="Delivery Type" value={data.deliveryType} name="deliveryType" readOnly={readOnly} /> : null}
+                    {data.type === "e_notice" ? <Item title="Delivery Type" value={data.express===1?"Express":"Normal"} name="deliveryType" readOnly={readOnly} /> : null}
                     {data.type === "publicity" ? [
                         <Item title="Program Schedule" value={data.schedule} key="12" name="schedule" readOnly={readOnly} />,
                         <Item title="Publish Time" value={new Date(data.publishTime).toLocaleTimeString()} key="13" name="publishTime" readOnly={readOnly} />] : null
@@ -192,7 +195,7 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                     <div className="requestView_con2">
                         <h6>
                             <span>Meeting URL : </span>
-                            {data.meetingUrl==="WILL BE UPDATED"?data.meetingUrl:<a href={data.meetingUrl}>{data.meetingUrl}</a>}</h6>
+                            {data.meetingUrl === "WILL BE UPDATED" ? data.meetingUrl : <a href={data.meetingUrl}>{data.meetingUrl}</a>}</h6>
                         <h6><span>Meeting Id : </span>{data.meetingId}</h6>
                         <h6><span>Meeting Password : </span>{data.meetingPassword}</h6>
                     </div>
@@ -220,7 +223,7 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                 }}>Save</button> </div> : null
 
                 }
-              
+
                 {message ? <Message ouId={ou.ouId} msg2={msg} setMessage={setMessage} setRefresh={setRefresh} setSpinner={setSpinner} refresh={refresh} data={data} setErr={setErr} /> : null}
             </div >
             : null
