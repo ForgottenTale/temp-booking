@@ -436,6 +436,7 @@ class ENotice extends Service{
 
     static convertSqlTimesToDate(input){
         input.publish_time = convertSqlDateTimeToDate(input.publish_time).toISOString();
+        input.reminder = convertSqlDateTimeToDate(input.reminder).toISOString();
         return input;
     }
 }
