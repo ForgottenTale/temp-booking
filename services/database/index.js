@@ -533,7 +533,9 @@ module.exports = {
 
 			await executeQuery("UPDATE blt SET level=" + info.level + " WHERE _id=" + bltBooking.insertId);
 			let emailIds = {mailTo: info.nextApprovers.map(person=>person.email)};
-			emailIds.mailCc = info.involved.map(person=>person.email);
+			let config = await getConfig(newBooking.type, newBooking.serviceName);
+			let reviewers = await findReviewers(config._id);
+			emailIds.mailCc = reviewers.map(reviewer=>reviewer.email);
 			newBooking.id = bltBooking.insertId;
 			if(info.level==0){
 				await executeQuery("UPDATE blt SET status='APPROVED' WHERE _id=" + bltBooking.insertId);
@@ -541,6 +543,7 @@ module.exports = {
 					await createMeeting(newBooking, newBooking.serviceName);
 				}
 				emailIds.mailTo.push(user.email);
+				emailIds.mailCc = info.involved.map(person=>person.email);
 				mail.finalApproval({id: newBooking.id}, emailIds);
 				return done(null, newBooking);
 			}
@@ -862,9 +865,12 @@ module.exports = {
 				let info = await tryLevelUp(bookingId, user.personId);
 				await executeQuery("UPDATE blt SET level="+ info.level + " WHERE _id=" + bookingId);
 				let emailIds = {mailTo: info.nextApprovers.map(person=>person.email)};
-				emailIds.mailCc = info.involved.map(person=>person.email);
+				let config = await getConfig(booking.type, booking.serviceName);
+				let reviewers = await findReviewers(config._id);
+				emailIds.mailCc = reviewers.map(reviewer=>reviewer.email);
 
 				if(info.level==0){
+					emailIds.mailCc = info.involved.map(person=>person.email);
 					await executeQuery("UPDATE blt SET status='APPROVED', approved_at=CURRENT_TIMESTAMP WHERE _id=" + bookingId);
 					booking = await executeQuery("SELECT * FROM blt WHERE _id=" + bookingId);
 					booking = booking[0];
@@ -904,7 +910,6 @@ module.exports = {
 					return done(null, "Updated");
 				}
 	
-				emailIds.mailCc.push(user.email);
 				booking = await executeQuery(`SELECT * FROM blt WHERE _id=${bookingId}`);
 				booking = await executeQuery(`SELECT *,blt._id as _id, ou.name as ou_name FROM blt INNER JOIN ${type} ON ${type}_id=${type}._id INNER JOIN ou ON ou_id=ou._id WHERE blt._id=${bookingId}`);
 				booking=transmuteSnakeToCamel(booking[0]);
