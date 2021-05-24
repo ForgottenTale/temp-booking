@@ -533,7 +533,9 @@ module.exports = {
 
 			await executeQuery("UPDATE blt SET level=" + info.level + " WHERE _id=" + bltBooking.insertId);
 			let emailIds = {mailTo: info.nextApprovers.map(person=>person.email)};
-			emailIds.mailCc = info.involved.map(person=>person.email);
+			let config = await getConfig(newBooking.type, newBooking.serviceName);
+			let reviewers = await findReviewers(config._id);
+			emailIds.mailCc = reviewers.map(reviewer=>reviewer.email);
 			newBooking.id = bltBooking.insertId;
 			if(info.level==0){
 				await executeQuery("UPDATE blt SET status='APPROVED' WHERE _id=" + bltBooking.insertId);
@@ -541,6 +543,7 @@ module.exports = {
 					await createMeeting(newBooking, newBooking.serviceName);
 				}
 				emailIds.mailTo.push(user.email);
+				emailIds.mailCc = info.involved.map(person=>person.email);
 				mail.finalApproval({id: newBooking.id}, emailIds);
 				return done(null, newBooking);
 			}
