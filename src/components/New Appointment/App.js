@@ -34,6 +34,7 @@ function App(props) {
     description: "",
     express: "",
     reminder: "",
+    remind:false,
     comments: "",
     purpose: "",
     dimensions: "",

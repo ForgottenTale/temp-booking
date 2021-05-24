@@ -1,17 +1,18 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import infoIcon from "../../../images/info.png";
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 
-function SupportInfo({ path, type, data, setData,setPop }) {
+function SupportInfo({ path, type, data, setData, setPop }) {
   const history = useHistory();
 
   const [support, setSupport] = useState({
     title: data.title,
     description: data.description,
     express: data.express,
-    reminder: data.reminder===""?new Date():data.reminder,
+    remind: data.remind,
+    reminder: data.reminder === "" ? new Date(data.publishTime) : data.reminder,
     comments: data.comments,
     purpose: data.purpose,
     dimensions: data.dimensions,
@@ -37,7 +38,8 @@ function SupportInfo({ path, type, data, setData,setPop }) {
       title: support.title,
       description: support.description,
       express: support.express.toLowerCase(),
-      reminder: support.reminder,
+      reminder: support.remind ? support.reminder : data.publishTime,
+      remind: support.remind,
       comments: support.comments,
       purpose: support.purpose,
       dimensions: support.dimensions,
@@ -48,6 +50,27 @@ function SupportInfo({ path, type, data, setData,setPop }) {
 
     history.push(path + "/verify");
   }
+  function prevButton(event) {
+    event.preventDefault();
+
+    setData({
+      ...data,
+      title: support.title,
+      description: support.description,
+      express: support.express.toLowerCase(),
+      reminder: support.remind ? support.reminder : data.publishTime,
+      remind: support.remind,
+      comments: support.comments,
+      purpose: support.purpose,
+      dimensions: support.dimensions,
+      wordsCount: support.wordsCount,
+      url: support.url,
+      img: support.img,
+    });
+
+    history.push(path + "/date-time");
+  }
+
 
   // useEffect(()=>{
   //   setData((prevState)=>{
@@ -76,10 +99,10 @@ function SupportInfo({ path, type, data, setData,setPop }) {
       </div>
       <div className="info col">
         <h2>Support Details </h2>
-        <div className="close"  onClick={() => {
+        <div className="close" onClick={() => {
           history.push("/dashboard");
-          setPop((prevState)=>{
-            return!prevState
+          setPop((prevState) => {
+            return !prevState
           });
         }}>Close</div>
         {type === "intern_support" ? (
@@ -152,7 +175,7 @@ function SupportInfo({ path, type, data, setData,setPop }) {
                   />
                 </div>
                 {data.serviceName === "Poster Design" ||
-                data.serviceName === "Content Writing" ? (
+                  data.serviceName === "Content Writing" ? (
                   data.serviceName === "Poster Design" ? (
                     <div className="mb-4">
                       <input
@@ -303,21 +326,35 @@ function SupportInfo({ path, type, data, setData,setPop }) {
                   />
                 </div>
                 <div className="mb-4">
-            
-                <label className="form-label">Reminder</label>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <KeyboardDatePicker
-                  margin="normal"
-                  required
-                  minDate={new Date()}
-                  id="time-picker"
-                  value={support.reminder === "" ? undefined: new Date(support.reminder)}
-                  KeyboardButtonProps={{
-                    'aria-label': 'change time',
-                  }}
-                  onChange={(e) => handleDateChange(e)}
-                />
-              </MuiPickersUtilsProvider>
+
+                  <label className="form-label">Reminder&nbsp;</label>
+                  <input
+                    type="radio"
+                    checked={data.remind?true:false}
+                    value="Yes" 
+                    onChange={() => {
+                      setSupport({ ...support, remind: true });
+                    }} /> Yes&nbsp;&nbsp;
+                <input
+                    type="radio"
+                    value="No" 
+                    checked={data.remind?false:true}
+                    onChange={() => {
+                      setSupport({ ...support, remind: false });
+                    }} /> No&nbsp;&nbsp;
+                {support.remind ? <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <KeyboardDatePicker
+                      margin="normal"
+                      required
+                      minDate={new Date(data.publishTime)}
+                      id="time-picker"
+                      value={support.reminder === "" ? new Date(data.publishTime) : new Date(support.reminder)}
+                      KeyboardButtonProps={{
+                        'aria-label': 'change time',
+                      }}
+                      onChange={(e) => handleDateChange(e)}
+                    />
+                  </MuiPickersUtilsProvider> : null}
                 </div>
                 <div className="mb-5">
                   <textarea
@@ -337,8 +374,8 @@ function SupportInfo({ path, type, data, setData,setPop }) {
             <button
               type="button"
               className="back-btn"
-              onClick={() => {
-                history.push(path + "/date-time");
+              onClick={(e) => {
+                prevButton(e);
               }}
             >
               Prev

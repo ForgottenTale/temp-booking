@@ -131,6 +131,7 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
 
 
                     {data.type === "online_meeting" || data.type === "intern_support" ? [
+                        <ItemDate title="Date" value={data.startTime} key="53" readOnly={readOnly} setData={setData} />,
                         <ItemTime name="startTime" title="Start Time" value={data.startTime} key="3" readOnly={readOnly} setData={setData} />,
                         <ItemTime name="endTime" title="End Time" value={data.endTime} key="4" readOnly={readOnly} setData={setData} />,
                     ] : [
