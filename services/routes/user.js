@@ -18,8 +18,8 @@ module.exports = function(app){
                 newBooking = new ServiceClass(req.body);
                 newBooking.checkRequired(newBooking);
                 if(newBooking.reminder)
-                    if(newBooking.reminder>newBooking.publishTime)
-                        throw new Error("Publish time cannot be lower than reminder date");
+                    if(newBooking.reminder<newBooking.publishTime)
+                        throw new Error("Reminder date cannot be lower than publish date");
                 database.addBooking(newBooking, req.user, (err, doc)=>{
                     if(err){
                         return respondError(err, res);
