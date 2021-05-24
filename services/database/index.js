@@ -865,7 +865,7 @@ module.exports = {
 				let info = await tryLevelUp(bookingId, user.personId);
 				await executeQuery("UPDATE blt SET level="+ info.level + " WHERE _id=" + bookingId);
 				let emailIds = {mailTo: info.nextApprovers.map(person=>person.email)};
-				let config = await getConfig(booking.type, newBooking.serviceName);
+				let config = await getConfig(booking.type, booking.serviceName);
 				let reviewers = await findReviewers(config._id);
 				emailIds.mailCc = reviewers.map(reviewer=>reviewer.email);
 
@@ -910,7 +910,6 @@ module.exports = {
 					return done(null, "Updated");
 				}
 	
-				emailIds.mailCc.push(user.email);
 				booking = await executeQuery(`SELECT * FROM blt WHERE _id=${bookingId}`);
 				booking = await executeQuery(`SELECT *,blt._id as _id, ou.name as ou_name FROM blt INNER JOIN ${type} ON ${type}_id=${type}._id INNER JOIN ou ON ou_id=ou._id WHERE blt._id=${bookingId}`);
 				booking=transmuteSnakeToCamel(booking[0]);
