@@ -865,9 +865,12 @@ module.exports = {
 				let info = await tryLevelUp(bookingId, user.personId);
 				await executeQuery("UPDATE blt SET level="+ info.level + " WHERE _id=" + bookingId);
 				let emailIds = {mailTo: info.nextApprovers.map(person=>person.email)};
-				emailIds.mailCc = info.involved.map(person=>person.email);
+				let config = await getConfig(booking.type, newBooking.serviceName);
+				let reviewers = await findReviewers(config._id);
+				emailIds.mailCc = reviewers.map(reviewer=>reviewer.email);
 
 				if(info.level==0){
+					emailIds.mailCc = info.involved.map(person=>person.email);
 					await executeQuery("UPDATE blt SET status='APPROVED', approved_at=CURRENT_TIMESTAMP WHERE _id=" + bookingId);
 					booking = await executeQuery("SELECT * FROM blt WHERE _id=" + bookingId);
 					booking = booking[0];
