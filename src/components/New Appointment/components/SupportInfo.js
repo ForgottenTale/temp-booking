@@ -330,7 +330,7 @@ function SupportInfo({ path, type, data, setData, setPop }) {
                   <label className="form-label">Reminder&nbsp;</label>
                   <input
                     type="radio"
-                    checked={data.remind?true:false}
+                    checked={support.remind?true:false}
                     value="Yes" 
                     onChange={() => {
                       setSupport({ ...support, remind: true });
@@ -338,7 +338,7 @@ function SupportInfo({ path, type, data, setData, setPop }) {
                 <input
                     type="radio"
                     value="No" 
-                    checked={data.remind?false:true}
+                    checked={support.remind?false:true}
                     onChange={() => {
                       setSupport({ ...support, remind: false });
                     }} /> No&nbsp;&nbsp;
