@@ -25,7 +25,7 @@ export default function AdminDashboard({ role, setErr,user ,ou}) {
 
     useEffect(() => {
         var url = ""
-        url = `/api/activity?ouId=${ou.ouId}`;
+       if(ou.ouId!==undefined){ url = `/api/activity?ouId=${ou.ouId}`;
         axios.get(url, { withCredentials: true })
             .then((data) => {
 
@@ -44,7 +44,7 @@ export default function AdminDashboard({ role, setErr,user ,ou}) {
             .catch(err => {
                 console.error(err);
                 setErr(err.response.data.err);
-            });
+            });}
 
     }, [role,setErr,refresh,ou]);
 
