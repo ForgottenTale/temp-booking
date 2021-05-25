@@ -165,7 +165,7 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                     {data.serviceName === "website development" ? <Item title="URL" readOnly={readOnly} value={data.url} name="url" /> : null}
                     {data.type === "e_notice" ? [
                     <Item title="Delivery Type" value={data.express===1?"Express":"Normal"} key="44" name="deliveryType" readOnly={readOnly} />,
-                    <ItemDate title="Remainder" value={data.reminder} key="51" readOnly={readOnly} setData={setData} />, ]: null}
+                    <ItemDate title="Reminder" value={data.reminder} key="51" readOnly={readOnly} setData={setData} />, ]: null}
                     {data.type === "publicity" ? [
                         <Item title="Program Schedule" value={data.schedule} key="12" name="schedule" readOnly={readOnly} />] : null
                     }
