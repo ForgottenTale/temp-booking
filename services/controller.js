@@ -257,7 +257,7 @@ class OnlineMeeting extends Service {
         }):null;
     }
 
-    static validateTime(input, config){
+    static validateTime(input, config, advance=false){
         if(input.startTime>input.endTime)
             throw new Error('End Date must be greater than Start Date');
         if(input.startTime<(new Date()))
@@ -265,9 +265,10 @@ class OnlineMeeting extends Service {
         let startOfAdvanceTime = new Date(input.startTime);
         startOfAdvanceTime.setHours(0, 0, 0);
         startOfAdvanceTime.setDate(startOfAdvanceTime.getDate() - config.advance_days);
-        if(startOfAdvanceTime<=(new Date())){
-            throw new Error('Booking has to be done ' + config.advance_days + ' days in advance');
-        }
+        if(advance)
+            if(startOfAdvanceTime<=(new Date())){
+                throw new Error('Booking has to be done ' + config.advance_days + ' days in advance');
+            }
     }
 
     static getValuesForEdit(params){
@@ -339,7 +340,7 @@ class InternSupport extends Service{
     }
 
 
-    static validateTime(input, config){
+    static validateTime(input, config, advance=false){
         if(input.startTime>input.endTime)
             throw new Error('End Date must be greater than Start Date');
         if(input.startTime<(new Date()))
@@ -347,9 +348,10 @@ class InternSupport extends Service{
         let startOfAdvanceTime = new Date(input.startTime);
         startOfAdvanceTime.setHours(0, 0, 0);
         startOfAdvanceTime.setDate(startOfAdvanceTime.getDate() - config.advance_days);
-        if(startOfAdvanceTime<=(new Date())){
-            throw new Error('Booking has to be done ' + config.advance_days + ' days in advance');
-        }
+        if(advance)
+            if(startOfAdvanceTime<=(new Date())){
+                throw new Error('Booking has to be done ' + config.advance_days + ' days in advance');
+            }
     }
 
     static getTimeAvailQuery(input, config){
@@ -399,13 +401,14 @@ class ENotice extends Service{
         this.publishTime = new Date(input.publishTime);
     }
 
-    static validateTime(input, config){
+    static validateTime(input, config, advance=false){
         let startOfAdvanceTime = new Date(input.publishTime);
         startOfAdvanceTime.setHours(0, 0, 0);
         startOfAdvanceTime.setDate(startOfAdvanceTime.getDate() - config.advance_days);
-        if(startOfAdvanceTime<=(new Date())){
-            throw new Error('Booking has to be done ' + config.advance_days + ' days in advance');
-        }
+        if(advance)
+            if(startOfAdvanceTime<=(new Date())){
+                throw new Error('Booking has to be done ' + config.advance_days + ' days in advance');
+            }
     }
 
     static getTimeAvailQuery(input, config){
@@ -449,13 +452,14 @@ class Publicity extends Service{
         this.schedule = input.schedule;
     }
 
-    static validateTime(input, config){
+    static validateTime(input, config, advance=false){
         let startOfAdvanceTime = new Date(input.publishTime);
         startOfAdvanceTime.setHours(0, 0, 0);
         startOfAdvanceTime.setDate(startOfAdvanceTime.getDate() - config.advance_days);
-        if(startOfAdvanceTime<=(new Date())){
-            throw new Error('Booking has to be done ' + config.advance_days + ' days in advance');
-        }
+        if(advance)
+            if(startOfAdvanceTime<=(new Date())){
+                throw new Error('Booking has to be done ' + config.advance_days + ' days in advance');
+            }
     }
 
     static getTimeAvailQuery(input, config){

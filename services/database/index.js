@@ -87,12 +87,12 @@ async function addNextApprover(personId, bltId){
 	await executeQuery("INSERT INTO next_to_approve (person_id, blt_id) VALUES (" + personId + "," + bltId + ");");
 }
 
-function checkAvailability(input){
+function checkAvailability(input, advance=false){
 	return new Promise(async (resolve, reject)=>{
 		try{
 			ServiceClass = getClass(input.type);
 			let config = await getConfig(input.type,input.serviceName);
-			ServiceClass.validateTime(input, config);
+			ServiceClass.validateTime(input, config, advance);
 			let query = ServiceClass.getTimeAvailQuery(input, config);
 			query += " AND status='APPROVED'";
 			connection.query(query, (err, results, fields)=>{
@@ -511,7 +511,7 @@ module.exports = {
                 throw new Error("User not associated with Ou");
             }
 
-			await checkAvailability(newBooking);
+			await checkAvailability(newBooking, true);
 
 			//UPDATE: GLOBAL ADMIN
 
