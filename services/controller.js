@@ -214,7 +214,7 @@ class Service{
                 this.serviceName?(`"${this.serviceName}"`):"null",
                 this.title?(`"${this.title}"`):"null",
                 this.description?(`"${this.description}"`):"null",
-                this.comments?(`"${this.comments}`):"null",
+                this.comments?(`"${this.comments}"`):"null",
                 this.img?(`"${this.img}"`):"null",
             ]
         })
@@ -338,7 +338,6 @@ class InternSupport extends Service{
         this.url = input.url;
         this.img = input.img;
     }
-
 
     static validateTime(input, config, advance=false){
         if(input.startTime>input.endTime)
