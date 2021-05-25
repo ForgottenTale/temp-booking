@@ -25,24 +25,7 @@ export default function AdminDashboard({ role, setErr,user ,ou}) {
 
     useEffect(() => {
         var url = ""
-        // if (role === "ALPHA_ADMIN" || role === "BETA_ADMIN") {
-        //     url = "/api/my-approvals/history";
-        //     axios.get(url, { withCredentials: true })
-        //         .then((data) => {
-        //             if (data.status === 200)
-        //                 setData(data.data);
-        //         })
-        //         .catch(err => {
-        //             console.error(err);
-        //             setErr(err.response.data.error);
-        //         });
-
-        // } else if (role === "REGULAR") {
-
-       
-           
-        // }
-        url = "/api/activity";
+        url = `/api/activity?ouId=${ou.ouId}`;
         axios.get(url, { withCredentials: true })
             .then((data) => {
 
@@ -63,7 +46,7 @@ export default function AdminDashboard({ role, setErr,user ,ou}) {
                 setErr(err.response.data.err);
             });
 
-    }, [role,setErr,refresh]);
+    }, [role,setErr,refresh,ou]);
 
     useEffect(()=>{
         if(ou.ouId!==undefined){
