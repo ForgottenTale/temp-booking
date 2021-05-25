@@ -723,7 +723,7 @@ module.exports = {
 		}
 	},
 
-    getActivity: async function(userId, done){
+    getActivity: async function(userId, ouId, done){
 		let returnData = {};
 		try{
 			let query = "SELECT status, count(*) FROM blt";
