@@ -51,7 +51,7 @@ module.exports = {
             _id INT PRIMARY KEY AUTO_INCREMENT,
             service_name VARCHAR(30) NOT NULL,
             title VARCHAR(30) NOT NULL,
-            description VARCHAR(200),
+            description VARCHAR(1000),
             img VARCHAR(255),
             meeting_url VARCHAR(255) DEFAULT 'WILL BE UPDATED',
             meeting_id VARCHAR(50) DEFAULT 'WILL BE UPDATED',

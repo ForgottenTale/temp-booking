@@ -211,11 +211,11 @@ class Service{
         return({
             names: ['service_name', 'title', 'description', 'comments', 'img'],
             values: [
-                this.serviceName?("'" + this.serviceName + "'"):"null",
-                this.title?("'" + this.title + "'"):"null",
-                this.description?("'" + this.description + "'"):"null",
-                this.comments?("'" + this.comments + "'"):"null",
-                this.img?("'" + this.img + "'"):"null",
+                this.serviceName?(`"${this.serviceName}"`):"null",
+                this.title?(`"${this.title}"`):"null",
+                this.description?(`"${this.description}"`):"null",
+                this.comments?(`"${this.comments}`):"null",
+                this.img?(`"${this.img}"`):"null",
             ]
         })
     }
