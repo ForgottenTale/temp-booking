@@ -729,7 +729,7 @@ module.exports = {
 			let query = "SELECT status, count(*) FROM blt";
             // if(ouId != 1)
             //     query += " WHERE ou_id=" + ouId ;
-            query+= ` WHERE creator_id=${userId} GROUP BY status;`;
+            query+= ` WHERE creator_id=${userId} GROUP BY status AND ou_id=${ouId};`;
             let data = await executeQuery(query);
 			data.forEach(statusType=>{
 				returnData[statusType.status.toLowerCase()] = statusType["count(*)"];

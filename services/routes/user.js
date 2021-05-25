@@ -113,7 +113,9 @@ module.exports = function(app){
 
     app.route('/api/activity')
     .get(auth.ensureAuthenticated, (req, res)=>{
-        database.getActivity(req.user.id, (err, results)=>{
+        if(!req.query.ouId)
+            return respondError(new Error("OuId is required"), res);
+        database.getActivity(req.user.id, req.query.ouId, (err, results)=>{
             if(err) return respondError(err, res);
             res.status(200).json(results);
         })
