@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import dateIcon from "../../../images/date.png";
 import Select from 'react-select'
@@ -10,7 +10,7 @@ import { KeyboardTimePicker } from '@material-ui/pickers';
 
 function minDay() {
   let newday = new Date();
-  newday.setDate(newday.getDate() + 6);
+  newday.setDate(newday.getDate() + 4);
   let year = newday.getFullYear();
   let month = newday.getMonth() + 1;
   let day = newday.getDate();
@@ -25,24 +25,70 @@ function minDay() {
 }
 
 function DateTime({ path, type, setData, data, user, ou, setPop }) {
+  let minDate = minDay();
   const [equalTimeError, setequalTimeError] = useState(false);
   const [shortTimeError, setShortTimeError] = useState(false);
   const [ouError, setOuError] = useState(false);
-  const [options, setOptions] = useState([])
-  const [ouId, setOuID] = useState("")
-  const [ouName, setOuName] = useState("")
+  const [ouId, setOuID] = useState(data.ouId)
+  const [ouName, setOuName] = useState(() => {
+
+    var ouName = [];
+
+    ouName = user.ou.filter((ouData) => {
+      if (ouData.ouId === data.ouId) {
+        return ouData
+      }
+      else {
+        return null
+      }
+
+    })
+
+    if (ouName.length > 0) {
+      return { value: ouName[0].ouName, label: ouName[0].ouName }
+    }
+    else {
+      return "";
+    }
+  })
+  const [localState, setLocalState] = useState(() => {
+    var temp = [];
+    if (user.ou !== undefined && user.ou !== null && user.ou.length > 0) {
+      temp = user.ou.map((item) => {
+        return { "value": item.ouName, "label": item.ouName }
+      })
+    }
+    return {
+      options: temp,
+      startTime: data.startTime !== "" ? data.startTime : minDate.toISOString(),
+      endTime: data.endTime !== "" ? data.endTime : minDate.toISOString(),
+      publishTime: data.publishTime !== "" ? data.publishTime : minDate.toISOString()
+    }
+  });
 
   const history = useHistory();
 
-  let minDate = minDay();
+
+  const set = () => {
+    setData((prevState) => {
+      return {
+        ...prevState,
+        startTime: localState.startTime,
+        endTime: localState.endTime,
+        publishTime: localState.publishTime,
+        ouId: ouId
+      }
+    })
+  }
+
   const next = (event) => {
     event.preventDefault();
     setData({
       ...data,
       ouId: ouId
     });
-    var start = Date.parse(new Date(data.startTime).toISOString())
-    var end = Date.parse(new Date(data.endTime).toISOString())
+    var start = Date.parse(new Date(localState.startTime).toISOString())
+    var end = Date.parse(new Date(localState.endTime).toISOString())
 
     if (data.ouid === "") {
       setOuError(true);
@@ -56,16 +102,20 @@ function DateTime({ path, type, setData, data, user, ou, setPop }) {
 
     if (start !== "" && end !== "" && start !== end && start < end && ouId !== "") {
       if (type === "online_meeting" || type === "publicity") {
+        set();
         history.push(path + "/event-info");
       } else if (type === "intern_support" || type === "e_notice") {
+        set();
         history.push(path + "/support-info");
       }
     }
     if (type === "e_notice" || type === "publicity") {
-      if (data.startTime !== "" && ouId !== "") {
+      if (localState.startTime !== "" && ouId !== "") {
         if (type === "online_meeting" || type === "publicity") {
+          set();
           history.push(path + "/event-info");
         } else if (type === "intern_support" || type === "e_notice") {
+          set();
           history.push(path + "/support-info");
         }
       }
@@ -73,52 +123,10 @@ function DateTime({ path, type, setData, data, user, ou, setPop }) {
     }
   };
 
-
-
-  useEffect(() => {
-
-
-    if (user.ou !== undefined && user.ou !== null && user.ou.length > 0) {
-      var temp = user.ou.map((item) => {
-        return { "value": item.ouName, "label": item.ouName }
-      })
-      setOptions(temp)
-    }
-    var ouName = [];
-    setOuID(data.ouId)
-    setData(prevState => {
-      ouName = user.ou.filter((ouData) => {
-        if (ouData.ouId === prevState.ouId) {
-          return ouData
-        }
-        else {
-          return null
-        }
-
-      })
-     
-      return ({
-        ...prevState,
-        startTime: prevState.startTime !== "" ? prevState.startTime : minDate.toISOString(),
-        endTime: prevState.endTime !== "" ? prevState.endTime : minDate.toISOString(),
-        publishTime: prevState.publishTime !== "" ? prevState.publishTime : minDate.toISOString(),
-      })
-    })
-
-    if (ouName.length > 0) {
-      setOuName({ value: ouName[0].ouName, label: ouName[0].ouName });
-    }
-
-
-  }, []);
-
-
   const handleChange = (e) => {
     var temp = user.ou.filter((item) => {
       return item.ouName === e.value ? item : null
     })
-
-
     setOuID(temp[0].ouId)
     setOuName({ value: temp[0].ouName, label: temp[0].ouName })
   }
@@ -126,7 +134,7 @@ function DateTime({ path, type, setData, data, user, ou, setPop }) {
   const handleDateChange = (e) => {
 
 
-    setData(prevState => {
+    setLocalState(prevState => {
 
       var d = new Date(e)
       var start = new Date(prevState.startTime === "" ? new Date() : prevState.startTime);
@@ -135,7 +143,6 @@ function DateTime({ path, type, setData, data, user, ou, setPop }) {
 
       return ({
         ...prevState,
-        ouId: prevState.ouId,
         startTime: new Date(d.setHours(start.getHours(), start.getMinutes(), 0, 0)).toISOString(),
         endTime: new Date(d.setHours(end.getHours(), end.getMinutes(), 0, 0)).toISOString(),
         publishTime: new Date(d.setHours(publishTime.getHours(), publishTime.getMinutes(), 0, 0)).toISOString(),
@@ -146,11 +153,11 @@ function DateTime({ path, type, setData, data, user, ou, setPop }) {
   }
   const handleTimeChange = (e, name) => {
 
-    setData(prevState => {
+    setLocalState(prevState => {
       return ({
         ...prevState,
         [name]: e.toISOString(),
-        date: e.toISOString(),
+        // date: e.toISOString(),
       })
     })
   }
@@ -180,7 +187,7 @@ function DateTime({ path, type, setData, data, user, ou, setPop }) {
               <Select
                 value={ouName}
                 error={ouError}
-                options={options}
+                options={localState.options}
                 required
                 onChange={(e) => {
                   handleChange(e)
@@ -195,7 +202,7 @@ function DateTime({ path, type, setData, data, user, ou, setPop }) {
                   margin="normal"
                   id="time-picker"
                   minDate={minDate}
-                  value={data.startTime === "" ? minDate : data.startTime}
+                  value={localState.startTime === "" ? minDate : localState.startTime}
                   KeyboardButtonProps={{
                     'aria-label': 'change time',
                   }}
@@ -217,7 +224,7 @@ function DateTime({ path, type, setData, data, user, ou, setPop }) {
                     error={shortTimeError || equalTimeError}
                     margin="normal"
                     id="time-picker"
-                    value={data.startTime === "" ? undefined : data.startTime}
+                    value={localState.startTime === "" ? undefined : localState.startTime}
                     onChange={(e) => handleTimeChange(e, "startTime")}
                     required
                     KeyboardButtonProps={{
@@ -234,7 +241,7 @@ function DateTime({ path, type, setData, data, user, ou, setPop }) {
                     error={shortTimeError || equalTimeError}
                     margin="normal"
                     id="time-picker"
-                    value={data.endTime === "" ? undefined : data.endTime}
+                    value={localState.endTime === "" ? undefined : localState.endTime}
                     onChange={(e) => handleTimeChange(e, "endTime")}
                     required
                     KeyboardButtonProps={{
@@ -254,7 +261,7 @@ function DateTime({ path, type, setData, data, user, ou, setPop }) {
                   <KeyboardTimePicker
                     margin="normal"
                     id="time-picker"
-                    value={data.publishTime === "" ? undefined : data.publishTime}
+                    value={localState.publishTime === "" ? undefined : localState.publishTime}
                     onChange={(e) => handleTimeChange(e, "publishTime")}
                     required
                     KeyboardButtonProps={{
@@ -268,7 +275,10 @@ function DateTime({ path, type, setData, data, user, ou, setPop }) {
           <button
             type="button"
             className="mt-5 back-btn"
-            onClick={() => history.push(path + "/services")}
+            onClick={() => {
+              set();
+              history.push(path + "/services")
+            }}
           >
             Prev
           </button>

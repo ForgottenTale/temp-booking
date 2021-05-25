@@ -48,13 +48,14 @@ function Verify({ path, type, data, setId, setErr, setPop }) {
 
     handleUpload(formData);
 
-    console.log(Array.from(formData));
+
   };
 
   const handleUpload = async (data) => {
     try {
       setLoading(true);
       const url = "/api/book/";
+      console.log(Array.from(data));
       const res = await axios.post(url, data, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -62,7 +63,10 @@ function Verify({ path, type, data, setId, setErr, setPop }) {
         withCredentials: true,
       });
       setId(res.data.id);
-      setProceed(true);
+      if (res.status === 200) {
+        setProceed(true);
+      }
+
     } catch (err) {
       console.error(err);
       setLoading(false);

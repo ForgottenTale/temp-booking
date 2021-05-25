@@ -38,11 +38,9 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
 
     const [message, setMessage] = useState(false);
     const [readOnly, setReadOnly] = useState(readProtect)
-    const { params,path } = useRouteMatch();
+    const { params} = useRouteMatch();
     const history = useHistory();
     const [msg, setMsg] = useState("");
-    console.log(path)
-
 
     useEffect(() => {
 
@@ -126,7 +124,7 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                     )}
                     <Item title="Organisational Unit" value={data.ouName} key="1" name="title" setData={setData} readOnly />
                     <Item title="Created at" value={new Date(data.createdAt).toLocaleString()} key="40" name="title" setData={setData} readOnly={readOnly} />
-                    <ItemTextArea title="Description" readOnly={readOnly} value={data.description} name="description" />
+                    <ItemTextArea title="Description" key="46" readOnly={readOnly} value={data.description} name="description" />
                     <Item title="Title" value={data.title} key="41" name="title" setData={setData} readOnly={readOnly} />
 
 
@@ -136,7 +134,7 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                         <ItemTime name="endTime" title="End Time" value={data.endTime} key="4" readOnly={readOnly} setData={setData} />,
                     ] : [
                         <ItemDate title="Date" value={data.publishTime} key="52" readOnly={readOnly} setData={setData} />,
-                        <ItemDate title="Remainder" value={data.reminder} key="51" readOnly={readOnly} setData={setData} />,]}
+                        <Item title="Publish Time" value={new Date(data.publishTime).toLocaleTimeString()} key="13" name="publishTime" readOnly={readOnly} />]}
                    
                     {data.type === "online_meeting" ?
                         [
@@ -165,10 +163,11 @@ export default function RequestView({ req, setRefresh, refresh, showButton, setE
                     {data.serviceName === "content writing" ? <Item title="Word Count" value={data.wordsCount} name="wordCount" readOnly={readOnly} /> : null}
                     {data.serviceName === "poster design" ? <Item title="Poster Diamensions" value={data.dimensions} name="diamensions" readOnly={readOnly} /> : null}
                     {data.serviceName === "website development" ? <Item title="URL" readOnly={readOnly} value={data.url} name="url" /> : null}
-                    {data.type === "e_notice" ? <Item title="Delivery Type" value={data.express===1?"Express":"Normal"} name="deliveryType" readOnly={readOnly} /> : null}
+                    {data.type === "e_notice" ? [
+                    <Item title="Delivery Type" value={data.express===1?"Express":"Normal"} key="44" name="deliveryType" readOnly={readOnly} />,
+                    <ItemDate title="Remainder" value={data.reminder} key="51" readOnly={readOnly} setData={setData} />, ]: null}
                     {data.type === "publicity" ? [
-                        <Item title="Program Schedule" value={data.schedule} key="12" name="schedule" readOnly={readOnly} />,
-                        <Item title="Publish Time" value={new Date(data.publishTime).toLocaleTimeString()} key="13" name="publishTime" readOnly={readOnly} />] : null
+                        <Item title="Program Schedule" value={data.schedule} key="12" name="schedule" readOnly={readOnly} />] : null
                     }
 
 
