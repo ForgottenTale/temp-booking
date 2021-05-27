@@ -755,7 +755,7 @@ module.exports = {
 						+ " WHERE n.person_id=" + constraint.user.personId + " AND"
 				}
 				else if(constraint.filter == "history"){
-					query+= " INNER JOIN response AS n ON n.blt_id=blt._id"
+					query+= " INNER JOIN (SELECT * FROM response GROUP BY blt_id) n ON n.blt_id=blt._id"
 						+ " WHERE n.person_id=" + constraint.user.personId + " AND"
 				}
 				else 
