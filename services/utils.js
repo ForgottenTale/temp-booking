@@ -163,6 +163,89 @@ module.exports = {
                 console.error(err);
                 mail.sendSuperMail(err);
             })
+        }else if(serviceName=="webex"){
+            let token = jwt.sign({
+                "sub": "Mint",
+                "iss": process.env.WEBEX_ISSUER_ID,
+                "exp": 1496091964000
+            }, Buffer.from(process.env.WEBEX_SHARED_SECRET, 'base64'));
+            let accessToken;
+            config = {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            };
+            axios
+            .post(`https://webexapis.com/v1/jwt/login`,
+                {},
+                config
+            )
+            .then(data=>{
+                    data = data.data;
+                    accessToken = data.token;
+                    payload = {
+                        "title": input.title,
+                        "start": input.startTime.toISOString(),
+                        "end": input.endTime.toISOString(),
+                        "timezone": "UTC",
+                        "agenda": input.description,
+                        "enabledAutoRecordMeeting": false,
+                        "allowAnyUserToBeCoHost": false,
+                        "enabledJoinBeforeHost": false,
+                        "enableConnectAudioBeforeHost": false,
+                        "joinBeforeHostMinutes": 0,
+                        "excludePassword": false,
+                        "publicMeeting": false,
+                        "reminderTime": 10,
+                        "allowFirstUserToBeCoHost": false,
+                        "allowAuthenticatedDevices": false,
+                        "sendEmail": true
+                    };
+                    config = {
+                        headers: {
+                            'Authorization': `Bearer ${accessToken}`
+                        }
+                    };
+                    axios
+                    .post(`https://webexapis.com/v1/meetings`,
+                        payload,
+                        config
+                    )
+                    .then(data=>{
+                        try{
+                            let connection = mysql.createConnection({
+                                host: process.env.DB_HOST,
+                                user: process.env.DB_USER,
+                                password: process.env.DB_PASSWORD,
+                                database: process.env.DB_DATABASE,
+                                multipleStatements: true,
+                                dateStrings: true
+                            });
+                            console.log(input, data.data);
+                            data= data.data;
+                            connection.query(`UPDATE online_meeting INNER JOIN blt ON blt.online_meeting_id=online_meeting._id SET meeting_id='${data.id}', meeting_url='${data.webLink}', meeting_password = '${data.password}'
+                            WHERE blt._id=${input.id}`, (err, results)=>{
+                                if(err) {
+                                    console.error(err);
+                                    mail.sendSuperMail(err);
+                                };
+                                return (results);
+                            });
+                        }catch(err){
+                            console.error(err);
+                        }
+                    })
+                    .catch(err=>{
+                        err.info=`MEETING CREATION FAULT: #${input.id}`;
+                        console.error(err);
+                        mail.sendSuperMail(err);
+                    })
+            })
+            .catch(err=>{
+                err.info=`MEETING CREATION FAULT: #${input.id}`;
+                console.error(err);
+                mail.sendSuperMail(err);
+            })
         }else{
             let err = new Error("Meeting link not created for booking id: " + input.id);
             console.error(err)
