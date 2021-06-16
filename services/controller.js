@@ -294,7 +294,8 @@ class OnlineMeeting extends Service {
             INNER JOIN blt ON ${input.type}_id=${input.type}._id WHERE
             ((start_time>'${paddedStart}' AND start_time<'${paddedEnd}') OR 
             (end_time>'${paddedStart}' AND end_time<'${paddedEnd}') OR 
-            (start_time='${paddedStart}' AND end_time='${paddedEnd}'))`
+            (start_time='${paddedStart}' AND end_time='${paddedEnd}') OR
+            (start_time<='${paddedStart}' AND end_time>='${paddedEnd}'))`
         )
     }
 
@@ -361,7 +362,8 @@ class InternSupport extends Service{
             INNER JOIN blt ON ${input.type}_id=${input.type}._id WHERE
             ((start_time>'${paddedStart}' AND start_time<'${paddedEnd}') OR 
             (end_time>'${paddedStart}' AND end_time<'${paddedEnd}') OR 
-            (start_time='${paddedStart}' AND end_time='${paddedEnd}'))`
+            (start_time='${paddedStart}' AND end_time='${paddedEnd}'))
+            (start_time<='${paddedStart}' AND end_time>='${paddedEnd}'))`
         )
     }
 
