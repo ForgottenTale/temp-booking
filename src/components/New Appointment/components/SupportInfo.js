@@ -154,7 +154,7 @@ function SupportInfo({ path, type, data, setData, setPop }) {
                   </label>
                   <input
                     type="file"
-                    multiple
+                    value={`./${data.img.name}`}
                     className="form-control"
                     name="relevantFiles"
                     onChange={(e) => {
@@ -182,7 +182,6 @@ function SupportInfo({ path, type, data, setData, setPop }) {
                         placeholder="Poster dimensions (if any)"
                         type="text"
                         className="form-control"
-                        required
                         name="posterDimensions"
                         defaultValue={data.dimensions}
                         onChange={(e) => {
@@ -306,6 +305,7 @@ function SupportInfo({ path, type, data, setData, setPop }) {
                   <label className="form-label">Poster (if any)</label>
                   <input
                     type="file"
+                    value={`./${data.img.name}`}
                     className="form-control"
                     name="poster"
                     onChange={(e) => {
