@@ -94,7 +94,7 @@ export default function AdminDashboard({ role, setErr,user ,ou}) {
 
 
                         <Input2 className="request_sub_input" placeholder="Search for requests" onChange={(e) => setSearchTerm(e.target.value)} />
-                        <button className="button" onClick={() => { setPop(true) }}>+ Book service</button>
+                        {/* <button className="button" >+ Book service</button> */}
                     </div>
 
                     <Table  setRefresh={setRefresh} setErr={setErr} ouId={ou.ouId} headers={header} data={data} path="dashboard" type='request' setRequest={setRequest} searchTerm={searchTerm} edit={false}role={role} />
